@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "btr-rental"
+version = "0.1.0"
+description = ""
+authors = ["Anton Georgievsky <123451311+jespy666@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "btr_rental"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.6"
+python-dotenv = "^1.0.0"
+dj-database-url = "^2.1.0"
+django-bootstrap5 = "^23.3"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.2.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block content %}
+<div class="card mt-4">
+  <div class="card-body p-5 bg-light">
+    <div class="display-4">{% translate 'Task Manager' %}</div>
+    <p class="lead">{% translate 'Try a simple task manager' %}</p>
+    <hr>
+    <a class="btn btn-primary btn-lg" href="#">{% translate 'Get Started' %}</a>
+  </div>
+</div>
+{% endblock %}
