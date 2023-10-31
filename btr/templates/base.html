@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-<head>
+  <head>
     {% load django_bootstrap5 %}
     {% load i18n %}
+    {% load static %}
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    {% bootstrap_css %}
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <header>
-    </header>
-    <main class="container wrapper flex-grow-1">
-        {% bootstrap_messages %}
-        {% block content %}
-        {% endblock %}
-    </main>
-    <footer>
-    </footer>
+      <title>{% block title %}{% endblock %}</title>
+      {% bootstrap_css %}
+      {% bootstrap_javascript %}
+      <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+      <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
+  </head>
+  <body class="scrollable-background">
+    <div class="container diagonal-gradient">
+      <header>
+        {% include 'navbar.html' %}
+      </header>
+  <div class="mb-3"></div>
+
+
+{% bootstrap_messages %}
+<footer>
+</footer>
 </body>
 </html>
