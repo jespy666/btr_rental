@@ -41,6 +41,19 @@ body {
     object-fit: none;
 }
 
+.r-carousel {
+    padding: 0;
+}
+
+.r-carousel .carousel-item {
+    display: flex;
+    max-height: 700px;
+}
+
+.r-carousel .carousel-item img {
+    object-fit: cover;
+}
+
 .red-text {
     color: red;
 }
@@ -59,11 +72,43 @@ body {
 }
 
 .main-header-color {
-    color: #E7F9F8;
+    color: #FFF1F0;
 }
 
 .h-line {
     border: none;
     border-top: 1px solid #fff;
     margin: 20px 0;
+}
+
+/* Moto Cards */
+
+.card-bg {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.list-rectangle {
+list-style: none;
+margin: 0;
+padding: 0;
+}
+.list-rectangle>li {
+position: relative;
+display: block;
+margin-bottom: .25rem;
+padding: .325rem .825rem .325rem 1.325rem;
+color: #fff;
+background: #C2185B;
+}
+.list-rectangle>li:last-child {
+margin-bottom: 0;
+}
+.list-rectangle>li::before {
+content: "";
+position: absolute;
+left: 0;
+top: 0;
+bottom: 0;
+width: 0.5rem;
+background: #ec407a;
 }
