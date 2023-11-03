@@ -20,6 +20,19 @@ body {
     height: 100vh;
 }
 
+.frame {
+    padding: 0;
+}
+
+.frame .frame-row {
+    display: flex;
+    max-height: 500px;
+}
+
+.frame .frame-row img {
+    object-fit: none;
+}
+
 .black-border {
     padding: 30px;
     margin: 20px;
@@ -27,6 +40,8 @@ body {
     background-color: black;
     border-radius: 20px;
 }
+
+/* Carousels */
 
 .my-carousel {
     padding: 0;
@@ -41,16 +56,8 @@ body {
     object-fit: none;
 }
 
-.r-carousel {
-    padding: 0;
-}
-
-.r-carousel .carousel-item {
-    display: flex;
-    max-height: 700px;
-}
-
 .r-carousel .carousel-item img {
+    height: 600px;
     object-fit: cover;
 }
 
@@ -76,9 +83,8 @@ body {
 }
 
 .h-line {
-    border: none;
-    border-top: 1px solid #fff;
-    margin: 20px 0;
+    color: red;
+    border: 1px solid;
 }
 
 /* Moto Cards */
@@ -92,6 +98,7 @@ list-style: none;
 margin: 0;
 padding: 0;
 }
+
 .list-rectangle>li {
 position: relative;
 display: block;
@@ -100,9 +107,11 @@ padding: .325rem .825rem .325rem 1.325rem;
 color: #fff;
 background: #C2185B;
 }
+
 .list-rectangle>li:last-child {
 margin-bottom: 0;
 }
+
 .list-rectangle>li::before {
 content: "";
 position: absolute;
@@ -111,4 +120,17 @@ top: 0;
 bottom: 0;
 width: 0.5rem;
 background: #ec407a;
+}
+
+.lg-m-t {
+    margin-top: 100px;
+}
+
+.lg-m-b {
+    margin-bottom: 100px;
+}
+
+.lg-m-y {
+    margin-top: 100px;
+    margin-bottom: 100px;
 }

@@ -5,49 +5,141 @@
 {% load static %}
 
 {% block index %}
+<div class="container-fluid my-4 px-0">
+  <div class="row">
+    <img src="{% static 'images/frame.jpg' %}" alt="frame">
+  </div>
+</div>
+<h1 class="display-1 text-white text-center lg-m-t">Прокат эндуро мотоциклов</h1>
+<h1 class="display-3 text-white text-center mb-4">В Санкт-Петербурге</h1>
+<div class="container lg-m-b">
+  <div class="row">
+    <div class="col-12 text-center">
+    <a class="btn btn-outline-light btn-lg" href="https://vk.me/broteamracing">Записаться на прокат</a>
+      </div>
+  </div>
+</div>
 {% include 'carousel.html' %}
 
-<h1 class="fs-1 my-5 text-center main-header-color text-uppercase">Bikes</h1>
-<div class="m-5">
-  <hr class="h-line">
+<div class="container lg-m-y">
+  <div class="row text-center">
+    <h1 class="display-4 text-white">Bikes</h1>
+    <div class="col"></div>
+    <div class="col text-center">
+      <hr class="h-line" style="opacity: 1;">
+    </div>
+    <div class="col"></div>
+  </div>
+  <div class="row text-center">
+    <h2 class="mt-4 text-white">Carefully Maintained and Tuned</h2>
+  </div>
+  <div class="row text-center">
+    <p class="h4 text-white mt-3">
+      All our motorcycles have undergone meticulous maintenance and tuning, ensuring high quality and safety
+    </p>
+  </div>
 </div>
 
 {% include 'cards.html' %}
-<div class="my-4"></div>
-<div class="m-5 text-center main-header-color">
-  <h2>Carefully Maintained and Tuned</h2>
-  <div class="my-4"></div>
-  <p class="h4">All our motorcycles have undergone meticulous maintenance and tuning, ensuring high quality and safety</p>
-</div>
 
-<div class="my-5"></div>
-<br>
-<h1 class="fs-1 my-5 text-center main-header-color text-uppercase">Routes</h1>
-<div class="m-5">
-  <hr class="h-line">
-</div>
-{% include 'routes_carousel.html' %}
-<div class="my-4"></div>
-<div class="m-5 text-center main-header-color">
-  <h2>Combining Beautiful Scenery with Adrenaline</h2>
-  <div class="my-4"></div>
-  <p class="h4">Experience the perfect blend of stunning landscapes and exhilarating adventure</p>
-</div>
-
-<div class="my-5"></div>
-<br>
-<h1 class="fs-1 my-5 text-center main-header-color text-uppercase">Contacts</h1>
-<div class="m-5">
-  <hr class="h-line">
-</div>
-<div class="container justify-content-between">
-  <div class="row">
+<div class="container lg-m-y">
+  <div class="row text-center">
+    <h1 class="display-4 text-white">Take a simle Try</h1>
+  </div>
+  <div class="row lg-m-t mx-5 justify-content-between">
     <div class="col-auto">
-      <div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a><a href="https://yandex.ru/maps/2/saint-petersburg/?ll=29.517382%2C60.191191&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" style="color:#eee;font-size:12px;position:absolute;top:14px;">Посёлок Молодёжное — Яндекс Карты</a><iframe src="https://yandex.ru/map-widget/v1/?ll=29.517382%2C60.191191&mode=whatshere&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
+      <div class="card h-100 d-flex" style="width: 22rem; background-color: transparent; border-color: transparent;">
+        <img src="{% static 'images/ico_block/ico1.png' %}" class="card-img-top" alt="ico-1">
+        <div class="card-body text-white">
+          <h3 class="card-title">Guide accompaniment</h3>
+          <p class="card-text fs-5">
+            Throughout the trip you will be accompanied by an experienced guide who will teach you riding techniques and give advice.
+          </p>
+        </div>
+      </div>
     </div>
     <div class="col-auto">
-
+      <div class="card h-100 d-flex" style="width: 22rem; background-color: transparent; border-color: transparent;">
+        <img src="{% static 'images/ico_block/ico2.png' %}" class="card-img-top" alt="ico-2">
+        <div class="card-body text-white">
+          <h3 class="card-title">Safety Equipment</h3>
+          <p class="card-text fs-5">
+            All equipment for safe driving is already included in the rental price
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="card h-100 d-flex" style="width: 22rem; background-color: transparent; border-color: transparent;">
+        <img src="{% static 'images/ico_block/ico3.png' %}" class="card-img-top" alt="ico-3">
+        <div class="card-body text-white">
+          <h3 class="card-title">No driver's license required</h3>
+          <p class="card-text fs-5">
+            To operate an enduro motorcycle you do not need a driver's license, because it is sports equipment
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+
+<div class="container lg-m-y">
+  <div class="row text-center">
+    <h1 class="display-4 text-white">Routes</h1>
+    <div class="col"></div>
+    <div class="col text-center">
+      <hr class="h-line" style="opacity: 1;">
+    </div>
+    <div class="col"></div>
+  </div>
+  <div class="row text-center">
+    <h2 class="mt-4 text-white">Combining Beautiful Scenery with Adrenaline</h2>
+  </div>
+  <div class="row text-center">
+    <p class="h4 text-white mt-3">
+      Experience the perfect blend of stunning landscapes and exhilarating adventure
+    </p>
+  </div>
+</div>
+{% include 'routes_carousel.html' %}
+<div class="container lg-m-y">
+  <div class="row text-center">
+    <h1 class="display-4 text-white">Contacts</h1>
+    <div class="col"></div>
+    <div class="col text-center">
+      <hr class="h-line" style="opacity: 1;">
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+<div class="container lg-m-b">
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-5">
+      <div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a><a href="https://yandex.ru/maps/2/saint-petersburg/?ll=29.517382%2C60.191191&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" style="color:#eee;font-size:12px;position:absolute;top:14px;">Посёлок Молодёжное — Яндекс Карты</a><iframe src="https://yandex.ru/map-widget/v1/?ll=29.517382%2C60.191191&mode=whatshere&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
+    </div>
+    <div class="col-6">
+      <div class="container" style="margin-left: 30px;">
+        <div class="row">
+          <div class="col-12">
+            <a href="https://vk.com/broteamracing" class="fs-3 text-white fw-bold lh-lg" style="text-decoration: none;">
+            <img class="m-3" src="{% static 'images/vk.png' %}" alt="vk-group" width="50px" height="50px">
+              VK public
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a href="https://vk.com/broteamracing" class="fs-3 text-white fw-bold lh-lg" style="text-decoration: none;">
+            <img class="m-3" src="{% static 'images/tel.png' %}" alt="tel" width="50px" height="50px">
+            +7 777 256-22-90
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
