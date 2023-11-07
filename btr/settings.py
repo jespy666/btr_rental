@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'btr.auth',
+    'btr.users',
     'django_bootstrap5',
 
 ]
@@ -80,10 +81,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'btr.wsgi.application'
 
-AUTH_USER_MODEL = 'custom_auth.SiteUser'
+AUTH_USER_MODEL = 'users.SiteUser'
 
 AUTHENTICATION_BACKENDS = [
-    'btr.auth.auth_backends.EmailOrNumberBackend',
+    'btr.auth.auth_backends.MultiplyFieldBackend',
 ]
 
 # Database

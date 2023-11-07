@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h1 class="mb-5 text-center text-white">{{ header }}</h1>
+            <form method="post" class="text-white">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <input class="btn btn-success" type="submit" value="{{ button }}">
+            </form>
+{% endblock %}

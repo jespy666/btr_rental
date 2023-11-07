@@ -22,5 +22,6 @@ from .views import IndexView
 urlpatterns = [
     path('', IndexView.as_view(), name='home'),
     path('auth/', include('btr.auth.urls')),
+    path('users/', include('btr.users.urls')),
     path('admin/', admin.site.urls),
 ]

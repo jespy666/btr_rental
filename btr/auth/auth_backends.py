@@ -1,9 +1,9 @@
 from django.contrib.auth.backends import ModelBackend
 
-from .models import SiteUser
+from btr.users.models import SiteUser
 
 
-class EmailOrNumberBackend(ModelBackend):
+class MultiplyFieldBackend(ModelBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:

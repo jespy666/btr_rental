@@ -32,7 +32,7 @@
                       <h6 class="mb-0 text-white">Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary text-white">
-                      {{ user.username }}
+                      {{ user.first_name }}
                     </div>
                   </div>
                   <hr class="text-white">
@@ -56,7 +56,7 @@
                   <hr class="text-white">
                   <div class="row">
                     <div class="col-sm-12">
-                      <a class="btn btn-outline-info" target="__blank" href="#">Edit Profile</a>
+                      <a class="btn btn-outline-info" href="{% url 'user_edit' pk=user.pk %}">Edit Profile</a>
                     </div>
                   </div>
                 </div>
