@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block index %}
+{% block content %}
 <div class="container-fluid my-4 px-0">
   <div class="row">
     <img src="{% static 'images/frame.jpg' %}" alt="frame">
@@ -103,43 +103,5 @@
   </div>
 </div>
 {% include 'routes_carousel.html' %}
-<div class="container lg-m-y">
-  <div class="row text-center">
-    <h1 class="display-4 text-white">Contacts</h1>
-    <div class="col"></div>
-    <div class="col text-center">
-      <hr class="h-line" style="opacity: 1;">
-    </div>
-    <div class="col"></div>
-  </div>
-</div>
-<div class="container lg-m-b">
-  <div class="row">
-    <div class="col-1"></div>
-    <div class="col-5">
-      <div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Санкт‑Петербург</a><a href="https://yandex.ru/maps/2/saint-petersburg/?ll=29.517382%2C60.191191&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" style="color:#eee;font-size:12px;position:absolute;top:14px;">Посёлок Молодёжное — Яндекс Карты</a><iframe src="https://yandex.ru/map-widget/v1/?ll=29.517382%2C60.191191&mode=whatshere&whatshere%5Bpoint%5D=29.513170%2C60.190044&whatshere%5Bzoom%5D=17&z=16.6" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
-    </div>
-    <div class="col-6">
-      <div class="container" style="margin-left: 30px;">
-        <div class="row">
-          <div class="col-12">
-            <a href="https://vk.com/broteamracing" class="fs-3 text-white fw-bold lh-lg" style="text-decoration: none;">
-            <img class="m-3" src="{% static 'images/vk.png' %}" alt="vk-group" width="50px" height="50px">
-              VK public
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <a href="https://vk.com/broteamracing" class="fs-3 text-white fw-bold lh-lg" style="text-decoration: none;">
-            <img class="m-3" src="{% static 'images/tel.png' %}" alt="tel" width="50px" height="50px">
-            +7 777 256-22-90
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+{% include 'contacts.html' %}
 {% endblock %}

@@ -20,7 +20,7 @@ from django.urls import path, include
 from .views import IndexView
 
 urlpatterns = [
-    path('', IndexView.as_view()),
-    path('registration/', include('btr.auth.urls')),
+    path('', IndexView.as_view(), name='home'),
+    path('auth/', include('btr.auth.urls')),
     path('admin/', admin.site.urls),
 ]

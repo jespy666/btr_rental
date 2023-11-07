@@ -12,15 +12,26 @@
       <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
   </head>
   <body class="scrollable-background">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <div class="container diagonal-gradient px-0">
       <header>{% include 'navbar.html' %}</header>
+      {% bootstrap_messages %}
       <div class="mb-4"></div>
-      {% block index %}{% endblock %}
+      {% block content %}{% endblock %}
     </div>
-  </body>
-{% bootstrap_messages %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
 
+          var alertElements = document.querySelectorAll('.alert');
+
+          alertElements.forEach(function (alert) {
+              setTimeout(function () {
+                  alert.style.display = 'none';
+              }, 5000);
+          });
+      });
+    </script>
+  </body>
 <footer>
 </footer>
-
 </html>

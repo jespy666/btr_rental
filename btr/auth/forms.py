@@ -3,15 +3,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext as _
 from phonenumber_field.formfields import PhoneNumberField
 
-from .models import User
+from .models import SiteUser, UserProfile
 
 
 class UserRegistrationForm(UserCreationForm):
 
-    name = forms.CharField(
-        max_length=30,
+    username = forms.CharField(
+        max_length=40,
         required=True,
-        help_text=_('Required. No more than 30 characters')
+        help_text=_('Required. No more than 40 characters')
     )
 
     email = forms.EmailField(
@@ -23,15 +23,22 @@ class UserRegistrationForm(UserCreationForm):
     phone_number = PhoneNumberField(
         region='RU',
         required=True,
-        help_text=_('Required. Enter a valid phone number')
+        help_text=_('Required. Enter a valid phone number'),
+        widget=forms.TextInput(attrs={'id': 'id_phone_number'})
     )
 
     class Meta:
-        model = User
+        model = SiteUser
         fields = (
-            'name',
+            'username',
             'email',
             'phone_number',
             'password1',
             'password2',
         )
+
+
+class ProfileImageUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('profile_image',)

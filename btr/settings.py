@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'btr.auth',
     'django_bootstrap5',
+
 ]
 
 MIDDLEWARE = [
@@ -79,10 +80,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'btr.wsgi.application'
 
-AUTH_USER_MODEL = 'custom_auth.User'
+AUTH_USER_MODEL = 'custom_auth.SiteUser'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    'btr.auth.auth_backends.EmailOrNumberBackend',
 ]
 
 # Database
@@ -131,7 +132,7 @@ if os.getenv('LANGUAGE'):
 else:
     LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -151,7 +152,12 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

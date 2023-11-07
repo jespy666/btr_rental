@@ -13,6 +13,7 @@ python-dotenv = "^1.0.0"
 dj-database-url = "^2.1.0"
 django-bootstrap5 = "^23.3"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.2.0"}
+pillow = "^10.1.0"
 
 
 [build-system]

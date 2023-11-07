@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid mt-3">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{% url 'home' %}">
       <img src="{% static 'images/favicon.ico' %}" alt="Icon" width="40" height="40">
     </a>
     <div class="navbar-collapse" id="navbarSupportedContent">
@@ -22,19 +22,28 @@
         <li class="nav-item">
           <a class="nav-link active font-weight-bold text-white" aria-current="page" href="#">FAQ</a>
         </li>
-        <li class="nav-item" style="margin-left: 30px;">
-          <a class="btn btn-outline-light" aria-current="page" href="#">Contacts</a>
+        <li class="nav-item">
+          <a class="nav-link active font-weight-bold text-white" aria-current="page" href="#">Contacts</a>
         </li>
       </ul>
       <ul class="navbar-nav" style="margin-left: auto;">
-
-        <li class="nav-item" style="margin-right: 15px;">
-          <a class="btn btn-outline-primary" aria-current="page" href="#">Sign Up</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-outline-success" aria-current="page" href="#">Sign In</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{% static 'images/lk.png' %}" alt="lk" width="35" height="35">
+          </a>
+          <ul class="dropdown-menu">
+            {% if not user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'login' %}">Log In</a></li>
+            <li><a class="dropdown-item" href="{% url 'registration' %}">Sign Up</a></li>
+            <li><a class="dropdown-item" href="{% url 'login' %}">Profile</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'profile' pk=user.pk %}">Profile</a></li>
+            {% endif %}
+          </ul>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
