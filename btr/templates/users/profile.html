@@ -9,8 +9,8 @@
               <div class="card card-bg">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    {% if user.userprofile.profile_image %}
-                    <img src="{{ user.userprofile.profile_image.url }}" alt="user" class="rounded-circle" width="150">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url|safe }}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
                     {% else %}
                     <img src="{% static 'images/user_image.png' %}" alt="user" class="rounded-circle" width="150">
                     {% endif %}

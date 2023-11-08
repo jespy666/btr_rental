@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from btr.users.forms import UserRegistrationForm, UserEditForm
 from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
+from .tasks import send_reg_email
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
@@ -18,6 +19,11 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
         'header': _('Registration'),
         'button': _('Sign Up'),
     }
+
+    def form_valid(self, form):
+        form.save()
+        send_reg_email.delay(form.instance.email)
+        return super().form_valid(form)
 
 
 class UserView(UserAuthRequiredMixin, DetailView):
@@ -38,5 +44,3 @@ class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
     template_name = 'users/edit.html'
     success_message = _('Profile successfully updated')
     success_url = reverse_lazy('home')
-
-

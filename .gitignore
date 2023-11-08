@@ -3,4 +3,5 @@ db.sqlite3
 .idea/
 staticfiles/
 *.pyc
-/__pycache__/
+__pycache__/
+btr/__pycache__/

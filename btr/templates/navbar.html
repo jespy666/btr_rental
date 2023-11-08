@@ -28,17 +28,23 @@
       </ul>
       <ul class="navbar-nav" style="margin-left: auto;">
         <li class="nav-item dropdown">
+          {% if user.profile_image %}
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ user.profile_image.url|safe }}" alt="lk" width="35" height="35" style="border-radius: 50%; object-fit: cover;">
+          </a>
+          {% else %}
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="{% static 'images/lk.png' %}" alt="lk" width="35" height="35">
           </a>
+          {% endif %}
           <ul class="dropdown-menu">
             {% if not user.is_authenticated %}
             <li><a class="dropdown-item" href="{% url 'login' %}">Log In</a></li>
             <li><a class="dropdown-item" href="{% url 'registration' %}">Sign Up</a></li>
             <li><a class="dropdown-item" href="{% url 'login' %}">Profile</a></li>
             {% else %}
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
             <li><a class="dropdown-item" href="{% url 'profile' pk=user.pk %}">Profile</a></li>
+            <li style="background-color: red;"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
             {% endif %}
           </ul>
         </li>

@@ -71,9 +71,14 @@ class UserEditForm(UserCreationForm):
         widget=forms.TextInput(attrs={'id': 'id_phone_number'})
     )
 
+    profile_image = forms.ImageField(
+        required=False,
+    )
+
     class Meta:
         model = SiteUser
         fields = (
+            'profile_image',
             'username',
             'first_name',
             'email',
