@@ -6,7 +6,7 @@ def send(user_email):
     send_mail(
         _('Welcome'),
         _('Welcome  to BroTeamRacing!'),
-        'broteamracing@gmail.com',
+        'broteamracing@yandex.ru',
         [user_email],
         fail_silently=False,
     )

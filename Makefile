@@ -10,3 +10,6 @@ migrate:
 
 celery-run:
 	celery -A btr worker -l info
+
+redis-run:
+	docker run -d -p 6379:6379 redis
