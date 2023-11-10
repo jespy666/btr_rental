@@ -18,6 +18,10 @@
                 {% bootstrap_form form %}
                 <input class="btn btn-success" type="submit" value="{{ button }}">
             </form>
+            {% if header == 'Profile Edit' %}
+            <div class="my-4"></div>
+            <a class="btn btn-danger" href="{% url 'user_delete' pk=user.pk %}">Delete Profile</a>
+            {% endif %}
         </div>
     </div>
 </div>

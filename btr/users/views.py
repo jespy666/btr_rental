@@ -7,6 +7,7 @@ from btr.users.forms import UserRegistrationForm, UserEditForm
 from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .tasks import send_reg_email
+from ..bookings.models import Booking
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
@@ -34,6 +35,20 @@ class UserView(UserAuthRequiredMixin, DetailView):
 
     login_url = 'login'
     permission_denied_message = _('You must to be log in')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        completed_bookings = Booking.objects.filter(
+            rider=user,
+            status__in=['completed', 'canceled'],
+        )
+        current_bookings = Booking.objects.filter(rider=user).exclude(
+            status__in=['completed', 'canceled'],
+        )
+        context['completed_bookings'] = completed_bookings
+        context['current_bookings'] = current_bookings
+        return context
 
 
 class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
