@@ -19,13 +19,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import IndexView
+from .views import IndexView, BriefingView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='home'),
+    path('briefing/', BriefingView.as_view(), name='briefing'),
     path('auth/', include('btr.auth.urls')),
     path('users/', include('btr.users.urls')),
     path('bookings/', include('btr.bookings.urls')),
+    path('reviews/', include('btr.reviews.urls')),
+
     path('admin/', admin.site.urls),
 ]
 

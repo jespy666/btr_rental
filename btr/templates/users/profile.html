@@ -16,7 +16,7 @@
             {% if user.profile_image %}
             <img src="{{ user.profile_image.url|safe }}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
             {% else %}
-            <img src="{% static 'images/user_image.png' %}" alt="user" class="rounded-circle" width="150">
+            <img src="{% static 'images/user_image.png' %}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
             {% endif %}
             <div class="mt-3">
               <h4 class="text-white">{{ user.username }}</h4>

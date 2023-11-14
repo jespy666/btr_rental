@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'btr.auth',
     'btr.users',
     'btr.bookings',
+    'btr.reviews',
     'django_bootstrap5',
 
 ]
