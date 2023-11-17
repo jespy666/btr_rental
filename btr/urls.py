@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import IndexView, BriefingView
+from .views import IndexView, BriefingView, ContactsView, GalleryView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='home'),
@@ -28,7 +28,8 @@ urlpatterns = [
     path('users/', include('btr.users.urls')),
     path('bookings/', include('btr.bookings.urls')),
     path('reviews/', include('btr.reviews.urls')),
-
+    path('contacts/', ContactsView.as_view(), name='contacts'),
+    path('gallery/', GalleryView.as_view(), name='gallery'),
     path('admin/', admin.site.urls),
 ]
 

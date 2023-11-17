@@ -135,6 +135,11 @@ background: #ec407a;
     margin-bottom: 100px;
 }
 
+.m-m-x {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
 .bg-form {
     background-color: rgba(0, 0, 0, 0.4);
 }
@@ -146,4 +151,20 @@ background: #ec407a;
     overflow: hidden;
 }
 
+.container-с {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.image-с {
+    width: 200px;
+    height: auto;
+}
+
+.text-с {
+    flex-grow: 1;
+}
 
