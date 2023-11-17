@@ -13,3 +13,6 @@ celery-run:
 
 redis-run:
 	docker run -d -p 6379:6379 redis
+
+bot:
+	python3 manage.py run_bot
