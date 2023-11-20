@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from btr.users.models import SiteUser
 
@@ -9,6 +10,13 @@ class Booking(models.Model):
     rider = models.ForeignKey(
         SiteUser,
         on_delete=models.PROTECT,
+        null=True,
+    )
+
+    foreign_number = PhoneNumberField(
+        blank=True,
+        unique=True,
+        verbose_name=_('Client\'s phone')
     )
 
     booking_date = models.DateField(
