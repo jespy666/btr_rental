@@ -2,12 +2,16 @@ import logging
 
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
+from django.conf import settings
 from telegram import Update
 from telegram.ext import (ContextTypes, ApplicationBuilder,
                           CommandHandler, MessageHandler, filters,
                           ConversationHandler)
 
-from btr.bookings.db_handlers import create_user_by_bot_as
+from btr.bookings.db_handlers import (create_user_by_bot_as,
+                                      create_booking_by_bot_as,
+                                      check_user_exist_as)
+from btr.bookings.tasks import send_details
 from btr.users.tasks import send_data_from_tg
 
 
@@ -19,6 +23,7 @@ class BookingBot:
     )
     USERNAME, FIRST_NAME, EMAIL, PHONE_NUMBER = range(4)
     EMAIL_CHECK, BOOK_DATE, BOOK_START_TIME, BOOK_HOURS = range(4)
+    ADMIN_CHECK, FOREIGN_PHONE, FOREIGN_START, FOREIGN_END = range(4)
 
     def __init__(self, token: str):
         self.token = token
@@ -136,49 +141,180 @@ class BookingBot:
 
     async def book_command(self, update: Update,
                            context: ContextTypes.DEFAULT_TYPE):
-        message = "Please enter your email to proceed with booking:"
+        message = _(
+            'Please enter your email to proceed with booking:'
+        )
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message
         )
         return self.EMAIL_CHECK
 
-    async def ask_date(self, update: Update, context):
-        context.book_data['book_date'] = update.message.text
-        message = _(
-            'Ok!\nWhat date should you rent?:'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.BOOK_DATE
+    async def check_user_and_ask_date(self, update: Update, context):
+        email = update.message.text
+        if await check_user_exist_as(email):
+            context.user_data['user_email'] = email
+            success_message = _(
+                'User with email {email} find successfully!\n'
+                'Please tell me the date you would like to make'
+                ' a reservation for\n'
+                'in format YYYY-MM-DD:'
+            ).format(email=email)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=success_message,
+            )
+            return self.BOOK_DATE
+        else:
+            message = _(
+                'Can\'t find user with email {email}(\n'
+                'Check your spelling or create a new account:\n'
+                '/create\n'
+                'Or type a /help command'
+            ).format(email=email)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+            return ConversationHandler.END
 
     async def ask_start_time(self, update: Update, context):
-        context.book_data['book_start_time'] = update.message.text
-        date = context.book_data.get('book_date')
+        context.user_data['book_date'] = update.message.text
         message = _(
-            'You will be scheduled for rental on {date}!\n'
-            'What time should you rent?:'
-        ).format(date=date)
-
+            'Ok!\nWhat time should you rent?:\n'
+            'Please, type in format: HH:MM'
+        )
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message
         )
         return self.BOOK_START_TIME
 
-    async def ask_hours_and_save(self, update: Update, context):
-        context.book_data['book_hours'] = update.message.text
+    async def ask_hours(self, update: Update, context):
+        context.user_data['book_start_time'] = update.message.text
+        date = context.user_data.get('book_date')
+        time = context.user_data.get('book_start_time')
         message = _(
-            'How long do you plan to ride?\nEnter the number of hours'
-        )
-        book_data = context.book_data
+            'You will be scheduled for rental on {date}\n'
+            'On {time}\n'
+            'How long do you plan to ride?\n'
+            'Enter the number of hours (example - 1)'
+        ).format(date=date, time=time)
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message
         )
         return self.BOOK_HOURS
+
+    async def make_booking(self, update: Update, context):
+        context.user_data['book_hours'] = int(update.message.text)
+        book_data = context.user_data
+
+        try:
+            interval = await create_booking_by_bot_as(book_data)
+            date = book_data.get('book_date'),
+            start = interval.get('start_time'),
+            end = interval.get('end_time'),
+            email = book_data.get('user_email')
+            message = _(
+                'Booking created successfully!\n'
+                'Details:\n'
+                'Date of ride: {date}\n'
+                'Time of ride: from {start} to {end}\n'
+                'We have sent you complete booking information by email:\n'
+                '{email}'
+            ).format(date=date, start=start, end=end, email=email)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
+            send_details.delay(email, date, start, end)
+
+        except Exception as e:
+            message = f'{str(e)}\n{book_data}'
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
+        finally:
+            return ConversationHandler.END
+
+    async def admin_command(self, update: Update,
+                            context: ContextTypes.DEFAULT_TYPE):
+        message = _(
+            'Hi, admin!\n'
+            'Confirm admin rights, type a password:\n'
+        )
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message
+        )
+        return self.ADMIN_CHECK
+
+    async def check_admin_and_start_booking(self, update: Update, context):
+        password = update.message.text
+        if password == settings.TG_ADMIN_PASSWORD:
+            message = _(
+                'Admin privileges confirmed!\n'
+                'Type rider phone number (for example: +70000000000):'
+            )
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+            return self.FOREIGN_PHONE
+        else:
+            message = _(
+                'Wrong password, try again!\n'
+                '/admin'
+            )
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+            return ConversationHandler.END
+
+    async def ask_admin_date(self, update: Update, context):
+        context.user_data['foreign_phone'] = update.message.text
+        message = _(
+            'Got it!\n'
+            'Type a date for client {phone}\n'
+            'In format YYYY:MM:DD:'
+        ).format(phone=context.user_data.get('foreign_phone'))
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message,
+        )
+        return self.FOREIGN_DATE
+
+    async def ask_admin_start(self, update: Update, context):
+        context.user_data['foreign_date'] = update.message.text
+        message = _(
+            'Ok!\n'
+            'Now enter the time of start in format HH:MM:'
+        )
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message,
+        )
+        return self.FOREIGN_START
+
+    async def ask_admin_end(self, update: Update, context):
+        context.user_data['foreign_start'] = update.message.text
+        message = _(
+            'Ok!\n'
+            'Now enter the time of end in format HH:MM:'
+        )
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message,
+        )
+        return self.FOREIGN_END
+
+    async def make_foreign_book(self, update: Update, context):
+        context.user_data['foreign_end'] = update.message.text
 
     def run(self):
         application = ApplicationBuilder().token(self.token).build()
@@ -216,19 +352,43 @@ class BookingBot:
             states={
                 self.EMAIL_CHECK: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.book_command)
+                                   self.check_user_and_ask_date)
                 ],
-                self.FIRST_NAME: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_date)
-                ],
-                self.EMAIL: [
+                self.BOOK_DATE: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
                                    self.ask_start_time)
                 ],
-                self.PHONE_NUMBER: [
+                self.BOOK_START_TIME: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_hours_and_save)]
+                                   self.ask_hours)
+                ],
+                self.BOOK_HOURS: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.make_booking)]
+            },
+            fallbacks=[]
+        )
+
+        admin_conv_handler = ConversationHandler(
+            entry_points=[
+                CommandHandler('admin', self.admin_command)
+            ],
+            states={
+                self.ADMIN_CHECK: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.check_admin_and_start_booking)
+                ],
+                self.FOREIGN_PHONE: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_admin_date)
+                ],
+                self.FOREIGN_START: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_admin_start)
+                ],
+                self.FOREIGN_END: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.make_booking)]
             },
             fallbacks=[]
         )
@@ -237,5 +397,6 @@ class BookingBot:
         application.add_handler(help_handler)
         application.add_handler(create_conv_handler)
         application.add_handler(booking_conv_handler)
+        application.add_handler(admin_conv_handler)
 
         application.run_polling()

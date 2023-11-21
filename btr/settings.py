@@ -192,3 +192,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 # tg bot setup
 
 TG_BOT_TOKEN = os.getenv('TG_BOT_TOKEN')
+TG_ADMIN_PASSWORD = os.getenv('TG_ADMIN_PASSWORD')

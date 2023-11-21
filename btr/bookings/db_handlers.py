@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from btr.users.models import SiteUser
+from btr.bookings.models import Booking
 from btr.bookings.time_handler import calculate_time_interval
 from asgiref.sync import sync_to_async
 
@@ -23,18 +24,34 @@ def create_user_by_bot(user_data: dict):
     return email, first_name, password
 
 
-def check_user_exist(email):
+def check_user_exist(email: str):
     try:
-        return SiteUser.objects.get(email=email)
+        SiteUser.objects.get(email=email)
+        return True
     except ObjectDoesNotExist:
         return None
 
 
-def create_booking_by_bot(book_data: dict):
-    date = book_data.get('book_date')
-    time = book_data.get('book_start_time')
-    hours = book_data.get('book_hours')
+def create_booking_by_bot(user_data: dict):
+    user_email = user_data.get('user_email')
+    user = SiteUser.objects.get(email=user_email)
+
+    date = user_data.get('book_date')
+    time = user_data.get('book_start_time')
+    hours = user_data.get('book_hours')
     interval = calculate_time_interval(time, hours)
+
+    booking = Booking.objects.create(
+        rider=user,
+        booking_date=date,
+        start_time=interval.get('start_time'),
+        end_time=interval.get('end_time'),
+        status='pending',
+    )
+    booking.save()
+    return interval
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
+check_user_exist_as = sync_to_async(check_user_exist)
+create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
