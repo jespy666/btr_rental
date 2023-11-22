@@ -188,6 +188,12 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'check-booking-status': {
+        'task': 'btr.bookings.tasks.check_booking_status',
+        'schedule': 120.0,
+    },
+}
 
 # tg bot setup
 
