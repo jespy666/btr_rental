@@ -3,6 +3,7 @@ import logging
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
 from django.conf import settings
+
 from telegram import Update
 from telegram.ext import (ContextTypes, ApplicationBuilder,
                           CommandHandler, MessageHandler, filters,
@@ -10,7 +11,8 @@ from telegram.ext import (ContextTypes, ApplicationBuilder,
 
 from btr.bookings.db_handlers import (create_user_by_bot_as,
                                       create_booking_by_bot_as,
-                                      check_user_exist_as)
+                                      check_user_exist_as,
+                                      create_booking_by_admin_as)
 from btr.bookings.tasks import send_details
 from btr.users.tasks import send_data_from_tg
 
@@ -23,12 +25,14 @@ class BookingBot:
     )
     USERNAME, FIRST_NAME, EMAIL, PHONE_NUMBER = range(4)
     EMAIL_CHECK, BOOK_DATE, BOOK_START_TIME, BOOK_HOURS = range(4)
-    ADMIN_CHECK, FOREIGN_PHONE, FOREIGN_START, FOREIGN_END = range(4)
+    (ADMIN_CHECK, FOREIGN_PHONE,
+     FOREIGN_DATE, FOREIGN_START, FOREIGN_END) = range(5)
 
     def __init__(self, token: str):
         self.token = token
 
-    async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+    @staticmethod
+    async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message = _(
             'Hi! I am BroTeamRacing booking bot\n'
             'There are commands that you can type:\n'
@@ -45,13 +49,13 @@ class BookingBot:
             text=message
         )
 
-    async def help_command(self, update: Update,
-                           context: ContextTypes.DEFAULT_TYPE):
+    @staticmethod
+    async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         help_text = _(
             'If you have any questions or problems with your booking,'
             ' please contact me at:\n'
             '+7 999 235-00-91\n'
-            'Or https://vk.me/broteamracing'
+            'Or\nhttps://vk.me/broteamracing'
         )
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -76,7 +80,8 @@ class BookingBot:
         context.user_data['username'] = username_text
         username = context.user_data.get('username')
         message = _(
-            'Great {username}!\nNow, please provide your first name:'
+            'Great {username}!\n'
+            'Now, please provide your first name:'
         ).format(username=username)
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -111,32 +116,30 @@ class BookingBot:
         context.user_data['phone_number'] = update.message.text
 
         collected_data = context.user_data
+        message = ''
         try:
             email, name, password = await create_user_by_bot_as(collected_data)
             send_data_from_tg.delay(email, name, password)
-            success_message = _(
+            message = _(
                 'User created successfully!\n'
                 'An email with your login information will be sent to {email}'
-                'You can track your bookings in your profile on\n'
+                '\nYou can track your bookings in your profile on\n'
                 'broteamracing.ru'
             ).format(USERNAME=self.USERNAME, email=email)
 
-            await context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=success_message
-            )
         except IntegrityError as e:
             error_message = str(e).split(':')[-1].strip()
             error_field = error_message.split('.')[-1].strip()
-            error_text = _(
-                'Field {error_field} already used, try again!'
+            message = _(
+                'Field {error_field} already used, try again!\n'
                 '/create /help'
             ).format(error_field=error_field)
+
+        finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
-                text=error_text
+                text=message
             )
-        finally:
             return ConversationHandler.END
 
     async def book_command(self, update: Update,
@@ -168,7 +171,7 @@ class BookingBot:
             return self.BOOK_DATE
         else:
             message = _(
-                'Can\'t find user with email {email}(\n'
+                'Can\'t find user with email {email} :(\n'
                 'Check your spelling or create a new account:\n'
                 '/create\n'
                 'Or type a /help command'
@@ -208,10 +211,11 @@ class BookingBot:
         )
         return self.BOOK_HOURS
 
-    async def make_booking(self, update: Update, context):
+    @staticmethod
+    async def make_booking(update: Update, context):
         context.user_data['book_hours'] = int(update.message.text)
         book_data = context.user_data
-
+        message = ''
         try:
             interval = await create_booking_by_bot_as(book_data)
             date = book_data.get('book_date'),
@@ -226,19 +230,16 @@ class BookingBot:
                 'We have sent you complete booking information by email:\n'
                 '{email}'
             ).format(date=date, start=start, end=end, email=email)
-            await context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=message
-            )
             send_details.delay(email, date, start, end)
 
         except Exception as e:
-            message = f'{str(e)}\n{book_data}'
+            message = str(e)
+
+        finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message
             )
-        finally:
             return ConversationHandler.END
 
     async def admin_command(self, update: Update,
@@ -258,7 +259,7 @@ class BookingBot:
         if password == settings.TG_ADMIN_PASSWORD:
             message = _(
                 'Admin privileges confirmed!\n'
-                'Type rider phone number (for example: +70000000000):'
+                'Type rider phone number (for example: +71234567890):'
             )
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
@@ -313,8 +314,35 @@ class BookingBot:
         )
         return self.FOREIGN_END
 
-    async def make_foreign_book(self, update: Update, context):
+    @staticmethod
+    async def make_foreign_book(update: Update, context):
         context.user_data['foreign_end'] = update.message.text
+        book_data = context.user_data
+        message = ''
+        try:
+            await create_booking_by_admin_as(book_data)
+            message = _(
+                'Booking created successfully!\n'
+                'Details:\n'
+                'Client\'s phone: {phone}\n'
+                'Date: {date}\n'
+                'From {start} to {end}'
+            ).format(
+                phone=book_data.get('foreign_phone'),
+                date=book_data.get('foreign_date'),
+                start=book_data.get('foreign_start'),
+                end=book_data.get('foreign_end'),
+            )
+
+        except Exception as e:
+            message = str(e)
+
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+            return ConversationHandler.END
 
     def run(self):
         application = ApplicationBuilder().token(self.token).build()
@@ -382,13 +410,18 @@ class BookingBot:
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
                                    self.ask_admin_date)
                 ],
-                self.FOREIGN_START: [
+                self.FOREIGN_DATE: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
                                    self.ask_admin_start)
                 ],
+                self.FOREIGN_START: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_admin_end)
+                ],
                 self.FOREIGN_END: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.make_booking)]
+                                   self.make_foreign_book)
+                ]
             },
             fallbacks=[]
         )

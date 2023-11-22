@@ -52,6 +52,25 @@ def create_booking_by_bot(user_data: dict):
     return interval
 
 
+def create_booking_by_admin(user_data: dict):
+    user = SiteUser.objects.get(username='admin')
+    phone = user_data.get('foreign_phone')
+    date = user_data.get('foreign_date')
+    start_time = user_data.get('foreign_start')
+    end_time = user_data.get('foreign_end')
+
+    booking = Booking.objects.create(
+        rider=user,
+        foreign_number=phone,
+        booking_date=date,
+        start_time=start_time,
+        end_time=end_time,
+        status='confirmed'
+    )
+    booking.save()
+
+
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
 check_user_exist_as = sync_to_async(check_user_exist)
 create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
+create_booking_by_admin_as = sync_to_async(create_booking_by_admin)
