@@ -10,7 +10,6 @@ class Booking(models.Model):
     rider = models.ForeignKey(
         SiteUser,
         on_delete=models.PROTECT,
-        null=True,
     )
 
     foreign_number = PhoneNumberField(
