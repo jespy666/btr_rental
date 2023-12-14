@@ -4,13 +4,19 @@
 
 {% block content %}
 <div class="container text-center text-white lg-m-t">
-  <h1 class="fs-1">{% translate 'Profile' %}</h1>
-  <hr class="my-4">
+  <div class="row">
+        <h1 class="display-5 text-center text-white">{% translate 'Profile' %}</h1>
+        <div class="col"></div>
+        <div class="col text-center">
+            <hr class="h-line mb-5" style="opacity: 1;">
+        </div>
+        <div class="col"></div>
+    </div>
 </div>
 <div class="container">
   <div class="row">
     <div class="col-md-4 mb-3">
-      <div class="card card-bg">
+      <div class="card card-bg h-100">
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
             {% if user.profile_image %}
@@ -153,7 +159,8 @@
       <div class="row text-center text-white">
         <div class="col my-4">
           <h4 class="fs-5">
-          If you liked the ride, leave a <a class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#"><strong>review</strong></a>
+          {% translate 'If you liked the ride, leave a ' %}
+            <a href="https://vk.com/topic-211850637_49522524" style="color: red; font-weight: bold;">{% translate 'review' %}</a>
         </h4>
         </div>
       </div>
