@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from btr.users.models import SiteUser
 from btr.bookings.models import Booking
-from btr.bookings.time_handler import calculate_time_interval
+from btr.bookings.bot_handlers import calculate_time_interval
 from asgiref.sync import sync_to_async
 
 
@@ -29,7 +29,7 @@ def check_user_exist(email: str):
         SiteUser.objects.get(email=email)
         return True
     except ObjectDoesNotExist:
-        return None
+        raise NameError
 
 
 def create_booking_by_bot(user_data: dict):
@@ -39,17 +39,21 @@ def create_booking_by_bot(user_data: dict):
     date = user_data.get('book_date')
     time = user_data.get('book_start_time')
     hours = user_data.get('book_hours')
+    bike_count = user_data.get('bike_count')
     interval = calculate_time_interval(time, hours)
-
-    booking = Booking.objects.create(
-        rider=user,
-        booking_date=date,
-        start_time=interval.get('start_time'),
-        end_time=interval.get('end_time'),
-        status='pending',
-    )
-    booking.save()
-    return interval
+    if interval:
+        booking = Booking.objects.create(
+            rider=user,
+            booking_date=date,
+            start_time=interval.get('start_time'),
+            end_time=interval.get('end_time'),
+            bike_count=bike_count,
+            status='pending',
+        )
+        booking.save()
+        return interval, interval.get('end_time')
+    else:
+        raise ValueError
 
 
 def create_booking_by_admin(user_data: dict):
@@ -58,6 +62,7 @@ def create_booking_by_admin(user_data: dict):
     date = user_data.get('foreign_date')
     start_time = user_data.get('foreign_start')
     end_time = user_data.get('foreign_end')
+    bike_count = user_data.get('bikes_num')
 
     booking = Booking.objects.create(
         rider=user,
@@ -65,6 +70,7 @@ def create_booking_by_admin(user_data: dict):
         booking_date=date,
         start_time=start_time,
         end_time=end_time,
+        bike_count=bike_count,
         status='confirmed'
     )
     booking.save()

@@ -33,6 +33,11 @@ class Booking(models.Model):
         verbose_name=_('Time of end')
     )
 
+    bike_count = models.IntegerField(
+        blank=False,
+        verbose_name=_('bikes_count')
+    )
+
     STATUS_CHOICES = [
         ('pending', _('wait to confirm')),
         ('confirmed', _('accepted')),
@@ -52,6 +57,12 @@ class Booking(models.Model):
     )
 
     def __str__(self):
-        return (f'Book user {self.rider.id} on {self.booking_date}'
-                f' from {self.start_time} to {self.end_time},'
-                f' status: {self.status}')
+        str_view = _(
+            'Status: {status}. Date: {date} {start} - {end}'
+        ).format(
+            status=self.status,
+            date=self.booking_date,
+            start=self.start_time,
+            end=self.end_time,
+        )
+        return str_view

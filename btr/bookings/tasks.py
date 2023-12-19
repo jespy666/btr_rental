@@ -7,8 +7,8 @@ from btr.celery import app
 
 
 @app.task
-def send_details(user_email, date, start, end):
-    send_booking_details(user_email, date, start, end)
+def send_details(user_email, date, start, end, bike_count):
+    send_booking_details(user_email, date, start, end, bike_count)
 
 
 @shared_task

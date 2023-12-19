@@ -14,6 +14,9 @@ from btr.bookings.db_handlers import (create_user_by_bot_as,
                                       check_user_exist_as,
                                       create_booking_by_admin_as)
 from btr.bookings.tasks import send_details
+from btr.bookings.bot_validators import validate_bike_quantity, \
+    validate_phone_number, validate_date, validate_time, validate_time_range, \
+    validate_email
 from btr.users.tasks import send_data_from_tg
 
 
@@ -24,9 +27,9 @@ class BookingBot:
         level=logging.INFO
     )
     USERNAME, FIRST_NAME, EMAIL, PHONE_NUMBER = range(4)
-    EMAIL_CHECK, BOOK_DATE, BOOK_START_TIME, BOOK_HOURS = range(4)
-    (ADMIN_CHECK, FOREIGN_PHONE,
-     FOREIGN_DATE, FOREIGN_START, FOREIGN_END) = range(5)
+    EMAIL_CHECK, BIKE_COUNT, BOOK_DATE, BOOK_START_TIME, BOOK_HOURS = range(5)
+    (ADMIN_CHECK, BIKES_NUM, FOREIGN_PHONE,
+     FOREIGN_DATE, FOREIGN_START, FOREIGN_END) = range(6)
 
     def __init__(self, token: str):
         self.token = token
@@ -36,12 +39,12 @@ class BookingBot:
         message = _(
             'Hi! I am BroTeamRacing booking bot\n'
             'There are commands that you can type:\n'
-            'To create at account (required for booking): /create\n'
+            'To create an account (required for booking): /create\n'
             'To book ride right now: /book\n'
-            'To see help - /help\n'
-            'By details you can visit our web-site\n'
+            'To see help message: /help\n'
+            'By details you can visit our web-site:\n'
             'broteamracing.ru\n'
-            'or vk-group\n'
+            'or vk-group:\n'
             'vk.com/broteamracing'
         )
         await context.bot.send_message(
@@ -104,7 +107,8 @@ class BookingBot:
         context.user_data['email'] = update.message.text
         message = _(
             'We are almost finished, all that remains is to enter '
-            'the phone number:\nPhone number must be in format: +77777777777'
+            'the phone number:\n'
+            'Phone number must be in format: +7 (XXX) XXX-XX-XX'
         )
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -154,84 +158,141 @@ class BookingBot:
         )
         return self.EMAIL_CHECK
 
-    async def check_user_and_ask_date(self, update: Update, context):
+    async def check_user_and_ask_bike_count(self, update: Update, context):
         email = update.message.text
-        if await check_user_exist_as(email):
+        message = ''
+        try:
+            await check_user_exist_as(email)
+            validate_email(email)
             context.user_data['user_email'] = email
-            success_message = _(
+            message = _(
                 'User with email {email} find successfully!\n'
-                'Please tell me the date you would like to make'
-                ' a reservation for\n'
-                'in format YYYY-MM-DD:'
+                'Please tell me, how many bikes you want to rent?\n'
+                'Min: 1, Max: 4'
             ).format(email=email)
-            await context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=success_message,
-            )
-            return self.BOOK_DATE
-        else:
+            return self.BIKE_COUNT
+        except ValueError:
+            message = _(
+                'Invalid email format: {email}!\n'
+                'Check your spelling and try again:'
+            ).format(email=email)
+        except NameError:
             message = _(
                 'Can\'t find user with email {email} :(\n'
-                'Check your spelling or create a new account:\n'
-                '/create\n'
-                'Or type a /help command'
+                'Check your spelling or create a new account: /create\n'
+                'Type a help command: /help\n'
+                'Or try again:'
             ).format(email=email)
+        finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message,
             )
-            return ConversationHandler.END
+
+    async def ask_date(self, update: Update, context):
+        bike_count = update.message.text
+        message = ''
+        try:
+            validate_bike_quantity(bike_count)
+            context.user_data['bike_count'] = bike_count
+            message = _(
+                'Ok! You are served {bike_count} bikes in this ride.'
+                'Now please tell me the date you would like to make'
+                ' a reservation for\n'
+                'in format YYYY-MM-DD:'
+            ).format(bike_count=bike_count)
+            return self.BOOK_DATE
+        except ValueError:
+            message = _(
+                'Invalid bikes rental count: {bike_count}!\n'
+                'Bikes count must be at 1-4\n'
+                'Try again!'
+            ).format(bike_count=bike_count)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
 
     async def ask_start_time(self, update: Update, context):
-        context.user_data['book_date'] = update.message.text
-        message = _(
-            'Ok!\nWhat time should you rent?:\n'
-            'Please, type in format: HH:MM'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.BOOK_START_TIME
+        date = update.message.text
+        message = ''
+        try:
+            validate_date(date)
+            context.user_data['book_date'] = date
+            message = _(
+                'Ok!\n'
+                'What time should you rent?:\n'
+                'Please, type in format: HH:MM'
+            )
+            return self.BOOK_START_TIME
+        except ValueError:
+            message = _(
+                'Invalid date format: {date}!\n'
+                'Date format must be: YYYY-MM-DD (with "-")\n'
+                'Try again!'
+            )
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
 
     async def ask_hours(self, update: Update, context):
-        context.user_data['book_start_time'] = update.message.text
-        date = context.user_data.get('book_date')
-        time = context.user_data.get('book_start_time')
-        message = _(
-            'You will be scheduled for rental on {date}\n'
-            'On {time}\n'
-            'How long do you plan to ride?\n'
-            'Enter the number of hours (example - 1)'
-        ).format(date=date, time=time)
-
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.BOOK_HOURS
+        start = update.message.text
+        message = ''
+        try:
+            validate_time(start)
+            context.user_data['book_start_time'] = start
+            date = context.user_data.get('book_date')
+            message = _(
+                'You will be scheduled for rental on {date}\n'
+                'On {time}\n'
+                'How long do you plan to ride?\n'
+                'Enter the number of hours (example: 3):'
+            ).format(date=date, time=start)
+            return self.BOOK_HOURS
+        except ValueError:
+            message = _(
+                'Invalid time format: {start}!\n'
+                'Correct format is: HH:MM\n'
+                'Try again!'
+            )
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
 
     @staticmethod
     async def make_booking(update: Update, context):
-        context.user_data['book_hours'] = int(update.message.text)
+        hours = update.message.text
+        context.user_data['book_hours'] = hours
         book_data = context.user_data
         message = ''
         try:
             interval = await create_booking_by_bot_as(book_data)
-            date = book_data.get('book_date'),
-            start = interval.get('start_time'),
-            end = interval.get('end_time'),
+            date = book_data.get('book_date')
+            start = interval.get('start_time')
+            end = interval.get('end_time')
+            validate_time_range(start, end)
             email = book_data.get('user_email')
+            bike_count = book_data.get('book_count')
             message = _(
                 'Booking created successfully!\n'
                 'Details:\n'
                 'Date of ride: {date}\n'
                 'Time of ride: from {start} to {end}\n'
+                'Number of bikes in the booking: {bike_count}\n'
                 'We have sent you complete booking information by email:\n'
                 '{email}'
-            ).format(date=date, start=start, end=end, email=email)
-            send_details.delay(email, date, start, end)
-
+            ).format(date=date, start=start, end=end,
+                     bike_count=bike_count, email=email)
+            send_details.delay(email, date, start, end, bike_count)
+        except ValueError:
+            message = _(
+                'Invalid end time'
+            )
         except Exception as e:
             message = str(e)
 
@@ -254,18 +315,19 @@ class BookingBot:
         )
         return self.ADMIN_CHECK
 
-    async def check_admin_and_start_booking(self, update: Update, context):
+    async def check_admin_and_ask_bikes_num(self, update: Update, context):
         password = update.message.text
         if password == settings.TG_ADMIN_PASSWORD:
             message = _(
                 'Admin privileges confirmed!\n'
-                'Type rider phone number (for example: +71234567890):'
+                'How many bikes should i rent?\n'
+                'Min: 1, Max: 4'
             )
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message,
             )
-            return self.FOREIGN_PHONE
+            return self.BIKES_NUM
         else:
             message = _(
                 'Wrong password, try again!\n'
@@ -275,74 +337,141 @@ class BookingBot:
                 chat_id=update.effective_chat.id,
                 text=message,
             )
-            return ConversationHandler.END
+            # return ConversationHandler.END
 
-    async def ask_admin_date(self, update: Update, context):
-        context.user_data['foreign_phone'] = update.message.text
-        message = _(
-            'Got it!\n'
-            'Type a date for client {phone}\n'
-            'In format YYYY:MM:DD:'
-        ).format(phone=context.user_data.get('foreign_phone'))
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message,
-        )
-        return self.FOREIGN_DATE
-
-    async def ask_admin_start(self, update: Update, context):
-        context.user_data['foreign_date'] = update.message.text
-        message = _(
-            'Ok!\n'
-            'Now enter the time of start in format HH:MM:'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message,
-        )
-        return self.FOREIGN_START
-
-    async def ask_admin_end(self, update: Update, context):
-        context.user_data['foreign_start'] = update.message.text
-        message = _(
-            'Ok!\n'
-            'Now enter the time of end in format HH:MM:'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message,
-        )
-        return self.FOREIGN_END
-
-    @staticmethod
-    async def make_foreign_book(update: Update, context):
-        context.user_data['foreign_end'] = update.message.text
-        book_data = context.user_data
+    async def ask_foreign_phone(self, update: Update, context):
+        bikes_num = update.message.text
         message = ''
         try:
-            await create_booking_by_admin_as(book_data)
+            validate_bike_quantity(bikes_num)
+            context.user_data['bikes_num'] = update.message.text
             message = _(
-                'Booking created successfully!\n'
-                'Details:\n'
-                'Client\'s phone: {phone}\n'
-                'Date: {date}\n'
-                'From {start} to {end}'
-            ).format(
-                phone=book_data.get('foreign_phone'),
-                date=book_data.get('foreign_date'),
-                start=book_data.get('foreign_start'),
-                end=book_data.get('foreign_end'),
+                'Ok!\n'
+                'Type rider phone number (for example: +71234567890):'
             )
-
-        except Exception as e:
-            message = str(e)
-
+            return self.FOREIGN_PHONE
+        except ValueError:
+            message = _(
+                'Bike count {bikes_num} is invalid!\n'
+                'The valid counter is at 1-4!\n'
+                'Try again'
+            ).format(bikes_num=bikes_num)
         finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message,
             )
+
+    async def ask_admin_date(self, update: Update, context):
+        foreign_phone = update.message.text
+        message = ''
+        try:
+            validate_phone_number(foreign_phone)
+            context.user_data['foreign_phone'] = foreign_phone
+            message = _(
+                'Got it!\n'
+                'Type a date for client: {phone}\n'
+                'In format YYYY-MM-DD:'
+            ).format(phone=context.user_data.get('foreign_phone'))
+            return self.FOREIGN_DATE
+        except ValueError:
+            message = _(
+                'Invalid phone number: {phone}!\n'
+                'Phone number format must be: +71234567890\n'
+                'Try again!'
+            ).format(phone=foreign_phone)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+
+    async def ask_admin_start(self, update: Update, context):
+        foreign_date = update.message.text
+        message = ''
+        try:
+            validate_date(foreign_date)
+            context.user_data['foreign_date'] = foreign_date
+            message = _(
+                'Ok!\n'
+                'Now enter the time of start in format HH:MM:'
+            )
+            return self.FOREIGN_START
+        except ValueError:
+            message = _(
+                'Invalid date format: {date}!\n'
+                'Date format must be: YYYY-MM-DD (with "-")\n'
+                'Try again!'
+            ).format(date=foreign_date)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+
+    async def ask_admin_end(self, update: Update, context):
+        start = update.message.text
+        message = ''
+        try:
+            validate_time(start)
+            context.user_data['foreign_start'] = start
+            message = _(
+                'Ok!\n'
+                'Now enter the time of end in format HH:MM:'
+            )
+            return self.FOREIGN_END
+        except ValueError:
+            message = _(
+                'Invalid time format: {start}!\n'
+                'Time format must be: HH:MM (with ":")\n'
+                'Try again!'
+            ).format(start=start)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
+
+    @staticmethod
+    async def make_foreign_book(update: Update, context):
+        start = context.user_data.get('foreign_start')
+        end = update.message.text
+        message = ''
+        try:
+            validate_time(end)
+            validate_time_range(start, end)
+            context.user_data['foreign_end'] = end
+            book_data = context.user_data
+            await create_booking_by_admin_as(book_data)
+            message = _(
+                'Booking created successfully!\n'
+                'Details:\n'
+                'Bikes rented: {bikes_num}\n'
+                'Client\'s phone: {phone}\n'
+                'Date: {date}\n'
+                'From {start} to {end}'
+            ).format(
+                bikes_num=book_data.get('bikes_num'),
+                phone=book_data.get('foreign_phone'),
+                date=book_data.get('foreign_date'),
+                start=book_data.get('foreign_start'),
+                end=book_data.get('foreign_end'),
+            )
             return ConversationHandler.END
+        except ValueError:
+            message = _(
+                'End time must be greater than Start time!\n'
+                'Your Start: {start}\n'
+                'Your End: {end}\n'
+                'Try again!'
+            ).format(start=start, end=end)
+        except Exception as e:
+            message = str(e)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message,
+            )
 
     def run(self):
         application = ApplicationBuilder().token(self.token).build()
@@ -380,7 +509,11 @@ class BookingBot:
             states={
                 self.EMAIL_CHECK: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.check_user_and_ask_date)
+                                   self.check_user_and_ask_bike_count)
+                ],
+                self.BIKE_COUNT: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_date)
                 ],
                 self.BOOK_DATE: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
@@ -404,7 +537,11 @@ class BookingBot:
             states={
                 self.ADMIN_CHECK: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.check_admin_and_start_booking)
+                                   self.check_admin_and_ask_bikes_num)
+                ],
+                self.BIKES_NUM: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_foreign_phone)
                 ],
                 self.FOREIGN_PHONE: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
