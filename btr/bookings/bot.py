@@ -1,6 +1,5 @@
 import logging
 
-from django.db import IntegrityError
 from django.utils.translation import gettext as _
 from django.conf import settings
 
@@ -9,15 +8,21 @@ from telegram.ext import (ContextTypes, ApplicationBuilder,
                           CommandHandler, MessageHandler, filters,
                           ConversationHandler)
 
+from btr.bookings.bot_handlers import generate_verification_code, \
+    check_verification_code
 from btr.bookings.db_handlers import (create_user_by_bot_as,
                                       create_booking_by_bot_as,
                                       check_user_exist_as,
-                                      create_booking_by_admin_as)
+                                      create_booking_by_admin_as,
+                                      check_available_field_as,
+                                      reset_user_password_as,
+                                      )
 from btr.bookings.tasks import send_details
 from btr.bookings.bot_validators import validate_bike_quantity, \
     validate_phone_number, validate_date, validate_time, validate_time_range, \
-    validate_email
-from btr.users.tasks import send_data_from_tg
+    validate_email, validate_hours, validate_first_name
+from btr.users.tasks import send_data_from_tg, send_verification_code_from_tg, \
+    send_recover_message_from_tg
 
 
 class BookingBot:
@@ -30,6 +35,7 @@ class BookingBot:
     EMAIL_CHECK, BIKE_COUNT, BOOK_DATE, BOOK_START_TIME, BOOK_HOURS = range(5)
     (ADMIN_CHECK, BIKES_NUM, FOREIGN_PHONE,
      FOREIGN_DATE, FOREIGN_START, FOREIGN_END) = range(6)
+    RESET_EMAIL, VERIFICATION_CODE = range(2)
 
     def __init__(self, token: str):
         self.token = token
@@ -65,12 +71,96 @@ class BookingBot:
             text=help_text
         )
 
-    async def create_command(self, update: Update,
-                             context: ContextTypes.DEFAULT_TYPE):
+    @staticmethod
+    async def unknown_command(update: Update,
+                              context: ContextTypes.DEFAULT_TYPE):
+        command = update.message.text
+        message = _(
+            'Unknown command: {command} !\n'
+            'You can see available commands below:\n'
+            '/start - to see main page\n'
+            '/help - to see help message\n'
+            '/create - to create an account\n'
+            '/book - to book ride (required account)\n'
+            '/reset - to reset your forgotten password'
+        ).format(command=command)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message
+        )
+
+    async def reset_command_and_ask_email(
+            self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ):
+        message = _(
+            'Enter a valid email to which a confirmation code will be sent:'
+        )
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message
+        )
+        return self.RESET_EMAIL
+
+    async def ask_verification_code(self, update: Update, context):
+        email = update.message.text
+        message = ''
+        try:
+            await check_user_exist_as(email)
+            context.user_data['reset_email'] = email
+            message = _(
+                'Verification code was sent by {email} !\n'
+                'Write the six-digit code from the email:'
+            ).format(email=email)
+            code = generate_verification_code()
+            context.user_data['ver_code'] = code
+            send_verification_code_from_tg.delay(email, code)
+            return self.VERIFICATION_CODE
+        except NameError:
+            message = _(
+                'User with email {email} does not exist!\n'
+                'Try spell email again (case sensitive)\n'
+                'Or create a new account: /create'
+            ).format(email=email)
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
+
+    @staticmethod
+    async def send_reset_password(update: Update, context):
+        code = update.message.text
+        source_code = context.user_data.get('ver_code')
+        user_email = context.user_data.get('reset_email')
+        message = ''
+        try:
+            check_verification_code(source_code, code)
+            password = await reset_user_password_as(user_email)
+            send_recover_message_from_tg.delay(user_email, password)
+            message = _(
+                'Password was reset successfully!\n'
+                'A new sign in info was sent to your email:\n'
+                '{email}'
+            ).format(email=user_email)
+            return ConversationHandler.END
+        except ValueError:
+            message = _(
+                'Verification codes does not match!\n'
+                'Try spell verification code again:'
+            )
+        finally:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
+
+    async def create_command_and_ask_username(
+            self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ):
         message = _(
             'Let\'s create an account!\n'
             'Please, provide a Username\n'
-            '*max length no more 40 symbols:'
+            '*max length 40 symbols:'
         )
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -78,73 +168,142 @@ class BookingBot:
         )
         return self.USERNAME
 
-    async def ask_username(self, update: Update, context):
-        username_text = update.message.text
-        context.user_data['username'] = username_text
-        username = context.user_data.get('username')
-        message = _(
-            'Great {username}!\n'
-            'Now, please provide your first name:'
-        ).format(username=username)
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.FIRST_NAME
-
     async def ask_first_name(self, update: Update, context):
-        context.user_data['first_name'] = update.message.text
-        message = _(
-            'Super! Now i need your valid Email:'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.EMAIL
+        username = update.message.text
+        is_username_available = await check_available_field_as(username)
+        message = ''
+        if is_username_available:
+            try:
+                validate_first_name(username)
+                context.user_data['username'] = username
+                message = _(
+                    'Great {username}!\n'
+                    'Now, please provide your first name:'
+                ).format(username=username)
+                return self.FIRST_NAME
+            except ValueError:
+                message = _(
+                    'Username can\'t be greater than 40 symbols!\n'
+                    'Try again!'
+                )
+            finally:
+                await context.bot.send_message(
+                    chat_id=update.effective_chat.id,
+                    text=message
+                )
+        else:
+            message = _(
+                'User with Username: {username} already exists!\n'
+                'Try another one!:'
+            ).format(username=username)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
 
     async def ask_email(self, update: Update, context):
-        context.user_data['email'] = update.message.text
-        message = _(
-            'We are almost finished, all that remains is to enter '
-            'the phone number:\n'
-            'Phone number must be in format: +7 (XXX) XXX-XX-XX'
-        )
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message
-        )
-        return self.PHONE_NUMBER
-
-    async def ask_phone_and_create(self, update: Update, context):
-        context.user_data['phone_number'] = update.message.text
-
-        collected_data = context.user_data
+        first_name = update.message.text
         message = ''
         try:
-            email, name, password = await create_user_by_bot_as(collected_data)
-            send_data_from_tg.delay(email, name, password)
+            validate_first_name(first_name)
+            context.user_data['first_name'] = first_name
             message = _(
-                'User created successfully!\n'
-                'An email with your login information will be sent to {email}'
-                '\nYou can track your bookings in your profile on\n'
-                'broteamracing.ru'
-            ).format(USERNAME=self.USERNAME, email=email)
-
-        except IntegrityError as e:
-            error_message = str(e).split(':')[-1].strip()
-            error_field = error_message.split('.')[-1].strip()
+                'Super, {name}!\n'
+                'Now i need your valid Email:'
+            ).format(name=first_name)
+            return self.EMAIL
+        except ValueError:
             message = _(
-                'Field {error_field} already used, try again!\n'
-                '/create /help'
-            ).format(error_field=error_field)
-
+                'The first name length greater than 40 symbols!\n'
+                'Max length are 40 symbols!\n'
+                'Try again!'
+            )
         finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message
             )
-            return ConversationHandler.END
+
+    async def ask_phone_number(self, update: Update, context):
+        email = update.message.text
+        message = ''
+        is_email_available = await check_available_field_as(email)
+        if is_email_available:
+            try:
+                validate_email(email)
+                context.user_data['email'] = email
+                message = _(
+                    'We are almost finished, all that remains is to enter '
+                    'the phone number:\n'
+                    'Phone number must be in format: +71234567890:'
+                )
+                return self.PHONE_NUMBER
+            except ValueError:
+                message = _(
+                    'Invalid email format: {email}!\n'
+                    'Check your spelling and try again!'
+                ).format(email=email)
+            finally:
+                await context.bot.send_message(
+                    chat_id=update.effective_chat.id,
+                    text=message
+                )
+        else:
+            message = _(
+                'User with email: {email} already exists!\n'
+                'If you have lost access to your account,\n'
+                'you can reset your password by command: /reset\n'
+                'Or type email again:'
+            ).format(email=email)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
+
+    @staticmethod
+    async def create_account(update: Update, context):
+        phone_number = update.message.text
+        message = ''
+        is_phone_available = await check_available_field_as(phone_number)
+        if is_phone_available:
+            try:
+                context.user_data['phone_number'] = phone_number
+                user_data = context.user_data
+                password = await create_user_by_bot_as(user_data)
+                send_data_from_tg.delay(
+                    user_data.get('email'),
+                    user_data.get('first_name'),
+                    user_data.get('username'),
+                    user_data.get('phone_number'),
+                    password,
+                )
+                message = _(
+                    'User created successfully!\n'
+                    'An email with your login information will be sent to '
+                    '{email}'
+                    '\nYou can check your bookings status in your profile on\n'
+                    'broteamracing.ru'
+                ).format(email=user_data.get('email'))
+                return ConversationHandler.END
+            #  String for dev env, remove before deployment!!!
+            except Exception as e:
+                message = str(e)
+            finally:
+                await context.bot.send_message(
+                    chat_id=update.effective_chat.id,
+                    text=message
+                )
+        else:
+            message = _(
+                'User with phone number: {phone} already exists!\n'
+                'If you have lost access to your account,\n'
+                'you can reset your password by command: /reset\n'
+                'Or type phone number again:'
+            ).format(phone=phone_number)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=message
+            )
 
     async def book_command(self, update: Update,
                            context: ContextTypes.DEFAULT_TYPE):
@@ -230,8 +389,9 @@ class BookingBot:
             message = _(
                 'Invalid date format: {date}!\n'
                 'Date format must be: YYYY-MM-DD (with "-")\n'
+                'Rent day cannot be in past!'
                 'Try again!'
-            )
+            ).format(date=date)
         finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
@@ -257,7 +417,7 @@ class BookingBot:
                 'Invalid time format: {start}!\n'
                 'Correct format is: HH:MM\n'
                 'Try again!'
-            )
+            ).format(start=start)
         finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
@@ -271,13 +431,13 @@ class BookingBot:
         book_data = context.user_data
         message = ''
         try:
+            validate_hours(hours)
+            email = book_data.get('user_email')
             interval = await create_booking_by_bot_as(book_data)
             date = book_data.get('book_date')
             start = interval.get('start_time')
             end = interval.get('end_time')
-            validate_time_range(start, end)
-            email = book_data.get('user_email')
-            bike_count = book_data.get('book_count')
+            bike_count = book_data.get('bike_count')
             message = _(
                 'Booking created successfully!\n'
                 'Details:\n'
@@ -289,19 +449,25 @@ class BookingBot:
             ).format(date=date, start=start, end=end,
                      bike_count=bike_count, email=email)
             send_details.delay(email, date, start, end, bike_count)
+            return ConversationHandler.END
+        except NameError:
+            message = _(
+                'Can\'t find phone number to user {email}!\n'
+            ).format(email=context.user_data.get('user_email'))
         except ValueError:
             message = _(
-                'Invalid end time'
-            )
+                'Invalid hours rate: {hours}!\n'
+                'Type format: 1-24\n'
+                'Try again!'
+            ).format(hours=hours)
+        # DEV string, remove before deployment!!!
         except Exception as e:
             message = str(e)
-
         finally:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=message
             )
-            return ConversationHandler.END
 
     async def admin_command(self, update: Update,
                             context: ContextTypes.DEFAULT_TYPE):
@@ -337,7 +503,6 @@ class BookingBot:
                 chat_id=update.effective_chat.id,
                 text=message,
             )
-            # return ConversationHandler.END
 
     async def ask_foreign_phone(self, update: Update, context):
         bikes_num = update.message.text
@@ -478,26 +643,32 @@ class BookingBot:
 
         start_handler = CommandHandler('start', self.start)
         help_handler = CommandHandler('help', self.help_command)
+        unknown_command_handler = MessageHandler(
+            filters.COMMAND,
+            self.unknown_command
+        )
         create_conv_handler = ConversationHandler(
             entry_points=[
-                CommandHandler('create', self.create_command)
+                CommandHandler(
+                    'create', self.create_command_and_ask_username
+                )
             ],
             states={
                 self.USERNAME: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_username)
+                                   self.ask_first_name)
                 ],
                 self.FIRST_NAME: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_first_name)
+                                   self.ask_email)
                 ],
                 self.EMAIL: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_email)
+                                   self.ask_phone_number)
                 ],
                 self.PHONE_NUMBER: [
                     MessageHandler(filters.TEXT & ~filters.COMMAND,
-                                   self.ask_phone_and_create)]
+                                   self.create_account)]
             },
             fallbacks=[]
         )
@@ -562,11 +733,31 @@ class BookingBot:
             },
             fallbacks=[]
         )
+        password_reset_handler = ConversationHandler(
+            entry_points=[
+                CommandHandler(
+                    'reset', self.reset_command_and_ask_email
+                )
+            ],
+            states={
+                self.RESET_EMAIL: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.ask_verification_code)
+                ],
+                self.VERIFICATION_CODE: [
+                    MessageHandler(filters.TEXT & ~filters.COMMAND,
+                                   self.send_reset_password)
+                ],
+            },
+            fallbacks=[]
+        )
 
         application.add_handler(start_handler)
         application.add_handler(help_handler)
         application.add_handler(create_conv_handler)
         application.add_handler(booking_conv_handler)
         application.add_handler(admin_conv_handler)
+        application.add_handler(password_reset_handler)
+        application.add_handler(unknown_command_handler)
 
         application.run_polling()

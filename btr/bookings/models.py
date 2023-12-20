@@ -14,7 +14,7 @@ class Booking(models.Model):
 
     foreign_number = PhoneNumberField(
         blank=True,
-        unique=True,
+        unique=False,
         verbose_name=_('Client\'s phone')
     )
 
