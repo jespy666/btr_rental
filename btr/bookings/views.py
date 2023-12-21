@@ -1,11 +1,29 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, \
+    TemplateView
 from django.utils.translation import gettext as _
+import datetime
+import calendar
 
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .models import Booking
 from .forms import BookingForm
+
+
+class BookingIndexView(TemplateView):
+    template_name = 'bookings/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = datetime.datetime.now()
+        current_year = now.year
+        current_month = now.month
+        current_cal = calendar.monthcalendar(current_year, current_month)
+        context['calendar'] = current_cal
+        context['current_month'] = calendar.month_name[current_month]
+        context['current_year'] = current_year
+        return context
 
 
 class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,

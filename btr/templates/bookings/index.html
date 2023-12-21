@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <h3 class="fs-3 text-white text-center mt-4">{% translate 'Below you can select the available day and time for rental' %}</h3>
+            <hr class="h-line" style="opacity: 1;">
+            <table class="table text-white mt-4">
+                <thead>
+                   <tr class="text-center">
+                       <th scope="col" colspan="7">{{ current_month }}, {{ current_year }}</th>
+                   </tr>
+                   <tr>
+                       <th scope="col">{% translate 'Sunday' %}</th>
+                       <th scope="col">{% translate 'Monday' %}</th>
+                       <th scope="col">{% translate 'Tuesday' %}</th>
+                       <th scope="col">{% translate 'Wednesday' %}</th>
+                       <th scope="col">{% translate 'Thursday' %}</th>
+                       <th scope="col">{% translate 'Friday' %}</th>
+                       <th scope="col">{% translate 'Saturday' %}</th>
+                   </tr>
+                </thead>
+                <tbody>
+                  {% for week in calendar %}
+                    <tr>
+                      {% for day in week %}
+                        {% if day == 0 %}
+                          <td style="width: calc(100% / 7);"></td>
+                        {% else %}
+                          <td style="width: calc(100% / 7);">{{ day }}</td>
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+{% endblock %}

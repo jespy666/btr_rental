@@ -1,4 +1,5 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 
 
@@ -58,15 +59,22 @@ def send_verification_code(user_email, code):
 
 def send_recover_message(user_email, password):
     subject = _('Recovered Sign in message')
-    message = _(
+    html_content = render_to_string(
+        'email/recover.html', {
+            'email': user_email,
+            'password': password
+        }
+    )
+    text_content = _(
         'There are recovered data to sign in:\n'
         'Login: {email}\n'
         'Password: {password}\n'
     ).format(email=user_email, password=password)
-    send_mail(
+    msg = EmailMultiAlternatives(
         subject,
-        message,
+        text_content,
         'broteamracing@yandex.ru',
-        [user_email],
-        fail_silently=False,
+        [user_email]
     )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
