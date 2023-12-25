@@ -1,45 +1,110 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load django_bootstrap5 %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
+        <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-8 col-12">
             <h3 class="fs-3 text-white text-center mt-4">{% translate 'Below you can select the available day and time for rental' %}</h3>
             <hr class="h-line" style="opacity: 1;">
-            <table class="table text-white mt-4">
-                <thead>
-                   <tr class="text-center">
-                       <th scope="col" colspan="7">{{ current_month }}, {{ current_year }}</th>
-                   </tr>
-                   <tr>
-                       <th scope="col">{% translate 'Sunday' %}</th>
-                       <th scope="col">{% translate 'Monday' %}</th>
-                       <th scope="col">{% translate 'Tuesday' %}</th>
-                       <th scope="col">{% translate 'Wednesday' %}</th>
-                       <th scope="col">{% translate 'Thursday' %}</th>
-                       <th scope="col">{% translate 'Friday' %}</th>
-                       <th scope="col">{% translate 'Saturday' %}</th>
-                   </tr>
-                </thead>
-                <tbody>
-                  {% for week in calendar %}
-                    <tr>
-                      {% for day in week %}
-                        {% if day == 0 %}
-                          <td style="width: calc(100% / 7);"></td>
-                        {% else %}
-                          <td style="width: calc(100% / 7);">{{ day }}</td>
-                        {% endif %}
-                      {% endfor %}
-                    </tr>
-                  {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive table-responsive-sm mt-4">
+                <table class="table text-white text-center">
+                    <thead>
+                       <tr class="text-center">
+                           <th scope="col" colspan="7">{{ current_month }}, {{ current_year }}</th>
+                       </tr>
+                       <tr>
+                           <th scope="col">{% translate 'Monday' %}</th>
+                           <th scope="col">{% translate 'Tuesday' %}</th>
+                           <th scope="col">{% translate 'Wednesday' %}</th>
+                           <th scope="col">{% translate 'Thursday' %}</th>
+                           <th scope="col">{% translate 'Friday' %}</th>
+                           <th scope="col">{% translate 'Saturday' %}</th>
+                           <th scope="col">{% translate 'Sunday' %}</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in current_calendar %}
+                            <tr>
+                                {% for day in week %}
+                                    {% with number=day.0 load=day.1 %}
+                                        {% if number == 0 %}
+                                            <td style="width: calc(100% / 7);"></td>
+                                        {% else %}
+                                            {% if load < 30 %}
+                                                <td style="width: calc(100% / 7);">{{ number }}</td>
+                                            {% elif load > 70 %}
+                                                <td style="width: calc(100% / 7); background-color: rgba(255, 0, 0, 0.7);">{{ number }}</td>
+                                            {% else %}
+                                                <td style="width: calc(100% / 7); background-color: rgba(255, 165, 0, 0.7);">{{ number }}</td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table text-white text-center mt-4">
+                    <thead>
+                       <tr class="text-center">
+                           <th scope="col" colspan="7">{{ next_month }}, {{ next_year }}</th>
+                       </tr>
+                       <tr>
+                           <th scope="col">{% translate 'Monday' %}</th>
+                           <th scope="col">{% translate 'Tuesday' %}</th>
+                           <th scope="col">{% translate 'Wednesday' %}</th>
+                           <th scope="col">{% translate 'Thursday' %}</th>
+                           <th scope="col">{% translate 'Friday' %}</th>
+                           <th scope="col">{% translate 'Saturday' %}</th>
+                           <th scope="col">{% translate 'Sunday' %}</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in next_calendar %}
+                            <tr>
+                                {% for day in week %}
+                                    {% with number=day.0 load=day.1 %}
+                                        {% if number == 0 %}
+                                            <td style="width: calc(100% / 7);"></td>
+                                        {% else %}
+                                            {% if load < 30 %}
+                                                <td style="width: calc(100% / 7);">{{ number }}</td>
+                                            {% elif load > 70 %}
+                                                <td style="width: calc(100% / 7); background-color: rgba(255, 0, 0, 0.7);">{{ number }}</td>
+                                            {% else %}
+                                                <td style="width: calc(100% / 7); background-color: rgba(255, 165, 0, 0.7);">{{ number }}</td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-2"></div>
+        <div class="col-lg-2 col-0"></div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-6 col-3"></div>
+        <div class="col-lg-5 col-6">
+            <div class="legend">
+                <div class="legend-item legend-red">
+                    <span>{% translate 'Busy' %}</span>
+                </div>
+                <div class="legend-item legend-orange">
+                    <span>{% translate 'Limited' %}</span>
+                </div>
+                <div class="legend-item legend-t">
+                    <span>{% translate 'Available' %}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-3"></div>
     </div>
 </div>
 {% endblock %}

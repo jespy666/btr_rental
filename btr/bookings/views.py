@@ -7,6 +7,7 @@ import datetime
 import calendar
 
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
+from .db_handlers import get_month_load
 from .models import Booking
 from .forms import BookingForm
 
@@ -20,9 +21,25 @@ class BookingIndexView(TemplateView):
         current_year = now.year
         current_month = now.month
         current_cal = calendar.monthcalendar(current_year, current_month)
-        context['calendar'] = current_cal
+        if current_month == 12:
+            next_year = current_year + 1
+            next_month = 1
+        else:
+            next_year = current_year
+            next_month = current_month + 1
+        current_load = get_month_load(
+            current_cal, current_year, current_month
+        )
+        next_cal = calendar.monthcalendar(next_year, next_month)
+        next_load = get_month_load(
+            next_cal, next_year, next_month
+        )
         context['current_month'] = calendar.month_name[current_month]
         context['current_year'] = current_year
+        context['current_calendar'] = current_load
+        context['next_month'] = calendar.month_name[next_month]
+        context['next_year'] = next_year
+        context['next_calendar'] = next_load
         return context
 
 

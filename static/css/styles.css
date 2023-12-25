@@ -168,3 +168,37 @@ background: #ec407a;
     flex-grow: 1;
 }
 
+.legend {
+    display: flex;
+    align-items: center;
+}
+
+/* Стили для каждого элемента легенды */
+.legend-item {
+    display: flex;
+    align-items: center;
+    width: 25px;
+    height: 15px;
+    margin-right: 110px;
+
+}
+
+.legend-item span {
+    color: white;
+    margin-left: 30px; /* Расстояние между цветом и текстом */
+}
+
+/* Стили для цветов */
+.legend-red {
+    background-color: red;
+}
+
+.legend-orange {
+    background-color: orange;
+}
+
+.legend-t {
+    background-color: transparent;
+    border: 1px solid white;
+}
+

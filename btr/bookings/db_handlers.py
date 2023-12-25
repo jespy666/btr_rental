@@ -1,3 +1,6 @@
+import math
+from datetime import datetime, timedelta, date
+
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 
@@ -5,6 +8,11 @@ from btr.users.models import SiteUser
 from btr.bookings.models import Booking
 from btr.bookings.bot_handlers import calculate_time_interval
 from asgiref.sync import sync_to_async
+
+
+FRIDAY = 5
+ORDINARY_DAY_HOURS = 6
+WEEKEND_DAY_HOURS = 8
 
 
 def create_user_by_bot(user_data: dict) -> str:
@@ -115,6 +123,43 @@ def reset_user_password(user_email: str) -> str:
     user.set_password(password)
     user.save()
     return password
+
+
+def get_month_load(calendar: list, year: int, month: int) -> list:
+    """Get the workload of each day in month as a percentage"""
+    percentage_load = []
+    for week in calendar:
+        day_load = [
+            (day, get_day_load(f'{year}-{month}-{day}')) for day in week
+        ]
+        percentage_load.append(day_load)
+    return percentage_load
+
+
+def get_day_load(current_date: str) -> int:
+    """Get the workload of current day as a percentage"""
+    if current_date.split('-')[-1] == '0':
+        return -1
+    bookings = Booking.objects.filter(
+        booking_date=current_date,
+    )
+    date_format = datetime.strptime(current_date, "%Y-%m-%d").date()
+    book_time = 0
+    for booking in bookings:
+        start_time = booking.start_time
+        end_time = booking.end_time
+        start = datetime.combine(datetime.today(), start_time)
+        end = datetime.combine(datetime.today(), end_time)
+        duration = (end - start).seconds // 3600
+        book_time += duration
+    if is_weekend(date_format):
+        return int((book_time / WEEKEND_DAY_HOURS) * 100)
+    return int((book_time / ORDINARY_DAY_HOURS) * 100)
+
+
+def is_weekend(current_date: datetime.date) -> bool:
+    """Check if day is a weekend"""
+    return current_date.weekday() >= FRIDAY
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
