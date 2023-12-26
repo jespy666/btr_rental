@@ -13,6 +13,8 @@ from asgiref.sync import sync_to_async
 FRIDAY = 5
 ORDINARY_DAY_HOURS = 6
 WEEKEND_DAY_HOURS = 8
+ORDINARY_SLOTS = ('16:00:00', '22:00:00')
+WEEKEND_SLOTS = ('10:00:00', '18:00:00')
 
 
 def create_user_by_bot(user_data: dict) -> str:
@@ -130,7 +132,11 @@ def get_month_load(calendar: list, year: int, month: int) -> list:
     percentage_load = []
     for week in calendar:
         day_load = [
-            (day, get_day_load(f'{year}-{month}-{day}')) for day in week
+            (
+                day,
+                get_day_load(f'{year}-{month}-{day}'),
+                get_day_time_ranges(f'{year}-{month}-{day}'),
+            ) for day in week
         ]
         percentage_load.append(day_load)
     return percentage_load
@@ -143,7 +149,6 @@ def get_day_load(current_date: str) -> int:
     bookings = Booking.objects.filter(
         booking_date=current_date,
     )
-    date_format = datetime.strptime(current_date, "%Y-%m-%d").date()
     book_time = 0
     for booking in bookings:
         start_time = booking.start_time
@@ -152,14 +157,62 @@ def get_day_load(current_date: str) -> int:
         end = datetime.combine(datetime.today(), end_time)
         duration = (end - start).seconds // 3600
         book_time += duration
-    if is_weekend(date_format):
+    if is_weekend(datetime.strptime(current_date, "%Y-%m-%d").date()):
         return int((book_time / WEEKEND_DAY_HOURS) * 100)
     return int((book_time / ORDINARY_DAY_HOURS) * 100)
+
+
+def get_day_time_ranges(current_date: str) -> list:
+    """Return list of available time ranges for current day"""
+    if current_date.split('-')[-1] == '0':
+        return []
+    bookings = Booking.objects.filter(
+        booking_date=current_date,
+    )
+    booked_slots = [
+        f'{booking.start_time}-{booking.end_time}' for booking in bookings
+    ]
+    if is_weekend(datetime.strptime(current_date, "%Y-%m-%d").date()):
+        available_slots = get_available_slots(WEEKEND_SLOTS, booked_slots)
+    else:
+        available_slots = get_available_slots(ORDINARY_SLOTS, booked_slots)
+    return available_slots
 
 
 def is_weekend(current_date: datetime.date) -> bool:
     """Check if day is a weekend"""
     return current_date.weekday() >= FRIDAY
+
+
+def get_available_slots(available_range: tuple, booked_slots: list) -> list:
+    """Returns a list of available slots based on the day of the week"""
+    start_time = datetime.strptime(available_range[0], '%H:%M:%S')
+    end_time = datetime.strptime(available_range[1], '%H:%M:%S')
+    available_slots = [(start_time, end_time)]
+    for slot in booked_slots:
+        slot_start, slot_end = slot.split('-')
+        slot_start = datetime.strptime(slot_start, '%H:%M:%S')
+        slot_end = datetime.strptime(slot_end, '%H:%M:%S')
+
+        updated_slots = []
+        for available_slot in available_slots:
+            if available_slot[0] < slot_start < available_slot[1]:
+                updated_slots.append((available_slot[0], slot_start))
+            if available_slot[0] < slot_end < available_slot[1]:
+                updated_slots.append((slot_end, available_slot[1]))
+            if (slot_start <= available_slot[0]
+                    and slot_end >= available_slot[1]):
+                continue
+            if available_slot[0] <= slot_start < available_slot[1] or \
+                    available_slot[0] < slot_end <= available_slot[1]:
+                updated_slots.append(available_slot)
+
+        available_slots = updated_slots
+
+    return [
+        (slot[0].strftime('%H:%M:%S'), slot[1].strftime('%H:%M:%S'))
+        for slot in available_slots
+    ]
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)

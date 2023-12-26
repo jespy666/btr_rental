@@ -1,0 +1,74 @@
+{% load static %}
+{% load i18n %}
+
+<div class="modal-container">
+    {% for week in current_calendar %}
+        {% for day in week %}
+            {% with number=day.0 load=day.1 slots=day.2 %}
+                {% if number != 0 %}
+                    <div class="modal fade" id="currentModal{{ number }}" tabindex="-1" aria-labelledby="currentModalLabel{{ number }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="currentModalLabel{{ number }}">
+                                        {{ number }} {{ current_month }}, {{ current_year }}<br>
+                                        {% translate 'Available booking slots:' %}
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                              <th scope="col">#</th>
+                                              <th scope="col">{% translate 'From' %}</th>
+                                              <th scope="col">{% translate 'To' %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for slot in slots %}
+                                                <tr>
+                                                    <th scope="row">{{ forloop.counter }}</th>
+                                                    <td>{{ slot.0 }}</td>
+                                                    <td>{{ slot.1 }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+                                    <a href="{% url 'book_create' %}" class="btn btn-success">{% translate 'Book' %}</a>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    {% endfor %}
+    {% for week in next_calendar %}
+        {% for day in week %}
+            {% with number=day.0 load=day.1 slots=day.2 %}
+                {% if number != 0 %}
+                    <div class="modal fade" id="nextModal{{ number }}" tabindex="-1" aria-labelledby="nextModalLabel{{ number }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">Modal title {{ number }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    {% endfor %}
+</div>
