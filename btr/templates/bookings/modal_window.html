@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-                                    <a href="{% url 'book_create' %}" class="btn btn-success">{% translate 'Book' %}</a>
+                                    <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}" class="btn btn-success">{% translate 'Book' %}</a>
                                 </div>
                             </div>
                         </div>

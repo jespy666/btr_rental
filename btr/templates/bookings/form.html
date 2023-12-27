@@ -6,7 +6,10 @@
     <div class="row bg-form">
         <div class="col-3"></div>
         <div class="col-6  lg-m-y">
-            <h1 class="mb-5 text-center text-white">{{ header }}</h1>
+            <h1 class="mb-5 text-center text-white">
+                {{ header }}<br>
+                {{ selected_date }}
+            </h1>
             <form method="post" class="text-white">
                 {% csrf_token %}
                 {% bootstrap_form form %}

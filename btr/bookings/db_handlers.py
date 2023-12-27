@@ -1,5 +1,4 @@
-import math
-from datetime import datetime, timedelta, date
+from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
@@ -13,8 +12,8 @@ from asgiref.sync import sync_to_async
 FRIDAY = 5
 ORDINARY_DAY_HOURS = 6
 WEEKEND_DAY_HOURS = 8
-ORDINARY_SLOTS = ('16:00:00', '22:00:00')
-WEEKEND_SLOTS = ('10:00:00', '18:00:00')
+ORDINARY_SLOTS = '16:00:00-22:00:00'
+WEEKEND_SLOTS = '10:00:00-18:00:00'
 
 
 def create_user_by_bot(user_data: dict) -> str:
@@ -184,35 +183,38 @@ def is_weekend(current_date: datetime.date) -> bool:
     return current_date.weekday() >= FRIDAY
 
 
-def get_available_slots(available_range: tuple, booked_slots: list) -> list:
+def get_available_slots(available_range: str, booked_slots: list) -> list:
     """Returns a list of available slots based on the day of the week"""
-    start_time = datetime.strptime(available_range[0], '%H:%M:%S')
-    end_time = datetime.strptime(available_range[1], '%H:%M:%S')
-    available_slots = [(start_time, end_time)]
+    total_start, total_end = map(lambda x: int(x.replace(':', '')),
+                                 available_range.split('-'))
+
+    busy_seconds = []
     for slot in booked_slots:
-        slot_start, slot_end = slot.split('-')
-        slot_start = datetime.strptime(slot_start, '%H:%M:%S')
-        slot_end = datetime.strptime(slot_end, '%H:%M:%S')
+        start, end = map(lambda x: int(x.replace(':', '')), slot.split('-'))
+        busy_seconds.append((start, end))
 
-        updated_slots = []
-        for available_slot in available_slots:
-            if available_slot[0] < slot_start < available_slot[1]:
-                updated_slots.append((available_slot[0], slot_start))
-            if available_slot[0] < slot_end < available_slot[1]:
-                updated_slots.append((slot_end, available_slot[1]))
-            if (slot_start <= available_slot[0]
-                    and slot_end >= available_slot[1]):
-                continue
-            if available_slot[0] <= slot_start < available_slot[1] or \
-                    available_slot[0] < slot_end <= available_slot[1]:
-                updated_slots.append(available_slot)
+    busy_seconds.sort()
 
-        available_slots = updated_slots
+    free_slots = []
+    last_end = total_start
 
-    return [
-        (slot[0].strftime('%H:%M:%S'), slot[1].strftime('%H:%M:%S'))
-        for slot in available_slots
+    for start, end in busy_seconds:
+        if start > last_end:
+            free_slots.append((last_end, start))
+        last_end = max(last_end, end)
+
+    if last_end < total_end:
+        free_slots.append((last_end, total_end))
+
+    available_slots = [
+        (
+            f'{str(start)[:2]}:{str(start)[2:4]}',
+            f'{str(end)[:2]}:{str(end)[2:4]}',
+        )
+        for start, end in free_slots if start != end
     ]
+
+    return available_slots
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)

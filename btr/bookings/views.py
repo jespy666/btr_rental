@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, \
     TemplateView
 from django.utils.translation import gettext as _
-import datetime
+from datetime import datetime
 import calendar
 
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
@@ -17,7 +17,7 @@ class BookingIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        now = datetime.datetime.now()
+        now = datetime.now()
         current_year = now.year
         current_month = now.month
         current_cal = calendar.monthcalendar(current_year, current_month)
@@ -54,9 +54,40 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     success_message = _('Reservation created successfully')
     permission_denied_message = _('You must to be login to book ride')
     extra_context = {
-        'header': _('Rental Reservation'),
+        'header': _('Rental Reservation for'),
         'button': _('Book')
     }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        selected_date = self.request.GET.get('selected_date')
+        formatted_date = self.format_date_for_form(selected_date)
+        context['selected_date'] = formatted_date
+        return context
+
+    @staticmethod
+    def format_date_for_form(date: str) -> str:
+        """Friendly view date format"""
+        date_elements = date.split('-')
+        return f'{date_elements[2]} {date_elements[1]}, {date_elements[0]}'
+
+    @staticmethod
+    def format_date_for_orm(date: str) -> str:
+        """Format month name to number"""
+        date_object = datetime.strptime(date, '%Y-%B-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        return formatted_date
+
+    def form_valid(self, form):
+        selected_date = self.request.GET.get('selected_date')
+        user = self.request.user
+        form.instance.booking_date = self.format_date_for_orm(selected_date)
+        form.instance.rider = user
+        if user.is_superuser:
+            form.instance.status = 'confirmed'
+        else:
+            form.instance.status = 'pending'
+        return super().form_valid(form)
 
 
 class BookingEditView(UserAuthRequiredMixin, UserPermissionMixin,
