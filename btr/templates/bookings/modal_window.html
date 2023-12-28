@@ -17,28 +17,34 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                              <th scope="col">#</th>
-                                              <th scope="col">{% translate 'From' %}</th>
-                                              <th scope="col">{% translate 'To' %}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for slot in slots %}
+                                    {% if not slots %}
+                                        <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
+                                    {% else %}
+                                        <table class="table">
+                                            <thead>
                                                 <tr>
-                                                    <th scope="row">{{ forloop.counter }}</th>
-                                                    <td>{{ slot.0 }}</td>
-                                                    <td>{{ slot.1 }}</td>
+                                                  <th scope="col">#</th>
+                                                  <th scope="col">{% translate 'From' %}</th>
+                                                  <th scope="col">{% translate 'To' %}</th>
                                                 </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {% for slot in slots %}
+                                                    <tr class="table-success">
+                                                        <th scope="row">{{ forloop.counter }}</th>
+                                                        <td>{{ slot.0 }}</td>
+                                                        <td>{{ slot.1 }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-                                    <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                    {% if slots %}
+                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -55,14 +61,41 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">Modal title {{ number }}</h1>
+                                    <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">
+                                        {{ number }} {{ next_month }}, {{ next_year }}<br>
+                                        {% translate 'Available booking slots:' %}
+                                    </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    {% if not slots %}
+                                        <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
+                                    {% else %}
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                  <th scope="col">#</th>
+                                                  <th scope="col">{% translate 'From' %}</th>
+                                                  <th scope="col">{% translate 'To' %}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for slot in slots %}
+                                                    <tr class="table-success">
+                                                        <th scope="row">{{ forloop.counter }}</th>
+                                                        <td>{{ slot.0 }}</td>
+                                                        <td>{{ slot.1 }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+                                    {% if slots %}
+                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

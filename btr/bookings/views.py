@@ -20,6 +20,7 @@ class BookingIndexView(TemplateView):
         now = datetime.now()
         current_year = now.year
         current_month = now.month
+        current_day = now.day
         current_cal = calendar.monthcalendar(current_year, current_month)
         if current_month == 12:
             next_year = current_year + 1
@@ -36,6 +37,7 @@ class BookingIndexView(TemplateView):
         )
         context['current_month'] = calendar.month_name[current_month]
         context['current_year'] = current_year
+        context['today'] = current_day
         context['current_calendar'] = current_load
         context['next_month'] = calendar.month_name[next_month]
         context['next_year'] = next_year
@@ -58,11 +60,19 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
         'button': _('Book')
     }
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['available_slots'] = self.request.GET.get('slots')
+        kwargs['current_date'] = self.request.GET.get('selected_date')
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_date = self.request.GET.get('selected_date')
+        slots = self.request.GET.get('slots')
         formatted_date = self.format_date_for_form(selected_date)
         context['selected_date'] = formatted_date
+        context['ranges'] = eval(slots)
         return context
 
     @staticmethod
