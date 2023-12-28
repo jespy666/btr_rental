@@ -1,15 +1,42 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 
 {% block content %}
 <div class="container">
     <div class="row bg-form">
         <div class="col-3"></div>
         <div class="col-6  lg-m-y">
-            <h1 class="mb-5 text-center text-white">
+            <h1 class="mb-4 text-center text-white">
                 {{ header }}<br>
                 {{ selected_date }}
             </h1>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <hr class="h-line mb-5" style="opacity: 1;">
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <h4 class="fs-4 text-center text-white">{% translate 'Available time:' %}</h4>
+            <table class="table text-center">
+                <thead>
+                    <tr class="table-primary">
+                      <th scope="col">{% translate 'from' %}</th>
+                      <th scope="col"></th>
+                      <th scope="col">{% translate 'to' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in ranges %}
+                        <tr class="table-success">
+                            <td style="font-weight: bold;">{{ slot.0 }}</td>
+                            <td style="font-weight: bold;">-</td>
+                            <td style="font-weight: bold;">{{ slot.1 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <form method="post" class="text-white">
                 {% csrf_token %}
                 {% bootstrap_form form %}

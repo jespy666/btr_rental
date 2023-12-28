@@ -19,5 +19,15 @@
         {% include 'bookings/modal_window.html' %}
     </div>
     {% include 'bookings/legend.html' %}
+    <div class="row lg-m-y">
+        <div class="col-lg-3 col-0"></div>
+        <div class="col-lg-6 col-12">
+            <h3 class="fs-3 text-center text-white">
+                {% translate 'Also you can book a ride via TG bot ' %}
+                <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="bot" width="50" height="50"></a>
+            </h3>
+        </div>
+        <div class="col-lg-3 col-0"></div>
+    </div>
 </div>
 {% endblock %}

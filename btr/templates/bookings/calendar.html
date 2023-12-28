@@ -23,10 +23,12 @@
                     {% with number=day.0 load=day.1 %}
                         {% if number == 0 %}
                             <td style="width: calc(100% / 7);"></td>
+                        {% elif number < today %}
+                            <td class="text-black" style="width: calc(100% / 7);">{{ number }}</td>
                         {% else %}
                             {% if load < 30 %}
                                 <td style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
-                            {% elif load > 70 %}
+                            {% elif load > 99 %}
                                 <td style="width: calc(100% / 7); background-color: rgba(255, 0, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
                             {% else %}
                                 <td style="width: calc(100% / 7); background-color: rgba(255, 165, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
