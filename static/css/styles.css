@@ -179,7 +179,7 @@ background: #ec407a;
     align-items: center;
     width: 25px;
     height: 15px;
-    margin-right: 110px;
+    margin-right: 100px;
 
 }
 
@@ -197,9 +197,8 @@ background: #ec407a;
     background-color: orange;
 }
 
-.legend-t {
-    background-color: transparent;
-    border: 1px solid white;
+.legend-w {
+    background-color: white;
 }
 
 .hover-effect:hover {
