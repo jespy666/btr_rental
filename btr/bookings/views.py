@@ -10,6 +10,7 @@ from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .db_handlers import get_month_load
 from .models import Booking
 from .forms import BookingForm
+from .tasks import send_details
 
 
 class BookingIndexView(TemplateView):
@@ -90,13 +91,19 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
 
     def form_valid(self, form):
         selected_date = self.request.GET.get('selected_date')
+        start_time = form.cleaned_data.get('start_time')
+        end_time = form.cleaned_data.get('end_time')
+        bike_count = form.cleaned_data.get('bike_count')
         user = self.request.user
+        user_email = user.email
         form.instance.booking_date = self.format_date_for_orm(selected_date)
         form.instance.rider = user
         if user.is_superuser:
             form.instance.status = 'confirmed'
         else:
             form.instance.status = 'pending'
+        form.save()
+        send_details.delay(user_email, selected_date, start_time, end_time, bike_count)
         return super().form_valid(form)
 
 
