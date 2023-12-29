@@ -1,0 +1,21 @@
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" id="customModalDialog">
+    <div class="modal-content auth-bg">
+      <div class="row text-center my-4">
+        <h1 class="fs-5 text-white" id="userModalLabel">{% translate 'Authorisation' %}</h1>
+      </div>
+      <div class="row my-3 mx-3">
+        <a class="btn btn-info text-center" href="{% url 'profile' pk=user.pk %}">{% translate 'Profile' %}</a>
+        <a class="btn btn-outline-danger text-center mt-4" href="{% url 'logout' %}">{% translate 'Log Out' %}</a>
+      </div>
+      <div class="modal-footer mt-4">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

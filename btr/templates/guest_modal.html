@@ -1,0 +1,22 @@
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content auth-bg">
+      <div class="row text-center my-4">
+        <h1 class="fs-5 text-white" id="guestModalLabel">{% translate 'Authorisation' %}</h1>
+      </div>
+      <div class="row mx-3 mt-3">
+        <a class="btn btn-success text-center" href="{% url 'login' %}">{% translate 'Log In' %}</a>
+        <span class="text-sm-center mt-3">{% translate 'Don\'t have an account?' %}</span>
+        <a class="btn btn-outline-primary text-center mt-1" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>
+      </div>
+      <div class="modal-footer mt-4">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

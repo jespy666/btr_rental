@@ -205,3 +205,8 @@ background: #ec407a;
     background-color: white;
     color: black;
 }
+
+.auth-bg {
+    background: linear-gradient(to bottom right, #242735, #565656);
+    color: white;
+}
