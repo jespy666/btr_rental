@@ -8,7 +8,7 @@
                 {% if number != 0 %}
                     <div class="modal fade" id="currentModal{{ number }}" tabindex="-1" aria-labelledby="currentModalLabel{{ number }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
+                            <div class="modal-content auth-bg">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="currentModalLabel{{ number }}">
                                         {{ number }} {{ current_month }}, {{ current_year }}<br>
@@ -16,13 +16,13 @@
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body" style="padding: 0;">
                                     {% if not slots %}
                                         <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
                                     {% else %}
                                         <table class="table">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-white">
                                                   <th scope="col">#</th>
                                                   <th scope="col">{% translate 'From' %}</th>
                                                   <th scope="col">{% translate 'To' %}</th>
@@ -59,7 +59,7 @@
                 {% if number != 0 %}
                     <div class="modal fade" id="nextModal{{ number }}" tabindex="-1" aria-labelledby="nextModalLabel{{ number }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
+                            <div class="modal-content auth-bg">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">
                                         {{ number }} {{ next_month }}, {{ next_year }}<br>
@@ -67,13 +67,13 @@
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body" style="padding: 0;">
                                     {% if not slots %}
                                         <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
                                     {% else %}
                                         <table class="table">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-white">
                                                   <th scope="col">#</th>
                                                   <th scope="col">{% translate 'From' %}</th>
                                                   <th scope="col">{% translate 'To' %}</th>
