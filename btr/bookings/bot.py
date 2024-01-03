@@ -1,5 +1,7 @@
+import datetime
 import logging
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 from django.conf import settings
 
@@ -9,7 +11,8 @@ from telegram.ext import (ContextTypes, ApplicationBuilder,
                           ConversationHandler)
 
 from btr.bookings.bot_handlers import generate_verification_code, \
-    check_verification_code
+    check_verification_code, get_free_slots_for_bot_view, \
+    check_available_start_time, check_available_hours
 from btr.bookings.db_handlers import (create_user_by_bot_as,
                                       create_booking_by_bot_as,
                                       check_user_exist_as,
@@ -21,8 +24,12 @@ from btr.bookings.tasks import send_details
 from btr.bookings.bot_validators import validate_bike_quantity, \
     validate_phone_number, validate_date, validate_time, validate_time_range, \
     validate_email, validate_hours, validate_first_name
-from btr.users.tasks import send_data_from_tg, send_verification_code_from_tg, \
-    send_recover_message_from_tg
+from btr.users.tasks import (send_data_from_tg,
+                             send_verification_code_from_tg,
+                             send_recover_message_from_tg)
+from .bot_exceptions import BusyDayException, TimeIsNotAvailable, \
+    InvalidTimeFormat, InvalidDateFormat, WrongBikeCount, InvalidEmailFormat, \
+    DateInPastException
 
 
 class BookingBot:
@@ -43,7 +50,7 @@ class BookingBot:
     @staticmethod
     async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message = _(
-            'Hi! I am BroTeamRacing booking bot\n'
+            'Hi! 16+\nI am BroTeamRacing booking bot\n'
             'There are commands that you can type:\n'
             'To create an account (required for booking): /create\n'
             'To book ride right now: /book\n'
@@ -62,7 +69,7 @@ class BookingBot:
     async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         help_text = _(
             'If you have any questions or problems with your booking,'
-            ' please contact me at:\n'
+            '\nPlease contact me at:\n'
             '+7 999 235-00-91\n'
             'Or\nhttps://vk.me/broteamracing'
         )
@@ -321,8 +328,8 @@ class BookingBot:
         email = update.message.text
         message = ''
         try:
-            await check_user_exist_as(email)
             validate_email(email)
+            await check_user_exist_as(email)
             context.user_data['user_email'] = email
             message = _(
                 'User with email {email} find successfully!\n'
@@ -330,12 +337,12 @@ class BookingBot:
                 'Min: 1, Max: 4'
             ).format(email=email)
             return self.BIKE_COUNT
-        except ValueError:
+        except InvalidEmailFormat:
             message = _(
                 'Invalid email format: {email}!\n'
                 'Check your spelling and try again:'
             ).format(email=email)
-        except NameError:
+        except ObjectDoesNotExist:
             message = _(
                 'Can\'t find user with email {email} :(\n'
                 'Check your spelling or create a new account: /create\n'
@@ -361,11 +368,11 @@ class BookingBot:
                 'in format YYYY-MM-DD:'
             ).format(bike_count=bike_count)
             return self.BOOK_DATE
-        except ValueError:
+        except WrongBikeCount:
             message = _(
                 'Invalid bikes rental count: {bike_count}!\n'
-                'Bikes count must be at 1-4\n'
-                'Try again!'
+                'Bikes count must be at 1-4!\n'
+                'Try again:'
             ).format(bike_count=bike_count)
         finally:
             await context.bot.send_message(
@@ -378,19 +385,31 @@ class BookingBot:
         message = ''
         try:
             validate_date(date)
+            available_slots = await get_free_slots_for_bot_view(date)
             context.user_data['book_date'] = date
             message = _(
                 'Ok!\n'
-                'What time should you rent?:\n'
+                'What time should you rent?\n'
+                'Available time slots:\n\n{slots}\n\n'
                 'Please, type in format: HH:MM'
-            )
+            ).format(slots=available_slots)
             return self.BOOK_START_TIME
-        except ValueError:
+        except InvalidDateFormat:
             message = _(
                 'Invalid date format: {date}!\n'
                 'Date format must be: YYYY-MM-DD (with "-")\n'
-                'Rent day cannot be in past!'
-                'Try again!'
+                'Try again:'
+            ).format(date=date)
+        except DateInPastException:
+            message = _(
+                'Rent day cannot be in past!\n'
+                'Today is {today}\n'
+                'Try again:'
+            ).format(today=datetime.datetime.now().date())
+        except BusyDayException:
+            message = _(
+                'On {date} no available slots! :(\n'
+                'Pick up another date:\n'
             ).format(date=date)
         finally:
             await context.bot.send_message(
@@ -400,19 +419,29 @@ class BookingBot:
 
     async def ask_hours(self, update: Update, context):
         start = update.message.text
+        date = context.user_data.get('book_date')
+        available_slots = await get_free_slots_for_bot_view(date)
         message = ''
         try:
             validate_time(start)
+            check_available_start_time(start, available_slots)
             context.user_data['book_start_time'] = start
-            date = context.user_data.get('book_date')
             message = _(
                 'You will be scheduled for rental on {date}\n'
-                'On {time}\n'
                 'How long do you plan to ride?\n'
-                'Enter the number of hours (example: 3):'
-            ).format(date=date, time=start)
+                'Available slots:\n\n'
+                '{slots}\n\n'
+                'Your start time:\n\n{time}\n\n'
+                'Enter the number of hours (example: 2):'
+            ).format(date=date, slots=available_slots, time=start)
             return self.BOOK_HOURS
-        except ValueError:
+        except TimeIsNotAvailable:
+            message = _(
+                'The time {start} is already booked!\n'
+                'Please select a start time based on available slots:\n\n'
+                '{slots}\n\n'
+            ).format(start=start, slots=available_slots)
+        except InvalidTimeFormat:
             message = _(
                 'Invalid time format: {start}!\n'
                 'Correct format is: HH:MM\n'
@@ -429,9 +458,13 @@ class BookingBot:
         hours = update.message.text
         context.user_data['book_hours'] = hours
         book_data = context.user_data
+        start_time = book_data.get('book_start_time')
+        date = book_data.get('book_date')
+        available_slots = await get_free_slots_for_bot_view(date)
         message = ''
         try:
             validate_hours(hours)
+            check_available_hours(start_time, hours, available_slots)
             email = book_data.get('user_email')
             interval = await create_booking_by_bot_as(book_data)
             date = book_data.get('book_date')
@@ -450,6 +483,13 @@ class BookingBot:
                      bike_count=bike_count, email=email)
             send_details.delay(email, date, start, end, bike_count)
             return ConversationHandler.END
+        except TimeIsNotAvailable:
+            message = _(
+                '{hours} hours exceeds the available booking slot\n'
+                'Available slots is:\n\n{slots}\n\n'
+                'Your start time is:\n\n{time}\n\n'
+                'Please, type allowable count of hours again:'
+            ).format(hours=hours, slots=available_slots, time=start_time)
         except NameError:
             message = _(
                 'Can\'t find phone number to user {email}!\n'

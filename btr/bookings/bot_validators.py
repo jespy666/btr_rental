@@ -1,6 +1,8 @@
 from datetime import datetime, date
 import re
 
+from btr.bookings.bot_exceptions import InvalidTimeFormat, InvalidDateFormat, \
+    WrongBikeCount, InvalidEmailFormat, DateInPastException
 
 MIN_BIKES_COUNT = 1
 MAX_BIKES_COUNT = 4
@@ -11,10 +13,13 @@ MAX_FIRST_NAME_LENGTH = 40
 
 def validate_bike_quantity(count: str) -> bool:
     """Validate bike's count input. Count must be in 1-4 pcs"""
+    try:
+        int(count)
+    except ValueError:
+        raise WrongBikeCount
     if int(count) in set(range(MIN_BIKES_COUNT, MAX_BIKES_COUNT + 1)):
         return True
-    else:
-        raise ValueError
+    raise WrongBikeCount
 
 
 def validate_email(email: str) -> bool:
@@ -23,7 +28,7 @@ def validate_email(email: str) -> bool:
     if re.match(pattern, email):
         return True
     else:
-        raise ValueError
+        raise InvalidEmailFormat
 
 
 def validate_phone_number(phone_number: str) -> bool:
@@ -43,9 +48,9 @@ def validate_date(date_str: str) -> bool:
         if input_date >= today:
             return True
         else:
-            raise ValueError
+            raise DateInPastException
     except ValueError:
-        raise ValueError
+        raise InvalidDateFormat
 
 
 def validate_time(time: str) -> bool:
@@ -54,7 +59,7 @@ def validate_time(time: str) -> bool:
     if re.match(pattern, time):
         return True
     else:
-        raise ValueError
+        raise InvalidTimeFormat
 
 
 def validate_time_range(start_time: str, end_time: str) -> bool:
