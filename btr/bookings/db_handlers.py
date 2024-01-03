@@ -9,13 +9,6 @@ from btr.bookings.bot_handlers import calculate_time_interval
 from asgiref.sync import sync_to_async
 
 
-FRIDAY = 5
-ORDINARY_DAY_HOURS = 6
-WEEKEND_DAY_HOURS = 8
-ORDINARY_SLOTS = '16:00:00-22:00:00'
-WEEKEND_SLOTS = '10:00:00-18:00:00'
-
-
 def create_user_by_bot(user_data: dict) -> str:
     """User create an account via tg bot"""
     username = user_data.get('username')
@@ -43,7 +36,7 @@ def check_user_exist(email: str) -> bool:
         SiteUser.objects.get(email=email)
         return True
     except ObjectDoesNotExist:
-        raise NameError
+        raise ObjectDoesNotExist
 
 
 def create_booking_by_bot(user_data: dict) -> dict:
@@ -126,95 +119,123 @@ def reset_user_password(user_email: str) -> str:
     return password
 
 
-def get_month_load(calendar: list, year: int, month: int) -> list:
-    """Get the workload of each day in month as a percentage"""
-    percentage_load = []
-    for week in calendar:
-        day_load = [
+class LoadCalc:
+
+    FRIDAY = 5
+    ORDINARY_DAY_HOURS = 6
+    WEEKEND_DAY_HOURS = 8
+
+    def __init__(self, calendar: list, year: int, month: int):
+        self.calendar = calendar
+        self.year = year
+        self.month = month
+
+    def get_day_load(self, date: str) -> int:
+        """Get the workload of given date as a percentage"""
+        if date.split('-')[-1] == '0':
+            return -1
+        bookings = Booking.objects.filter(booking_date=date)
+        book_time = 0
+        for booking in bookings:
+            start_time = booking.start_time
+            end_time = booking.end_time
+            start = datetime.combine(datetime.today(), start_time)
+            end = datetime.combine(datetime.today(), end_time)
+            duration = (end - start).seconds // 3600
+            book_time += duration
+        if self.is_weekend(date):
+            return int((book_time / self.WEEKEND_DAY_HOURS) * 100)
+        return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
+
+    def get_week_load(self, week: list) -> list:
+        """Distribute load on week"""
+        week_load = []
+        for day in week:
+            date = f'{self.year}-{self.month}-{day}'
+            slots = SlotsFinder(date).find_available_slots()
+            day_load = (day, self.get_day_load(date), slots)
+            week_load.append(day_load)
+        return week_load
+
+    def is_weekend(self, date: str) -> bool:
+        """Check if day is a weekend"""
+        f_date = datetime.strptime(date, "%Y-%m-%d")
+        return f_date.weekday() >= self.FRIDAY
+
+    def get_month_load(self):
+        """Calculate full month load"""
+        return [self.get_week_load(week) for week in self.calendar]
+
+
+class SlotsFinder:
+
+    ORDINARY_SLOTS = '16:00:00-22:00:00'
+    WEEKEND_SLOTS = '10:00:00-18:00:00'
+    FRIDAY = 5
+
+    def __init__(self, date: str):
+        self.date = date
+
+    def is_weekend(self) -> bool:
+        """Check if day is a weekend"""
+        f_date = datetime.strptime(self.date, "%Y-%m-%d")
+        return f_date.weekday() >= self.FRIDAY
+
+    def get_booked_slots(self) -> list:
+        """Get busy time ranges from db"""
+        bookings = Booking.objects.filter(booking_date=self.date)
+        return [f'{book.start_time}-{book.end_time}' for book in bookings]
+
+    @staticmethod
+    def get_booked_seconds(booked_slots: list) -> list:
+        """Calculate booked ranges to seconds"""
+        booked_seconds = []
+        for slot in booked_slots:
+            start, end = map(lambda x: int(x.replace(':', '')),
+                             slot.split('-'))
+            booked_seconds.append((start, end))
+        return sorted(booked_seconds)
+
+    def get_available_slots(self, booked_seconds: list):
+        if self.is_weekend():
+            total_start, total_end = map(lambda x: int(x.replace(':', '')),
+                                         self.WEEKEND_SLOTS.split('-'))
+        else:
+            total_start, total_end = map(lambda x: int(x.replace(':', '')),
+                                         self.ORDINARY_SLOTS.split('-'))
+        free_slots = []
+        last_end = total_start
+        for start, end in booked_seconds:
+            if start > last_end:
+                free_slots.append((last_end, start))
+            last_end = max(last_end, end)
+        if last_end < total_end:
+            free_slots.append((last_end, total_end))
+        available_slots = [
             (
-                day,
-                get_day_load(f'{year}-{month}-{day}'),
-                get_day_time_ranges(f'{year}-{month}-{day}'),
-            ) for day in week
+                f'{str(start)[:2]}:{str(start)[2:4]}',
+                f'{str(end)[:2]}:{str(end)[2:4]}',
+            )
+            for start, end in free_slots if start != end
         ]
-        percentage_load.append(day_load)
-    return percentage_load
+        return available_slots
 
+    def find_available_slots(self) -> list:
+        """Get list of available slots for view"""
+        if self.date.split('-')[-1] == '0':
+            return []
+        booked_slots = self.get_booked_slots()
+        booked_seconds = self.get_booked_seconds(booked_slots)
+        available_slots = self.get_available_slots(booked_seconds)
+        return available_slots
 
-def get_day_load(current_date: str) -> int:
-    """Get the workload of current day as a percentage"""
-    if current_date.split('-')[-1] == '0':
-        return -1
-    bookings = Booking.objects.filter(
-        booking_date=current_date,
-    )
-    book_time = 0
-    for booking in bookings:
-        start_time = booking.start_time
-        end_time = booking.end_time
-        start = datetime.combine(datetime.today(), start_time)
-        end = datetime.combine(datetime.today(), end_time)
-        duration = (end - start).seconds // 3600
-        book_time += duration
-    if is_weekend(datetime.strptime(current_date, "%Y-%m-%d").date()):
-        return int((book_time / WEEKEND_DAY_HOURS) * 100)
-    return int((book_time / ORDINARY_DAY_HOURS) * 100)
-
-
-def get_day_time_ranges(current_date: str) -> list:
-    """Return list of available time ranges for current day"""
-    if current_date.split('-')[-1] == '0':
-        return []
-    bookings = Booking.objects.filter(
-        booking_date=current_date,
-    )
-    booked_slots = [
-        f'{booking.start_time}-{booking.end_time}' for booking in bookings
-    ]
-    if is_weekend(datetime.strptime(current_date, "%Y-%m-%d").date()):
-        available_slots = get_available_slots(WEEKEND_SLOTS, booked_slots)
-    else:
-        available_slots = get_available_slots(ORDINARY_SLOTS, booked_slots)
-    return available_slots
-
-
-def is_weekend(current_date: datetime.date) -> bool:
-    """Check if day is a weekend"""
-    return current_date.weekday() >= FRIDAY
-
-
-def get_available_slots(available_range: str, booked_slots: list) -> list:
-    """Returns a list of available slots based on the day of the week"""
-    total_start, total_end = map(lambda x: int(x.replace(':', '')),
-                                 available_range.split('-'))
-
-    busy_seconds = []
-    for slot in booked_slots:
-        start, end = map(lambda x: int(x.replace(':', '')), slot.split('-'))
-        busy_seconds.append((start, end))
-
-    busy_seconds.sort()
-
-    free_slots = []
-    last_end = total_start
-
-    for start, end in busy_seconds:
-        if start > last_end:
-            free_slots.append((last_end, start))
-        last_end = max(last_end, end)
-
-    if last_end < total_end:
-        free_slots.append((last_end, total_end))
-
-    available_slots = [
-        (
-            f'{str(start)[:2]}:{str(start)[2:4]}',
-            f'{str(end)[:2]}:{str(end)[2:4]}',
-        )
-        for start, end in free_slots if start != end
-    ]
-
-    return available_slots
+    async def find_available_slots_as(self) -> list:
+        """Get list of available slots for bot"""
+        get_booking_slots_as = sync_to_async(self.get_booked_slots)
+        booked_slots = await get_booking_slots_as()
+        booked_seconds = self.get_booked_seconds(booked_slots)
+        available_slots = self.get_available_slots(booked_seconds)
+        return available_slots
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
