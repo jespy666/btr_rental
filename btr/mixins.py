@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 
 
@@ -23,3 +24,16 @@ class UserPermissionMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         messages.error(self.request, self.permission_message)
         return redirect(self.permission_url)
+
+
+class ObjectDoesNotExistMixin:
+
+    not_existed_message = None
+    not_existed_url = None
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except ObjectDoesNotExist:
+            messages.error(request, self.not_existed_message)
+            return redirect(self.not_existed_url)

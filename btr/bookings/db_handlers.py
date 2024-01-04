@@ -22,7 +22,8 @@ def create_user_by_bot(user_data: dict) -> str:
         username=username,
         email=email,
         phone_number=phone_number,
-        first_name=first_name
+        first_name=first_name,
+        status='Newbie',
     )
 
     user.set_password(password)

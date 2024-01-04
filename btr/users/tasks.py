@@ -4,20 +4,25 @@ from ..celery import app
 
 
 @app.task
-def send_reg_email(user_email):
+def send_reg_email(user_email: str) -> None:
+    """Task work out when user signed up"""
     send(user_email)
 
 
 @app.task
-def send_data_from_tg(user_email, name, username, phone_number, password):
-    send_from_tg(user_email, name, username, phone_number, password)
+def send_data_from_tg(email: str, name: str, username: str,
+                      phone_number: str, password: str) -> None:
+    """Task send sign up details to email"""
+    send_from_tg(email, name, username, phone_number, password)
 
 
 @app.task
-def send_verification_code_from_tg(user_email, code):
-    send_verification_code(user_email, code)
+def send_verification_code_from_tg(email: str, code: str) -> None:
+    """Task send verification code when user request password reset from tg"""
+    send_verification_code(email, code)
 
 
 @app.task
-def send_recover_message_from_tg(user_email, password):
-    send_recover_message(user_email, password)
+def send_recover_message_from_tg(email: str, password: str) -> None:
+    """Task send recovered details to email via tg bot"""
+    send_recover_message(email, password)

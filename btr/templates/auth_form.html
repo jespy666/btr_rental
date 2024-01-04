@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 {% block content %}
 
     <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
@@ -20,8 +21,17 @@
             </form>
             {% if header == 'Sign In' %}
             <hr class="text-white">
-            <h6 class="fs-6 text-white mt-3 mb-3">Don't have an account?</h6>
-            <a class="btn btn-outline-info" href="{% url 'registration' %}">Sign Up</a>
+            <div class="row">
+                <div class="col-5"><h6 class="fs-6 text-white mt-3 mb-3">{% translate 'Don\'t have an account?' %}</h6></div>
+                <div class="col-2"></div>
+                <div class="col-5 text-center">
+                    <h6 class="fs-6 text-white mt-3 mb-3">
+                        {% translate 'Forgot the ' %}
+                        <a href="{% url 'auth-reset' %}">{% translate 'Password?' %}</a>
+                    </h6>
+                </div>
+            </div>
+            <a class="btn btn-outline-info" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>
             {% endif %}
         </div>
         <div class="col-3"></div>
