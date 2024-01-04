@@ -5,3 +5,4 @@ staticfiles/
 *.pyc
 __pycache__/
 btr/__pycache__/
+media/profile_images/
