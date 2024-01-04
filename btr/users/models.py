@@ -44,5 +44,20 @@ class SiteUser(AbstractUser):
         auto_now_add=True
     )
 
+    LEVEL_CHOICES = [
+        ('Newbie', _('Newbie')),
+        ('Amateur', _('Amateur')),
+        ('Professional', _('Professional')),
+        ('Master', _('Master')),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        verbose_name=_('Level'),
+        blank=True,
+        unique=False,
+        choices=LEVEL_CHOICES,
+    )
+
     def __str__(self):
         return self.username

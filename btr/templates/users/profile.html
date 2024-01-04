@@ -26,8 +26,7 @@
             {% endif %}
             <div class="mt-3">
               <h4 class="text-white">{{ user.username }}</h4>
-              <p class="text-secondary text-white mb-1">{{ user.email }}</p>
-              <p class="text-secondary text-white font-size-sm">{{ user.phone_number }}</p>
+              <p class="text-secondary text-white mb-4 mt-1">{{ user.status }}</p>
               <a class="btn btn-light" href="{% url 'bookings' %}" >{% translate 'Book Now' %}</a>
             </div>
           </div>
@@ -75,51 +74,59 @@
       <div class="row">
         <div class="col-12 col-sm-6 mb-3">
           <div class="card h-100 card-bg text-white">
-            <div class="card-body">
-              <h5 class="d-flex align-items-center mb-3">
-                {% translate 'Current bookings' %}
-              </h5>
+            <h5 class="booking-card-header">
+              {% translate 'Current bookings' %}
+            </h5>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
               {% if not current_bookings %}
-              <h4 class="fs-4 text-center">{% translate 'There are not current bookings yet...' %}</h4>
+                <div class="card-text text-center">
+                    <h4 class="fs-4">
+                        {% translate 'There are not current bookings yet...' %}
+                    </h4>
+                </div>
               {% else %}
-              <table class="table">
-                <thead class="text-white">
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">{% translate 'Date' %}</th>
-                    <th scope="col">{% translate 'Begin time' %}</th>
-                    <th scope="col">{% translate 'End time' %}</th>
-                    <th scope="col">{% translate 'Status' %}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for ride in current_bookings %}
-                    {% if ride.status == 'pending' %}
-                      <tr class="table-warning">
-                    {% else %}
-                      <tr class="table-success">
-                    {% endif %}
-                      <th scope="row">{{ ride.id }}</th>
-                      <td>{{ ride.booking_date }}</td>
-                      <td>{{ ride.start_time }}</td>
-                      <td>{{ ride.end_time }}</td>
-                      <td>{{ ride.status }}</td>
+                <table class="table">
+                  <thead class="text-white">
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">{% translate 'Date' %}</th>
+                      <th scope="col">{% translate 'Begin time' %}</th>
+                      <th scope="col">{% translate 'End time' %}</th>
+                      <th scope="col">{% translate 'Status' %}</th>
                     </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {% for ride in current_bookings %}
+                      {% if ride.status == 'pending' %}
+                        <tr class="table-warning">
+                      {% else %}
+                        <tr class="table-success">
+                      {% endif %}
+                        <th scope="row">{{ ride.id }}</th>
+                        <td>{{ ride.booking_date }}</td>
+                        <td>{{ ride.start_time }}</td>
+                        <td>{{ ride.end_time }}</td>
+                        <td>{{ ride.status }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               {% endif %}
             </div>
           </div>
         </div>
         <div class="col-12 col-sm-6 mb-3">
           <div class="card h-100 card-bg text-white">
-            <div class="card-body">
-              <h5 class="d-flex align-items-center mb-3">
-                {% translate 'History' %}
-              </h5>
+            <h5 class="booking-card-header">
+              {% translate 'History' %}
+            </h5>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
               {% if not completed_bookings %}
-                <h4 class="fs-4 text-center">{% translate 'There are not completed bookings yet...' %}</h4>
+                <div class="card-text text-center">
+                  <h4 class="fs-4">
+                      {% translate 'There are not completed bookings yet...' %}
+                  </h4>
+                </div>
               {% else %}
                 <table class="table">
                   <thead class="text-white">

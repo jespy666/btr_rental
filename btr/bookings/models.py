@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 
 from btr.users.models import SiteUser
@@ -66,3 +68,20 @@ class Booking(models.Model):
             end=self.end_time,
         )
         return str_view
+
+
+@receiver(post_save, sender=Booking)
+def update_user_status(sender, instance, **kwargs):
+    """Setting the user level based on the number of rides"""
+    rider = instance.rider
+    book_count = rider.booking_set.filter(status='completed').count()
+    match book_count:
+        case count if count < 3:
+            rider.status = 'Newbie'
+        case count if 3 <= count < 5:
+            rider.status = 'Amateur'
+        case count if 5 <= count < 10:
+            rider.status = 'Professional'
+        case _:
+            rider.status = 'Master'
+    rider.save()

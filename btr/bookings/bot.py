@@ -53,6 +53,7 @@ class BookingBot:
             'Hi! 16+\nI am BroTeamRacing booking bot\n'
             'There are commands that you can type:\n'
             'To create an account (required for booking): /create\n'
+            'To reset your forgotten password: /reset\n'
             'To book ride right now: /book\n'
             'To see help message: /help\n'
             'By details you can visit our web-site:\n'

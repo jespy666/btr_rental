@@ -30,9 +30,7 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
 class UserView(UserAuthRequiredMixin, DetailView):
     model = SiteUser
     template_name = 'users/profile.html'
-
     context_object_name = 'profile'
-
     login_url = 'login'
     permission_denied_message = _('You must to be log in')
 
