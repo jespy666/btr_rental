@@ -1,6 +1,9 @@
+import os
+from dotenv import load_dotenv
+
 from django.db import models
 from django.utils.translation import gettext as _
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -85,3 +88,45 @@ def update_user_status(sender, instance, **kwargs):
         case _:
             rider.status = 'Master'
     rider.save()
+
+
+@receiver(post_save, sender=Booking)
+def booking_created_receiver(sender, instance, created, **kwargs):
+    from btr.bookings.tasks import send_booking_notify
+    if created:
+        load_dotenv()
+        access_token = os.getenv('VK_BTR_KEY')
+        user_id = os.getenv('VK_ADMIN_ID')
+        message = _(
+            '#{id}\n'
+            'User with name {name} book a ride just now!\n'
+            'User phone: {phone}\n'
+            'Date: {date}\nTime: {start}-{end}\n'
+            'Bikes requested: {bike}\n'
+            'Awaiting confirmation...'
+        ).format(
+            id=instance.pk,
+            name=instance.rider.first_name,
+            phone=instance.rider.phone_number,
+            date=instance.booking_date,
+            start=instance.start_time,
+            end=instance.end_time,
+            bike=instance.bike_count,
+        )
+        send_booking_notify.delay(user_id, access_token, message)
+
+
+@receiver(pre_save, sender=Booking)
+def booking_created_receiver(sender, instance, **kwargs):
+    from btr.bookings.tasks import send_booking_notify
+    try:
+        old_status = Booking.objects.get(pk=instance.pk).status
+    except Booking.DoesNotExist:
+        return
+    user_id = os.getenv('VK_ADMIN_ID')
+    access_token = os.getenv('VK_BTR_KEY')
+    if old_status == 'pending' and instance.status == 'confirmed':
+        message = _(
+            'Booking #{id} confirmed by admin'
+        ).format(id=instance.pk)
+        send_booking_notify.delay(user_id, access_token, message)
