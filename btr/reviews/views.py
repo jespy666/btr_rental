@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
-from btr.vk import get_vk_comments
+from btr.vk import TopicComments
 from dotenv import load_dotenv
 import os
 
@@ -18,14 +18,14 @@ class VKCommentsView(View):
     topic_id = '49522524'
 
     def get(self, request, *args, **kwargs):
-        comments = get_vk_comments(
+        vk = TopicComments(
             self.group_id,
             self.topic_id,
             self.access_token
         )
 
         context = {
-            'comments': comments,
+            'comments': vk.get_comments(),
             'group_id': self.group_id,
             'topic_id': self.topic_id,
             'app_id': self.app_id,
