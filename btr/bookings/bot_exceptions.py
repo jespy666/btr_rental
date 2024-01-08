@@ -24,3 +24,11 @@ class InvalidEmailFormat(Exception):
 
 class DateInPastException(Exception):
     pass
+
+
+class SameStatusSelected(Exception):
+    pass
+
+
+class WrongAdminPassword(Exception):
+    pass

@@ -3,6 +3,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 
+from btr.bookings.bot_exceptions import SameStatusSelected
 from btr.users.models import SiteUser
 from btr.bookings.models import Booking
 from btr.bookings.bot_handlers import calculate_time_interval
@@ -118,6 +119,28 @@ def reset_user_password(user_email: str) -> str:
     user.set_password(password)
     user.save()
     return password
+
+
+def check_booking_info(booking_id: str) -> dict:
+    """Checking and return booking info by primary key"""
+    booking = Booking.objects.get(pk=int(booking_id))
+    return {
+        'date': booking.booking_date,
+        'start': booking.start_time,
+        'end': booking.end_time,
+        'status': booking.status,
+    }
+
+
+def change_booking_status(booking_id: str, status: str) -> str:
+    """Change booking status by primary key"""
+    booking = Booking.objects.get(pk=int(booking_id))
+    old_status = booking.status
+    if old_status == status:
+        raise SameStatusSelected
+    booking.status = status
+    booking.save()
+    return old_status
 
 
 class LoadCalc:
@@ -246,3 +269,5 @@ create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
 create_booking_by_admin_as = sync_to_async(create_booking_by_admin)
 check_available_field_as = sync_to_async(check_available_field)
 reset_user_password_as = sync_to_async(reset_user_password)
+check_booking_status_as = sync_to_async(check_booking_info)
+change_booking_status_as = sync_to_async(change_booking_status)
