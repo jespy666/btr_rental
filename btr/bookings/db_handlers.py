@@ -135,7 +135,8 @@ class LoadCalc:
         """Get the workload of given date as a percentage"""
         if date.split('-')[-1] == '0':
             return -1
-        bookings = Booking.objects.filter(booking_date=date)
+        bookings = (Booking.objects.filter(booking_date=date)
+                    .exclude(status='canceled'))
         book_time = 0
         for booking in bookings:
             start_time = booking.start_time
