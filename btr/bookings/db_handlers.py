@@ -1,12 +1,9 @@
 from datetime import datetime
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
-from btr.bookings.bot_exceptions import SameStatusSelected
 from btr.users.models import SiteUser
 from btr.bookings.models import Booking
-from btr.bookings.bot_handlers import calculate_time_interval
 from asgiref.sync import sync_to_async
 
 
@@ -33,7 +30,7 @@ def create_user_by_bot(user_data: dict) -> str:
 
 
 def check_user_exist(email: str) -> bool:
-    """Function check user exist from database"""
+    """Check user exist by email"""
     try:
         SiteUser.objects.get(email=email)
         return True
@@ -41,40 +38,40 @@ def check_user_exist(email: str) -> bool:
         raise ObjectDoesNotExist
 
 
-def create_booking_by_bot(user_data: dict) -> dict:
-    """User create booking yourself via tg bot"""
-    user_email = user_data.get('user_email')
-    user = SiteUser.objects.get(email=user_email)
-
-    date = user_data.get('book_date')
-    time = user_data.get('book_start_time')
-    hours = user_data.get('book_hours')
-    bike_count = user_data.get('bike_count')
-    interval = calculate_time_interval(time, hours)
-    phone_number = get_phone_number(user_email)
-
-    booking = Booking.objects.create(
-        rider=user,
-        foreign_number=phone_number,
-        booking_date=date,
-        start_time=interval.get('start_time'),
-        end_time=interval.get('end_time'),
-        bike_count=bike_count,
-        status='pending',
-    )
-    booking.save()
-    return interval
+# def create_booking_by_bot(user_data: dict) -> dict:
+#     """User create booking yourself via tg bot"""
+#     user_email = user_data.get('user_email')
+#     user = SiteUser.objects.get(email=user_email)
+#
+#     date = user_data.get('book_date')
+#     time = user_data.get('book_start_time')
+#     hours = user_data.get('book_hours')
+#     bike_count = user_data.get('bike_count')
+#     # interval = calculate_time_interval(time, hours)
+#     phone_number = get_phone_number(user_email)
+#
+#     booking = Booking.objects.create(
+#         rider=user,
+#         foreign_number=phone_number,
+#         booking_date=date,
+#         start_time=interval.get('start_time'),
+#         end_time=interval.get('end_time'),
+#         bike_count=bike_count,
+#         status='pending',
+#     )
+#     booking.save()
+#     return interval
 
 
 def create_booking_by_admin(user_data: dict) -> None:
     """Admin create booking by rider phone number via tg bot.
     Booked to admin account"""
     user = SiteUser.objects.get(username='admin')
-    phone = user_data.get('foreign_phone')
-    date = user_data.get('foreign_date')
-    start_time = user_data.get('foreign_start')
-    end_time = user_data.get('foreign_end')
-    bike_count = user_data.get('bikes_num')
+    phone = user_data.get('phone')
+    date = user_data.get('date')
+    start_time = user_data.get('start')
+    end_time = user_data.get('end')
+    bike_count = user_data.get('bikes')
 
     booking = Booking.objects.create(
         rider=user,
@@ -97,19 +94,19 @@ def get_phone_number(user_email: str) -> str:
         raise NameError
 
 
-def check_available_field(user_input: str) -> bool:
-    """Function checks the availability of fields in the database"""
-    try:
-        user = SiteUser.objects.get(
-            Q(username=user_input) |
-            Q(email=user_input) |
-            Q(phone_number=user_input)
-        )
-        return False
-    except ObjectDoesNotExist:
-        return True
-    except MultipleObjectsReturned:
-        return False
+# def check_available_field(user_input: str) -> bool:
+#     """Function checks the availability of fields in the database"""
+#     try:
+#         user = SiteUser.objects.get(
+#             Q(username=user_input) |
+#             Q(email=user_input) |
+#             Q(phone_number=user_input)
+#         )
+#         return False
+#     except ObjectDoesNotExist:
+#         return True
+#     except MultipleObjectsReturned:
+#         return False
 
 
 def reset_user_password(user_email: str) -> str:
@@ -132,15 +129,15 @@ def check_booking_info(booking_id: str) -> dict:
     }
 
 
-def change_booking_status(booking_id: str, status: str) -> str:
-    """Change booking status by primary key"""
-    booking = Booking.objects.get(pk=int(booking_id))
-    old_status = booking.status
-    if old_status == status:
-        raise SameStatusSelected
-    booking.status = status
-    booking.save()
-    return old_status
+# def change_booking_status(booking_id: str, status: str) -> str:
+#     """Change booking status by primary key"""
+#     booking = Booking.objects.get(pk=int(booking_id))
+#     old_status = booking.status
+#     if old_status == status:
+#         raise SameStatusSelected
+#     booking.status = status
+#     booking.save()
+#     return old_status
 
 
 class LoadCalc:
@@ -265,9 +262,9 @@ class SlotsFinder:
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
 check_user_exist_as = sync_to_async(check_user_exist)
-create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
+# create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
 create_booking_by_admin_as = sync_to_async(create_booking_by_admin)
-check_available_field_as = sync_to_async(check_available_field)
+# check_available_field_as = sync_to_async(check_available_field)
 reset_user_password_as = sync_to_async(reset_user_password)
 check_booking_status_as = sync_to_async(check_booking_info)
-change_booking_status_as = sync_to_async(change_booking_status)
+# change_booking_status_as = sync_to_async(change_booking_status)
