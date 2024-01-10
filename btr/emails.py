@@ -3,17 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 
 
-def send(user_email):
-    send_mail(
-        _('Welcome'),
-        _('Welcome  to BroTeamRacing!'),
-        'broteamracing@yandex.ru',
-        [user_email],
-        fail_silently=False,
-    )
-
-
-def send_from_tg(user_email, name, username, phone_number, password):
+def send_tg_reg_info(user_email, name, username, phone_number, password):
     subject = _('Created an new account on broteamracing.ru')
     message = _(
         'Hello, {name}!\n'
@@ -78,3 +68,25 @@ def send_recover_message(user_email, password):
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
+def send_booking_details(user_email, date, start_time, end_time, bike_count):
+    subject = _('A new booking create')
+    message = _(
+        'Hi, Rider!\n'
+        'We get a info about booking your made nearly!\n'
+        'Here\'s details:\n'
+        'Date: {date}\n'
+        'Time: from {start} to {end}\n'
+        'Number of bikes: {bike_count}\n'
+        'If you are late or cancel your race, please notify us in advance!\n'
+        'Contact number: +7 999 235-00-91\n'
+        'See you soon!'
+    ).format(date=date, start=start_time, end=end_time, bike_count=bike_count)
+    send_mail(
+        subject,
+        message,
+        'broteamracing@yandex.ru',
+        [user_email],
+        fail_silently=False,
+    )
