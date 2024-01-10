@@ -18,6 +18,7 @@ celery = "^5.3.4"
 redis = "^5.0.1"
 vk-api = "^11.9.9"
 python-telegram-bot = "^20.6"
+aiogram = "^3.3.0"
 
 
 [build-system]
