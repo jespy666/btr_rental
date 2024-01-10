@@ -2,9 +2,10 @@ from celery import shared_task
 from django.utils import timezone
 
 from btr.bookings.models import Booking
-from btr.bookings.service import send_booking_details
-from btr.vk import SendBookingNotification
-from btr.celery import app
+
+from ..emails import send_booking_details
+from ..vk import SendBookingNotification
+from ..celery import app
 
 
 @app.task
@@ -28,5 +29,3 @@ def check_booking_status():
 def send_booking_notify(group_id, access_token, message):
     vk = SendBookingNotification(group_id, access_token)
     vk.send_notify(message)
-
-
