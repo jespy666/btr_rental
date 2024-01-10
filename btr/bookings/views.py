@@ -10,7 +10,7 @@ from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .db_handlers import LoadCalc
 from .models import Booking
 from .forms import BookingForm
-from .tasks import send_details
+# from .tasks import send_details
 
 
 class BookingIndexView(TemplateView):
@@ -100,8 +100,8 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
         else:
             form.instance.status = 'pending'
         form.save()
-        send_details.delay(user_email, selected_date,
-                           start_time, end_time, bike_count)
+        # send_details.delay(user_email, selected_date,
+        #                    start_time, end_time, bike_count)
         return super().form_valid(form)
 
 

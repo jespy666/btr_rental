@@ -28,7 +28,7 @@ def validate_email(email: str) -> bool:
     if re.match(pattern, email):
         return True
     else:
-        raise InvalidEmailFormat
+        raise InvalidEmailError
 
 
 def validate_phone_number(phone_number: str) -> bool:

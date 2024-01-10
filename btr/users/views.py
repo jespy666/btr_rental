@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from btr.users.forms import UserRegistrationForm, UserEditForm
 from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
-from .tasks import send_reg_email
+# from ..tasks.reg_tasks import send_reg_email
 from ..bookings.models import Booking
 
 
@@ -23,7 +23,7 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.save()
-        send_reg_email.delay(form.instance.email)
+        # send_reg_email.delay(form.instance.email)
         return super().form_valid(form)
 
 
