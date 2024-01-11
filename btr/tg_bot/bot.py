@@ -1,14 +1,17 @@
 import logging
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 
 from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
+from .states.admin.foreign_book import ForeignBookingState
 
 from .handlers.start import Start
 from .handlers.help import Help
 from .handlers.create import CreateAccount
+from .handlers.cancel import Cancel
+from .handlers.admin.foreign_book import ForeignBook
 
 
 class BookingBot:
@@ -44,6 +47,42 @@ class BookingBot:
         self.dp.message.register(
             CreateAccount.create_account,
             CreateAccountState.regPhone,
+        )
+        self.dp.message.register(
+            ForeignBook.ask_bikes,
+            Command(commands='adbook'),
+        )
+        self.dp.message.register(
+            CreateAccount.ask_username,
+            ForeignBookingState.outPhone,
+        )
+        self.dp.message.register(
+            CreateAccount.ask_username,
+            ForeignBookingState.outDate,
+        )
+        self.dp.message.register(
+            CreateAccount.ask_username,
+            ForeignBookingState.outStart,
+        )
+        self.dp.message.register(
+            CreateAccount.ask_username,
+            ForeignBookingState.outHours,
+        )
+        self.dp.callback_query.register(
+            Cancel().handle,
+            F.data == 'cancel',
+        )
+        self.dp.callback_query.register(
+            Start().callback_handle,
+            F.data == 'start',
+        )
+        self.dp.callback_query.register(
+            Help().callback_handle,
+            F.data == 'help',
+        )
+        self.dp.callback_query.register(
+            CreateAccount.ask_name,
+            F.data == 'create',
         )
 
     async def run(self):

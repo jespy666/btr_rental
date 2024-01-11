@@ -62,15 +62,7 @@ def validate_time(time: str) -> bool:
         raise InvalidTimeFormat
 
 
-def validate_time_range(start_time: str, end_time: str) -> bool:
-    """Check for start time must be less than end time"""
-    format_str = '%H:%M'
-    start = datetime.strptime(start_time, format_str)
-    end = datetime.strptime(end_time, format_str)
-    if start < end:
-        return True
-    else:
-        raise ValueError
+
 
 
 def validate_hours(hours: str) -> bool:

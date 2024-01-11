@@ -94,21 +94,6 @@ def get_phone_number(user_email: str) -> str:
         raise NameError
 
 
-# def check_available_field(user_input: str) -> bool:
-#     """Function checks the availability of fields in the database"""
-#     try:
-#         user = SiteUser.objects.get(
-#             Q(username=user_input) |
-#             Q(email=user_input) |
-#             Q(phone_number=user_input)
-#         )
-#         return False
-#     except ObjectDoesNotExist:
-#         return True
-#     except MultipleObjectsReturned:
-#         return False
-
-
 def reset_user_password(user_email: str) -> str:
     """Set new random password to user by email"""
     user = SiteUser.objects.get(email=user_email)
@@ -189,75 +174,7 @@ class LoadCalc:
         return [self.get_week_load(week) for week in self.calendar]
 
 
-class SlotsFinder:
 
-    ORDINARY_SLOTS = '16:00:00-22:00:00'
-    WEEKEND_SLOTS = '10:00:00-18:00:00'
-    FRIDAY = 5
-
-    def __init__(self, date: str):
-        self.date = date
-
-    def is_weekend(self) -> bool:
-        """Check if day is a weekend"""
-        f_date = datetime.strptime(self.date, "%Y-%m-%d")
-        return f_date.weekday() >= self.FRIDAY
-
-    def get_booked_slots(self) -> list:
-        """Get busy time ranges from db"""
-        bookings = Booking.objects.filter(booking_date=self.date)
-        return [f'{book.start_time}-{book.end_time}' for book in bookings]
-
-    @staticmethod
-    def get_booked_seconds(booked_slots: list) -> list:
-        """Calculate booked ranges to seconds"""
-        booked_seconds = []
-        for slot in booked_slots:
-            start, end = map(lambda x: int(x.replace(':', '')),
-                             slot.split('-'))
-            booked_seconds.append((start, end))
-        return sorted(booked_seconds)
-
-    def get_available_slots(self, booked_seconds: list):
-        if self.is_weekend():
-            total_start, total_end = map(lambda x: int(x.replace(':', '')),
-                                         self.WEEKEND_SLOTS.split('-'))
-        else:
-            total_start, total_end = map(lambda x: int(x.replace(':', '')),
-                                         self.ORDINARY_SLOTS.split('-'))
-        free_slots = []
-        last_end = total_start
-        for start, end in booked_seconds:
-            if start > last_end:
-                free_slots.append((last_end, start))
-            last_end = max(last_end, end)
-        if last_end < total_end:
-            free_slots.append((last_end, total_end))
-        available_slots = [
-            (
-                f'{str(start)[:2]}:{str(start)[2:4]}',
-                f'{str(end)[:2]}:{str(end)[2:4]}',
-            )
-            for start, end in free_slots if start != end
-        ]
-        return available_slots
-
-    def find_available_slots(self) -> list:
-        """Get list of available slots for view"""
-        if self.date.split('-')[-1] == '0':
-            return []
-        booked_slots = self.get_booked_slots()
-        booked_seconds = self.get_booked_seconds(booked_slots)
-        available_slots = self.get_available_slots(booked_seconds)
-        return available_slots
-
-    async def find_available_slots_as(self) -> list:
-        """Get list of available slots for bot"""
-        get_booking_slots_as = sync_to_async(self.get_booked_slots)
-        booked_slots = await get_booking_slots_as()
-        booked_seconds = self.get_booked_seconds(booked_slots)
-        available_slots = self.get_available_slots(booked_seconds)
-        return available_slots
 
 
 create_user_by_bot_as = sync_to_async(create_user_by_bot)
