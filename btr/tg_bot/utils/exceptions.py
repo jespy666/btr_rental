@@ -32,3 +32,7 @@ class TimeIsNotAvailableError(Exception):
 
 class EndBiggerThenStartError(Exception):
     pass
+
+
+class SameStatusSelectedError(Exception):
+    pass

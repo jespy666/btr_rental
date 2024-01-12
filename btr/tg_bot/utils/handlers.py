@@ -71,3 +71,19 @@ def check_available_hours(start_time: str, hours: str, slots: list) -> bool:
         if f_start <= start and f_end >= end:
             return True
     raise TimeIsNotAvailableError
+
+
+def get_emoji_for_status(status: str) -> str:
+    """Get tg emoji equal booking status"""
+    statuses = {
+        'pending': '🟡',
+        'confirmed': '🟢',
+        'canceled': '🔴',
+        'completed': '🔵',
+    }
+    return statuses.get(status)
+
+
+def remove_seconds(time: datetime) -> str:
+    """Remove seconds from time"""
+    return time.strftime("%H:%M")

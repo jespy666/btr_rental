@@ -6,12 +6,14 @@ from aiogram.filters import Command
 from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
 from .states.admin.foreign_book import ForeignBookingState
+from .states.admin.change_status import ChangeStatusState
 
 from .handlers.start import Start
 from .handlers.help import Help
 from .handlers.create import CreateAccount
 from .handlers.cancel import Cancel
 from .handlers.admin.foreign_book import ForeignBook
+from .handlers.admin.change_status import ChangeStatus
 
 
 class BookingBot:
@@ -53,20 +55,36 @@ class BookingBot:
             Command(commands='adbook'),
         )
         self.dp.message.register(
-            CreateAccount.ask_username,
+            ForeignBook.ask_phone,
+            ForeignBookingState.outBikes,
+        )
+        self.dp.message.register(
+            ForeignBook.ask_date,
             ForeignBookingState.outPhone,
         )
         self.dp.message.register(
-            CreateAccount.ask_username,
+            ForeignBook.ask_start,
             ForeignBookingState.outDate,
         )
         self.dp.message.register(
-            CreateAccount.ask_username,
+            ForeignBook.ask_hours,
             ForeignBookingState.outStart,
         )
         self.dp.message.register(
-            CreateAccount.ask_username,
+            ForeignBook.make_booking,
             ForeignBookingState.outHours,
+        )
+        self.dp.message.register(
+            ChangeStatus.ask_id,
+            Command(commands='change'),
+        )
+        self.dp.message.register(
+            ChangeStatus.ask_status,
+            ChangeStatusState.bookingId,
+        )
+        self.dp.message.register(
+            ChangeStatus.change_status,
+            ChangeStatusState.bookingStatus,
         )
         self.dp.callback_query.register(
             Cancel().handle,

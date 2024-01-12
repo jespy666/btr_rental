@@ -1,10 +1,13 @@
 from datetime import datetime
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import (ObjectDoesNotExist,
+                                    MultipleObjectsReturned,
+                                    ValidationError)
 from django.db.models import Q
 from asgiref.sync import sync_to_async
 
 from btr.bookings.models import Booking
+from btr.tg_bot.utils.exceptions import SameStatusSelectedError
 from btr.users.models import SiteUser
 
 
@@ -30,6 +33,30 @@ def check_available_field(user_input: str) -> bool:
         return True
     except MultipleObjectsReturned:
         return False
+
+
+def check_booking_info(booking_id: str) -> dict:
+    """Checking and return booking info by primary key"""
+    booking = Booking.objects.get(pk=int(booking_id))
+    return {
+        'date': booking.booking_date,
+        'start': booking.start_time,
+        'end': booking.end_time,
+        'status': booking.status,
+        'phone': booking.rider.phone_number,
+        'f_phone': booking.foreign_number,
+    }
+
+
+def change_booking_status(booking_id: str, status: str) -> str:
+    """Change booking status by primary key"""
+    booking = Booking.objects.get(pk=int(booking_id))
+    old_status = booking.status
+    if old_status == status:
+        raise SameStatusSelectedError
+    booking.status = status
+    booking.save()
+    return old_status
 
 
 def create_user_by_bot(reg_data: dict) -> str:
@@ -141,11 +168,16 @@ class SlotsFinder:
         """Get list of available slots for bot"""
         get_booking_slots_as = sync_to_async(self.get_booked_slots)
         booked_slots = await get_booking_slots_as()
-        booked_seconds = self.get_booked_seconds(booked_slots)
-        available_slots = self.get_available_slots(booked_seconds)
-        return available_slots
+        try:
+            booked_seconds = self.get_booked_seconds(booked_slots)
+            available_slots = self.get_available_slots(booked_seconds)
+            return available_slots
+        except ValidationError:
+            return []
 
 
 check_available_field_as = sync_to_async(check_available_field)
 create_account_as = sync_to_async(create_user_by_bot)
 make_foreign_book_as = sync_to_async(create_booking_by_admin)
+check_booking_info_as = sync_to_async(check_booking_info)
+change_booking_status_as = sync_to_async(change_booking_status)

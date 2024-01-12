@@ -13,7 +13,7 @@ from ..utils.exceptions import (NameOverLengthError, InvalidEmailError,
                                 InvalidPhoneError)
 from ..utils.validators import (validate_name, validate_email,
                                 validate_phone_number)
-from ..keyboards.kb_cancel import InlineCancelKB
+from ..keyboards.kb_cancel import CancelKB
 
 
 class CreateAccount:
@@ -28,7 +28,7 @@ class CreateAccount:
         await bot.send_message(
             message.from_user.id,
             msg,
-            reply_markup=InlineCancelKB().place(),
+            reply_markup=CancelKB().place(),
         )
         await state.set_state(CreateAccountState.regName)
 
@@ -45,7 +45,7 @@ class CreateAccount:
             await bot.send_message(
                 message.from_user.id,
                 msg,
-                reply_markup=InlineCancelKB().place(),
+                reply_markup=CancelKB().place(),
             )
             await state.update_data(regname=name)
             await state.set_state(CreateAccountState.regUsername)
@@ -59,12 +59,13 @@ class CreateAccount:
             await bot.send_message(
                 message.from_user.id,
                 msg,
-                reply_markup=InlineCancelKB().place(),
+                reply_markup=CancelKB().place(),
             )
 
     @staticmethod
     async def ask_email(message: Message, state: FSMContext, bot: Bot):
         username = message.text
+        kb_cancel = CancelKB().place()
         if await check_available_field_as(username):
             try:
                 validate_name(username)
@@ -78,7 +79,7 @@ class CreateAccount:
                 await bot.send_message(
                     message.from_user.id,
                     msg,
-                    reply_markup=InlineCancelKB().place(),
+                    reply_markup=kb_cancel,
                 )
                 await state.update_data(regusername=username)
                 await state.set_state(CreateAccountState.regEmail)
@@ -92,7 +93,7 @@ class CreateAccount:
                 await bot.send_message(
                     message.from_user.id,
                     msg,
-                    reply_markup=InlineCancelKB().place(),
+                    reply_markup=kb_cancel,
                 )
         else:
             msg = _(
@@ -104,12 +105,13 @@ class CreateAccount:
             await bot.send_message(
                 message.from_user.id,
                 msg,
-                reply_markup=InlineCancelKB().place(),
+                reply_markup=kb_cancel,
             )
 
     @staticmethod
     async def ask_phone(message: Message, state: FSMContext, bot: Bot):
         email = message.text
+        kb_cancel = CancelKB().place()
         if await check_available_field_as(email):
             try:
                 validate_email(email)
@@ -123,7 +125,7 @@ class CreateAccount:
                 await bot.send_message(
                     message.from_user.id,
                     msg,
-                    reply_markup=InlineCancelKB().place(),
+                    reply_markup=kb_cancel,
                 )
                 await state.update_data(regemail=email)
                 await state.set_state(CreateAccountState.regPhone)
@@ -137,7 +139,7 @@ class CreateAccount:
                 await bot.send_message(
                     message.from_user.id,
                     msg,
-                    reply_markup=InlineCancelKB().place(),
+                    reply_markup=kb_cancel,
                 )
         else:
             msg = _(
@@ -151,12 +153,13 @@ class CreateAccount:
             await bot.send_message(
                 message.from_user.id,
                 msg,
-                reply_markup=InlineCancelKB().place(),
+                reply_markup=kb_cancel,
             )
 
     @staticmethod
     async def create_account(message: Message, state: FSMContext, bot: Bot):
         phone = message.text
+        kb_cancel = CancelKB().place()
         if check_available_field_as(phone):
             try:
                 validate_phone_number(phone)
@@ -187,7 +190,7 @@ class CreateAccount:
                 await bot.send_message(
                     message.from_user.id,
                     msg,
-                    reply_markup=InlineCancelKB().place(),
+                    reply_markup=kb_cancel,
                 )
         else:
             msg = _(
@@ -201,5 +204,5 @@ class CreateAccount:
             await bot.send_message(
                 message.from_user.id,
                 msg,
-                reply_markup=InlineCancelKB().place(),
+                reply_markup=kb_cancel,
             )
