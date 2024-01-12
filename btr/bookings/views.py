@@ -7,7 +7,7 @@ from datetime import datetime
 import calendar
 
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin
-from .db_handlers import LoadCalc
+# from .db_handlers import LoadCalc
 from .models import Booking
 from .forms import BookingForm
 # from .tasks import send_details
@@ -29,17 +29,17 @@ class BookingIndexView(TemplateView):
         else:
             next_year = current_year
             next_month = current_month + 1
-        current_load = LoadCalc(current_cal, current_year,
-                                current_month).get_month_load()
+        # current_load = LoadCalc(current_cal, current_year,
+        #                         current_month).get_month_load()
         next_cal = calendar.monthcalendar(next_year, next_month)
-        next_load = LoadCalc(next_cal, next_year, next_month).get_month_load()
+        # next_load = LoadCalc(next_cal, next_year, next_month).get_month_load()
         context['current_month'] = calendar.month_name[current_month]
         context['current_year'] = current_year
         context['today'] = current_day
-        context['current_calendar'] = current_load
+        # context['current_calendar'] = current_load
         context['next_month'] = calendar.month_name[next_month]
         context['next_year'] = next_year
-        context['next_calendar'] = next_load
+        # context['next_calendar'] = next_load
         return context
 
 

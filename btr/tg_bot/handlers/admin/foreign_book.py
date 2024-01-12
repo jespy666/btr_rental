@@ -2,14 +2,15 @@ from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram import html
+from django.core.exceptions import ValidationError
 
 from django.utils.translation import gettext as _
 
 from btr.orm_utils import SlotsFinder, make_foreign_book_as
 
 from ...states.admin.foreign_book import ForeignBookingState
-from ...keyboards.kb_cancel import InlineCancelKB
-from ...keyboards.kb_start_time import StartTimesKB
+from ...keyboards.kb_cancel import CancelKB
+from ...keyboards.kb_dialog import DialogKB
 from ...utils.handlers import (check_admin_access, extract_start_times,
                                check_available_start_time,
                                get_slots_for_bot_view, extract_hours,
@@ -37,12 +38,15 @@ class ForeignBook:
                 'Let\'s book unregistered rider!\n\n'
                 '🏍 How many <strong>bikes</strong> do you need?</em>'
             ).format(admin=user_name if user_name else 'Admin')
-            bikes = ['1', '2', '3', '4']
-            await bot.answer_callback_query('sss')
-            await message.reply(
-                msg,
-                reply_markup=StartTimesKB(bikes).place_outline()
+            msg2 = _(
+                '<strong>Choose value</strong> ⤵️'
             )
+            bikes = ['1', '2', '3', '4']
+            kb_cancel = CancelKB().place()
+            kb_reply = DialogKB(bikes).place()
+            await bot.send_message(user_id, msg, reply_markup=kb_cancel)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
+            await state.update_data(bikesb=bikes)
             await state.set_state(ForeignBookingState.outBikes)
         else:
             msg = _(
@@ -51,44 +55,46 @@ class ForeignBook:
                 'You are not Admin!</strong>\n'
                 '😜 <em>Get lost</em>'
             )
-            await bot.send_message(message.from_user.id, msg)
+            await bot.send_message(user_id, msg)
             await state.clear()
 
     @staticmethod
     async def ask_phone(message: Message, state: FSMContext, bot: Bot):
         bikes = message.text
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         try:
             validate_bike_quantity(bikes)
             msg = _(
                 '🟢🟢🟢\n\n'
                 '<em>Ok! I prepared {bikes} Bikes\n\n'
-                'What phone number should I use to book?</em>'
+                'What phone number should I use to book?</em>\n\n'
                 '📝 <strong>Format: +7xxxxxxxxxx</strong>\n\n'
                 '⚠️ <strong>Case sensitive</strong> ⤵️'
             ).format(bikes=html.bold(html.quote(bikes)))
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
             await state.update_data(outbikes=bikes)
             await state.set_state(ForeignBookingState.outPhone)
         except WrongBikesCountError:
+            data = await state.get_data()
+            bikes_b = data.get('bikesb')
             msg = _(
                 '🔴🔴🔴\n\n'
                 '<strong>Bikes count must be at <em>1 - 4</em>!\n\n'
                 '</strong>'
-                '<em>Try again</em> ⤵️'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
+            msg2 = _(
+                '<em>Choose again</em> ⤵️'
             )
+            kb_reply = DialogKB(bikes_b).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
 
     @staticmethod
     async def ask_date(message: Message, state: FSMContext, bot: Bot):
         phone = message.text
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         try:
             validate_phone_number(phone)
             msg = _(
@@ -100,11 +106,7 @@ class ForeignBook:
                 '⚠️ Type with \':\' ⤵️'
                 '</strong>'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
             await state.update_data(outphone=phone)
             await state.set_state(ForeignBookingState.outDate)
         except InvalidPhoneError:
@@ -114,83 +116,65 @@ class ForeignBook:
                 '</strong>'
                 '<em>Try again</em> ⤵️'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            await bot.send_message(message.from_user.id, msg, reply_markup=kb)
 
     @staticmethod
     async def ask_start(message: Message, state: FSMContext, bot: Bot):
         date = message.text
-        s = SlotsFinder(date)
-        free_slots: list = await s.find_available_slots_as()
-        if free_slots:
-            starts = extract_start_times(free_slots)
-            slots_view = get_slots_for_bot_view(free_slots)
-            try:
+        user_id = message.from_user.id
+        kb = CancelKB().place()
+        try:
+            s = SlotsFinder(date)
+            free_slots: list = await s.find_available_slots_as()
+            if free_slots:
+                starts = extract_start_times(free_slots)
+                slots_view = get_slots_for_bot_view(free_slots)
                 validate_date(date)
                 msg = _(
                     '🟢🟢🟢\n\n'
                     '<em>Ok! On 📆 {date} available slots is</em> ↙️\n\n'
                     '<strong>{slots}</strong>\n\n'
-                    '<em>Please, choose available start time</em> ⤵️'
                 ).format(date=date, slots=slots_view)
-                kb_cancel = StartTimesKB().place()
-                kb_starts = StartTimesKB().place_outline(starts)
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
+                msg2 = _(
+                    '<strong>Please, choose available start time</strong> ⤵️'
                 )
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_starts,
-                )
-                await state.update_data(outdate=date)
+                kb_reply = DialogKB(starts).place()
+                await bot.send_message(user_id, msg, reply_markup=kb)
+                await bot.send_message(user_id, msg2, reply_markup=kb_reply)
+                await state.update_data(outdate=date, startsb=starts)
                 await state.set_state(ForeignBookingState.outStart)
-            except InvalidDateError:
+            else:
                 msg = _(
                     '🔴🔴🔴\n\n'
-                    '<strong>Invalid date format!\n\n'
+                    '<strong>On 📆 {date} no available slots!\n\n'
                     '</strong>'
                     '<em>Try again</em> ⤵️'
-                )
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=InlineCancelKB().place(),
-                )
-            except DateInPastError:
-                msg = _(
-                    '🔴🔴🔴\n\n'
-                    '<strong>Date can\'t be in past!\n\n'
-                    '</strong>'
-                    '<em>Try again</em> ⤵️'
-                )
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=InlineCancelKB().place(),
-                )
-        else:
+                ).format(date=date)
+                await bot.send_message(user_id, msg, reply_markup=kb)
+        except (InvalidDateError, ValidationError, ValueError):
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>On 📆 {date} no available slots!\n\n'
+                '<strong>Invalid date format!\n\n'
                 '</strong>'
                 '<em>Try again</em> ⤵️'
-            ).format(date=date)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
             )
+            await bot.send_message(user_id, msg, reply_markup=kb)
+        except DateInPastError:
+            msg = _(
+                '🔴🔴🔴\n\n'
+                '<strong>Date can\'t be in past!\n\n'
+                '</strong>'
+                '<em>Try again</em> ⤵️'
+            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
 
     @staticmethod
     async def ask_hours(message: Message, state: FSMContext, bot: Bot):
         start = message.text
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         book_data = await state.get_data()
+        free_starts = book_data.get('startsb')
         date = book_data.get('outdate')
         s = SlotsFinder(date)
         free_slots: list = await s.find_available_slots_as()
@@ -204,55 +188,45 @@ class ForeignBook:
                 '<em>Ok!</em>\n\n'
                 '📆 <strong>{date}\n\n'
                 '🕒 {start}</strong>\n\n'
-                '<em>How many hours?</em> ⤵️'
             ).format(date=date, start=start)
-            kb_cancel = StartTimesKB().place()
-            kb_hours = StartTimesKB().place_outline(hours)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=kb_cancel,
-            )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=kb_hours,
-            )
-            await state.update_data(outstart=start)
+            msg2 = _('<strong>Choose hours ⤵️</strong>')
+            kb_reply = DialogKB(hours).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
+            await state.update_data(outstart=start, hoursb=hours)
             await state.set_state(ForeignBookingState.outHours)
         except InvalidTimeFormatError:
             msg = _(
                 '🔴🔴🔴\n\n'
                 '<strong>Invalid time format!\n\n'
                 '</strong>'
-                '<em>Try again</em> ⤵️'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            msg2 = _('<strong>Try again ⤵️</strong>')
+            kb_reply = DialogKB(free_starts).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
         except TimeIsNotAvailableError:
             msg = _(
                 '🔴🔴🔴\n\n'
                 '<strong>🕒 Time {time} is already booked!\n\n'
                 '</strong>'
-                '<em>Available start times are ↙️\n\n'
+                '<em>Available start times are ↙️</em>\n\n'
                 '<strong>{slots}</strong>\n\n'
-                'Try again</em> ⤵️'
             ).format(time=start, slots=slots_view)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            msg2 = _('<strong>Try again ⤵️</strong>')
+            kb_reply = DialogKB(free_starts).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
 
     @staticmethod
     async def make_booking(message: Message, state: FSMContext, bot: Bot):
         hours = message.text
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         book_data = await state.get_data()
         date = book_data.get('outdate')
         start = book_data.get('outstart')
+        free_hours = book_data.get('hoursb')
         end = get_end_time(start, hours)
         s = SlotsFinder(date)
         free_slots = await s.find_available_slots_as()
@@ -265,58 +239,52 @@ class ForeignBook:
             book_data = await state.get_data()
             await make_foreign_book_as(book_data)
             msg = _(
-                    '🎉🎉🎉\n\n'
-                    '<strong>Booking created successfully!</strong>\n\n'
-                    '<em>Book data ↙️\n\n'
-                    '📞 Rider contact: <strong>{phone}</strong>\n\n'
-                    '📆 Booking date: <strong>{date}</strong>\n\n'
-                    '🕛 Start time: <strong>{start}</strong>\n\n'
-                    '🕜 End time: <strong>{end}</strong>\n\n'
-                    '⏰ Hours: <strong>{hours} hours</strong></em>\n\n'
-                ).format(
+                '🎉🎉🎉\n\n'
+                '<strong>Booking created successfully!</strong>\n\n'
+                '<em>Book data ↙️\n\n'
+                '📞 Rider contact: <strong>{phone}</strong>\n\n'
+                '📆 Booking date: <strong>{date}</strong>\n\n'
+                '🕛 Start time: <strong>{start}</strong>\n\n'
+                '🕜 End time: <strong>{end}</strong>\n\n'
+                '⏰ Hours: <strong>{hours} hours</strong></em>\n\n'
+            ).format(
                 phone=book_data.get('outphone'),
                 date=date,
                 start=start,
                 end=end,
                 hours=hours,
             )
-            await bot.send_message(message.from_user.id, msg)
+            await bot.send_message(user_id, msg)
             await state.clear()
         except InvalidTimeFormatError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>Invalid time format!\n\n'
-                '</strong>'
-                '<em>Try again</em> ⤵️'
+                '<strong>Invalid time format!\n\n</strong>'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            msg2 = _('<strong>Try again ⤵️</strong>')
+            kb_reply = DialogKB(free_hours).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
         except EndBiggerThenStartError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>End time must be bigger then Start time!\n\n'
-                '</strong>'
-                '<em>Try again</em> ⤵️'
+                '<strong>End time must be bigger Start time!\n\n</strong>'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+            msg2 = _('<strong>Try again ⤵️</strong>')
+            kb_reply = DialogKB(free_hours).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)
         except TimeIsNotAvailableError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>🕒 Time {time} is already booked!\n\n'
-                '</strong>'
-                '<em>Available start times are ↙️\n\n'
+                '<strong>🕒 This time slot is already booked!\n\n</strong>'
+            ).format(time=end)
+            msg2 = _(
+                '<em>Available slots are ↙️\n\n'
                 '<strong>{slots}</strong>\n\n'
-                'Try again</em> ⤵️'
-            ).format(time=end, slots=slots_view)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=InlineCancelKB().place(),
-            )
+                '<em>Your start time is: <strong>{start}</strong></em>\n\n'
+                '<strong>Try again (choose hours) ⤵️</strong>'
+            ).format(slots=slots_view, start=start)
+            kb_reply = DialogKB(free_hours).place()
+            await bot.send_message(user_id, msg, reply_markup=kb)
+            await bot.send_message(user_id, msg2, reply_markup=kb_reply)

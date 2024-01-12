@@ -103,85 +103,69 @@ def reset_user_password(user_email: str) -> str:
     return password
 
 
-def check_booking_info(booking_id: str) -> dict:
-    """Checking and return booking info by primary key"""
-    booking = Booking.objects.get(pk=int(booking_id))
-    return {
-        'date': booking.booking_date,
-        'start': booking.start_time,
-        'end': booking.end_time,
-        'status': booking.status,
-    }
-
-
-# def change_booking_status(booking_id: str, status: str) -> str:
-#     """Change booking status by primary key"""
-#     booking = Booking.objects.get(pk=int(booking_id))
-#     old_status = booking.status
-#     if old_status == status:
-#         raise SameStatusSelected
-#     booking.status = status
-#     booking.save()
-#     return old_status
-
-
-class LoadCalc:
-
-    FRIDAY = 5
-    ORDINARY_DAY_HOURS = 6
-    WEEKEND_DAY_HOURS = 8
-
-    def __init__(self, calendar: list, year: int, month: int):
-        self.calendar = calendar
-        self.year = year
-        self.month = month
-
-    def get_day_load(self, date: str) -> int:
-        """Get the workload of given date as a percentage"""
-        if date.split('-')[-1] == '0':
-            return -1
-        bookings = (Booking.objects.filter(booking_date=date)
-                    .exclude(status='canceled'))
-        book_time = 0
-        for booking in bookings:
-            start_time = booking.start_time
-            end_time = booking.end_time
-            start = datetime.combine(datetime.today(), start_time)
-            end = datetime.combine(datetime.today(), end_time)
-            duration = (end - start).seconds // 3600
-            book_time += duration
-        if self.is_weekend(date):
-            return int((book_time / self.WEEKEND_DAY_HOURS) * 100)
-        return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
-
-    def get_week_load(self, week: list) -> list:
-        """Distribute load on week"""
-        week_load = []
-        for day in week:
-            date = f'{self.year}-{self.month}-{day}'
-            slots = SlotsFinder(date).find_available_slots()
-            day_load = (day, self.get_day_load(date), slots)
-            week_load.append(day_load)
-        return week_load
-
-    def is_weekend(self, date: str) -> bool:
-        """Check if day is a weekend"""
-        f_date = datetime.strptime(date, "%Y-%m-%d")
-        return f_date.weekday() >= self.FRIDAY
-
-    def get_month_load(self):
-        """Calculate full month load"""
-        return [self.get_week_load(week) for week in self.calendar]
 
 
 
 
+#
+#
+# class LoadCalc:
+#
+#     FRIDAY = 5
+#     ORDINARY_DAY_HOURS = 6
+#     WEEKEND_DAY_HOURS = 8
+#
+#     def __init__(self, calendar: list, year: int, month: int):
+#         self.calendar = calendar
+#         self.year = year
+#         self.month = month
+#
+#     def get_day_load(self, date: str) -> int:
+#         """Get the workload of given date as a percentage"""
+#         if date.split('-')[-1] == '0':
+#             return -1
+#         bookings = (Booking.objects.filter(booking_date=date)
+#                     .exclude(status='canceled'))
+#         book_time = 0
+#         for booking in bookings:
+#             start_time = booking.start_time
+#             end_time = booking.end_time
+#             start = datetime.combine(datetime.today(), start_time)
+#             end = datetime.combine(datetime.today(), end_time)
+#             duration = (end - start).seconds // 3600
+#             book_time += duration
+#         if self.is_weekend(date):
+#             return int((book_time / self.WEEKEND_DAY_HOURS) * 100)
+#         return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
+#
+#     def get_week_load(self, week: list) -> list:
+#         """Distribute load on week"""
+#         week_load = []
+#         for day in week:
+#             date = f'{self.year}-{self.month}-{day}'
+#             slots = SlotsFinder(date).find_available_slots()
+#             day_load = (day, self.get_day_load(date), slots)
+#             week_load.append(day_load)
+#         return week_load
+#
+#     def is_weekend(self, date: str) -> bool:
+#         """Check if day is a weekend"""
+#         f_date = datetime.strptime(date, "%Y-%m-%d")
+#         return f_date.weekday() >= self.FRIDAY
+#
+#     def get_month_load(self):
+#         """Calculate full month load"""
+#         return [self.get_week_load(week) for week in self.calendar]
+#
+#
 
-create_user_by_bot_as = sync_to_async(create_user_by_bot)
-check_user_exist_as = sync_to_async(check_user_exist)
-# create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
-create_booking_by_admin_as = sync_to_async(create_booking_by_admin)
-# check_available_field_as = sync_to_async(check_available_field)
-reset_user_password_as = sync_to_async(reset_user_password)
-check_booking_status_as = sync_to_async(check_booking_info)
-# change_booking_status_as = sync_to_async(change_booking_status)
+
+#
+# create_user_by_bot_as = sync_to_async(create_user_by_bot)
+# check_user_exist_as = sync_to_async(check_user_exist)
+# # create_booking_by_bot_as = sync_to_async(create_booking_by_bot)
+# create_booking_by_admin_as = sync_to_async(create_booking_by_admin)
+# # check_available_field_as = sync_to_async(check_available_field)
+# reset_user_password_as = sync_to_async(reset_user_password)
+# check_booking_status_as = sync_to_async(check_booking_info)
+# # change_booking_status_as = sync_to_async(change_booking_status)
