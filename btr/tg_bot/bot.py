@@ -7,6 +7,7 @@ from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
 from .states.admin.foreign_book import ForeignBookingState
 from .states.admin.change_status import ChangeStatusState
+from .states.admin.check_booking import CheckBookingState
 
 from .handlers.start import Start
 from .handlers.help import Help
@@ -14,6 +15,7 @@ from .handlers.create import CreateAccount
 from .handlers.cancel import Cancel
 from .handlers.admin.foreign_book import ForeignBook
 from .handlers.admin.change_status import ChangeStatus
+from .handlers.admin.check_booking import CheckBooking
 
 
 class BookingBot:
@@ -27,7 +29,7 @@ class BookingBot:
         self.bot = Bot(token=token, parse_mode='HTML')
         self.dp = Dispatcher()
 
-    def setup(self):
+    def _setup(self):
         self.dp.message.register(Start.handle, Command(commands='start'))
         self.dp.message.register(Help.handle, Command(commands='help'))
         self.dp.message.register(
@@ -86,6 +88,14 @@ class BookingBot:
             ChangeStatus.change_status,
             ChangeStatusState.bookingStatus,
         )
+        self.dp.message.register(
+            CheckBooking.ask_id,
+            Command(commands='check'),
+        )
+        self.dp.message.register(
+            CheckBooking.show_booking_info,
+            CheckBookingState.bookingId,
+        )
         self.dp.callback_query.register(
             Cancel().handle,
             F.data == 'cancel',
@@ -104,7 +114,7 @@ class BookingBot:
         )
 
     async def run(self):
-        self.setup()
+        self._setup()
         await set_commands(self.bot)
         try:
             await self.dp.start_polling(self.bot, skip_updates=True)
