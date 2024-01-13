@@ -43,8 +43,10 @@ def check_booking_info(booking_id: str) -> dict:
         'start': booking.start_time,
         'end': booking.end_time,
         'status': booking.status,
+        'bikes': booking.bike_count,
         'phone': booking.rider.phone_number,
         'f_phone': booking.foreign_number,
+        'r_username': booking.rider.username,
     }
 
 
