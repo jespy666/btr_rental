@@ -5,6 +5,8 @@ from aiogram.filters import Command
 
 from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
+from .states.reset_password import ResetPasswordState
+from .states.book_ride import BookingState
 from .states.admin.foreign_book import ForeignBookingState
 from .states.admin.change_status import ChangeStatusState
 from .states.admin.check_booking import CheckBookingState
@@ -13,6 +15,8 @@ from .handlers.start import Start
 from .handlers.help import Help
 from .handlers.create import CreateAccount
 from .handlers.cancel import Cancel
+from .handlers.reset import ResetPassword
+from .handlers.book import BookingRide
 from .handlers.admin.foreign_book import ForeignBook
 from .handlers.admin.change_status import ChangeStatus
 from .handlers.admin.check_booking import CheckBooking
@@ -51,6 +55,42 @@ class BookingBot:
         self.dp.message.register(
             CreateAccount.create_account,
             CreateAccountState.regPhone,
+        )
+        self.dp.message.register(
+            ResetPassword.ask_email,
+            Command(commands='reset'),
+        )
+        self.dp.message.register(
+            ResetPassword.ask_code,
+            ResetPasswordState.resetEmail,
+        )
+        self.dp.message.register(
+            ResetPassword.reset_password,
+            ResetPasswordState.verificationCode,
+        )
+        self.dp.message.register(
+            BookingRide.ask_email,
+            Command(commands='book'),
+        )
+        self.dp.message.register(
+            BookingRide.ask_bikes,
+            BookingState.bookEmail,
+        )
+        self.dp.message.register(
+            BookingRide.ask_date,
+            BookingState.bookBikes,
+        )
+        self.dp.message.register(
+            BookingRide.ask_start,
+            BookingState.bookDate,
+        )
+        self.dp.message.register(
+            BookingRide.ask_hours,
+            BookingState.bookStart,
+        )
+        self.dp.message.register(
+            BookingRide.make_booking,
+            BookingState.bookHours,
         )
         self.dp.message.register(
             ForeignBook.ask_bikes,

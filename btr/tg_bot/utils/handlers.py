@@ -1,9 +1,11 @@
+import secrets
+import string
 from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
 import os
 
-from .exceptions import TimeIsNotAvailableError
+from .exceptions import TimeIsNotAvailableError, CompareCodesError
 
 
 def check_admin_access(user_id: int) -> bool:
@@ -87,3 +89,16 @@ def get_emoji_for_status(status: str) -> str:
 def remove_seconds(time: datetime) -> str:
     """Remove seconds from time"""
     return time.strftime("%H:%M")
+
+
+def generate_verification_code() -> str:
+    """Generate random code to confirm personality"""
+    characters = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(characters) for _ in range(6))
+
+
+def check_verification_code(source_code: str, user_code: str) -> bool:
+    """Compare verification codes"""
+    if source_code == user_code:
+        return True
+    raise CompareCodesError
