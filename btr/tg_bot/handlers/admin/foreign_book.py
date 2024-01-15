@@ -246,7 +246,7 @@ class ForeignBook:
                 '📆 Booking date: <strong>{date}</strong>\n\n'
                 '🕛 Start time: <strong>{start}</strong>\n\n'
                 '🕜 End time: <strong>{end}</strong>\n\n'
-                '⏰ Hours: <strong>{hours} hours</strong></em>\n\n'
+                '⏰ Hours: <strong>{hours}</strong></em>\n\n'
             ).format(
                 phone=book_data.get('outphone'),
                 date=date,

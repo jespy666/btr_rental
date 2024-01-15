@@ -20,21 +20,21 @@ class CreateAccount:
 
     @staticmethod
     async def ask_name(message: Message, state: FSMContext, bot: Bot):
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         msg = _(
             '<strong>Create Account</strong>\n\n'
-            '<em>Hi! Let\'s create an account!\n'
+            '<em>Let\'s create an account!\n'
             'Please, type your Name ⤵️</em>'
         )
-        await bot.send_message(
-            message.from_user.id,
-            msg,
-            reply_markup=CancelKB().place(),
-        )
+        await bot.send_message(user_id, msg, reply_markup=kb)
         await state.set_state(CreateAccountState.regName)
 
     @staticmethod
     async def ask_username(message: Message, state: FSMContext, bot: Bot):
         name = message.text
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         try:
             validate_name(name)
             msg = _(
@@ -42,11 +42,7 @@ class CreateAccount:
                 '👋 <em>Hello,</em> <strong>{name}</strong>!\n\n'
                 '<em>Come up with a username</em> ⤵️'
             ).format(name=html.bold(html.quote(name)))
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=CancelKB().place(),
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
             await state.update_data(regname=name)
             await state.set_state(CreateAccountState.regUsername)
         except NameOverLengthError:
@@ -56,16 +52,13 @@ class CreateAccount:
                 '</strong>'
                 '<em>Try again</em> ⤵️'
             )
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=CancelKB().place(),
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
 
     @staticmethod
     async def ask_email(message: Message, state: FSMContext, bot: Bot):
         username = message.text
-        kb_cancel = CancelKB().place()
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         if await check_available_field_as(username):
             try:
                 validate_name(username)
@@ -76,11 +69,7 @@ class CreateAccount:
                     '<em>Now, i need your valid</em> ✉️ <strong> Email'
                     '</strong> ⤵️'
                 ).format(username=html.bold(html.quote(username)))
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
-                )
+                await bot.send_message(user_id, msg, reply_markup=kb)
                 await state.update_data(regusername=username)
                 await state.set_state(CreateAccountState.regEmail)
             except NameOverLengthError:
@@ -90,11 +79,7 @@ class CreateAccount:
                     '</strong>'
                     '<em>Try again</em> ⤵️'
                 )
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
-                )
+                await bot.send_message(user_id, msg, reply_markup=kb)
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
@@ -102,16 +87,13 @@ class CreateAccount:
                 '</strong>\n\n'
                 '<em>Try another username</em> ⤵️'
             ).format(username=html.bold(html.quote(username)))
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=kb_cancel,
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
 
     @staticmethod
     async def ask_phone(message: Message, state: FSMContext, bot: Bot):
         email = message.text
-        kb_cancel = CancelKB().place()
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         if await check_available_field_as(email):
             try:
                 validate_email(email)
@@ -122,11 +104,7 @@ class CreateAccount:
                     '📝 <strong>Format: +7xxxxxxxxxx</strong>\n\n'
                     '⚠️ <strong>Case sensitive</strong> ⤵️'
                 )
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
-                )
+                await bot.send_message(user_id, msg, reply_markup=kb)
                 await state.update_data(regemail=email)
                 await state.set_state(CreateAccountState.regPhone)
 
@@ -136,11 +114,7 @@ class CreateAccount:
                     '<strong>Invalid email format <em>{email}</em></strong>\n'
                     '\n<em>Check your spelling and try again</em> ⤵️'
                 ).format(email=email)
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
-                )
+                await bot.send_message(user_id, msg, reply_markup=kb)
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
@@ -150,16 +124,13 @@ class CreateAccount:
                 'command\n'
                 'Or try again</em> ⤵️'
             ).format(email=email)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=kb_cancel,
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
 
     @staticmethod
     async def create_account(message: Message, state: FSMContext, bot: Bot):
         phone = message.text
-        kb_cancel = CancelKB().place()
+        user_id = message.from_user.id
+        kb = CancelKB().place()
         if check_available_field_as(phone):
             try:
                 validate_phone_number(phone)
@@ -179,7 +150,7 @@ class CreateAccount:
                     '<em>All sign in info was send to</em> ↙️\n\n'
                     '✉️ {email}'
                 ).format(email=reg_data.get('regemail'))
-                await bot.send_message(message.from_user.id, msg)
+                await bot.send_message(user_id, msg)
                 await state.clear()
             except InvalidPhoneError:
                 msg = _(
@@ -187,11 +158,7 @@ class CreateAccount:
                     '<strong>Invalid phone format <em>{phone}</em></strong>\n'
                     '\n<em>Check your spelling and try again</em> ⤵️'
                 ).format(phone=phone)
-                await bot.send_message(
-                    message.from_user.id,
-                    msg,
-                    reply_markup=kb_cancel,
-                )
+                await bot.send_message(user_id, msg, reply_markup=kb)
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
@@ -201,8 +168,4 @@ class CreateAccount:
                 'command\n'
                 'Or try again</em> ⤵️'
             ).format(phone=phone)
-            await bot.send_message(
-                message.from_user.id,
-                msg,
-                reply_markup=kb_cancel,
-            )
+            await bot.send_message(user_id, msg, reply_markup=kb)
