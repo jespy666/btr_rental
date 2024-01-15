@@ -36,3 +36,7 @@ class EndBiggerThenStartError(Exception):
 
 class SameStatusSelectedError(Exception):
     pass
+
+
+class CompareCodesError(Exception):
+    pass
