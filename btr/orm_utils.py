@@ -104,6 +104,48 @@ def create_booking_by_admin(book_data: dict) -> None:
     booking.save()
 
 
+def create_booking_by_bot(user_data: dict) -> str:
+    """User create booking yourself via tg bot"""
+    user_email = user_data.get('email')
+    user = SiteUser.objects.get(email=user_email)
+
+    date = user_data.get('date')
+    start = user_data.get('start')
+    end = user_data.get('end')
+    bikes = user_data.get('bikes')
+    phone_number = get_phone_number(user_email)
+
+    booking = Booking.objects.create(
+        rider=user,
+        foreign_number=phone_number,
+        booking_date=date,
+        start_time=start,
+        end_time=end,
+        bike_count=bikes,
+        status='pending',
+    )
+    booking.save()
+    return booking.pk
+
+
+def get_phone_number(user_email: str) -> str:
+    """Find user phone number by email from database"""
+    try:
+        user = SiteUser.objects.get(email=user_email)
+        return user.phone_number
+    except ObjectDoesNotExist:
+        raise ObjectDoesNotExist
+
+
+def reset_user_password(user_email: str) -> str:
+    """Set new random password to user by email"""
+    user = SiteUser.objects.get(email=user_email)
+    password = SiteUser.objects.make_random_password(length=8)
+    user.set_password(password)
+    user.save()
+    return password
+
+
 class SlotsFinder:
 
     ORDINARY_SLOTS = '16:00:00-22:00:00'
@@ -179,7 +221,10 @@ class SlotsFinder:
 
 
 check_available_field_as = sync_to_async(check_available_field)
+check_user_exist_as = sync_to_async(check_user_exist)
 create_account_as = sync_to_async(create_user_by_bot)
 make_foreign_book_as = sync_to_async(create_booking_by_admin)
+create_booking_as = sync_to_async(create_booking_by_bot)
 check_booking_info_as = sync_to_async(check_booking_info)
 change_booking_status_as = sync_to_async(change_booking_status)
+reset_user_password_as = sync_to_async(reset_user_password)

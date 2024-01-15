@@ -6,10 +6,11 @@ from django.utils.translation import gettext as _
 from django.views.generic import FormView
 
 from btr.auth.forms import AuthPasswordResetForm, AuthConfirmForm
-from btr.bookings.db_handlers import reset_user_password, check_user_exist
+from ..orm_utils import reset_user_password
+from btr.bookings.db_handlers import check_user_exist
 from ..tasks.reg_tasks import (send_verification_code_from_site,
                                send_recover_message_from_site)
-from ..bookings.bot_handlers import generate_verification_code
+from btr.tg_bot.utils.handlers import generate_verification_code
 from ..mixins import ObjectDoesNotExistMixin
 
 

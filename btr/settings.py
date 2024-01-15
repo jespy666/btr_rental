@@ -190,7 +190,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'check-booking-status': {
-        'task': 'btr.bookings.tasks.check_booking_status',
+        'task': 'btr.tasks.book_tasks.check_booking_status',
         'schedule': 120.0,
     },
 }

@@ -9,18 +9,10 @@ from django.conf import settings
 #
 #
 
-def generate_verification_code() -> str:
-    """Generate random code to confirm personality"""
-    characters = string.ascii_letters + string.digits
-    return ''.join(secrets.choice(characters) for _ in range(6))
+
 #
 #
-# def check_verification_code(source_code: str, user_code: str) -> bool:
-#     """Check that the verification codes match"""
-#     if source_code == user_code:
-#         return True
-#     else:
-#         raise ValueError
+
 #
 #
 # def check_admin_password(password: str) -> bool:

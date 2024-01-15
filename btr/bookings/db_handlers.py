@@ -38,29 +38,7 @@ def check_user_exist(email: str) -> bool:
         raise ObjectDoesNotExist
 
 
-# def create_booking_by_bot(user_data: dict) -> dict:
-#     """User create booking yourself via tg bot"""
-#     user_email = user_data.get('user_email')
-#     user = SiteUser.objects.get(email=user_email)
-#
-#     date = user_data.get('book_date')
-#     time = user_data.get('book_start_time')
-#     hours = user_data.get('book_hours')
-#     bike_count = user_data.get('bike_count')
-#     # interval = calculate_time_interval(time, hours)
-#     phone_number = get_phone_number(user_email)
-#
-#     booking = Booking.objects.create(
-#         rider=user,
-#         foreign_number=phone_number,
-#         booking_date=date,
-#         start_time=interval.get('start_time'),
-#         end_time=interval.get('end_time'),
-#         bike_count=bike_count,
-#         status='pending',
-#     )
-#     booking.save()
-#     return interval
+
 
 
 def create_booking_by_admin(user_data: dict) -> None:
@@ -83,25 +61,6 @@ def create_booking_by_admin(user_data: dict) -> None:
         status='confirmed'
     )
     booking.save()
-
-
-def get_phone_number(user_email: str) -> str:
-    """Find user phone number by email from database"""
-    try:
-        user = SiteUser.objects.get(email=user_email)
-        return user.phone_number
-    except ObjectDoesNotExist:
-        raise NameError
-
-
-def reset_user_password(user_email: str) -> str:
-    """Set new random password to user by email"""
-    user = SiteUser.objects.get(email=user_email)
-    password = SiteUser.objects.make_random_password(length=8)
-    user.set_password(password)
-    user.save()
-    return password
-
 
 
 
