@@ -162,7 +162,8 @@ class SlotsFinder:
 
     def get_booked_slots(self) -> list:
         """Get busy time ranges from db"""
-        bookings = Booking.objects.filter(booking_date=self.date)
+        bookings = (Booking.objects.filter(booking_date=self.date)
+                    .exclude(status='canceled'))
         return [f'{book.start_time}-{book.end_time}' for book in bookings]
 
     @staticmethod
@@ -218,6 +219,55 @@ class SlotsFinder:
             return available_slots
         except ValidationError:
             return []
+
+
+class LoadCalc:
+
+    FRIDAY = 5
+    ORDINARY_DAY_HOURS = 6
+    WEEKEND_DAY_HOURS = 8
+
+    def __init__(self, calendar: list, year: int, month: int):
+        self.calendar = calendar
+        self.year = year
+        self.month = month
+
+    def get_day_load(self, date: str) -> int:
+        """Get the workload of given date as a percentage"""
+        if date.split('-')[-1] == '0':
+            return -1
+        bookings = (Booking.objects.filter(booking_date=date)
+                    .exclude(status='canceled'))
+        book_time = 0
+        for booking in bookings:
+            start_time = booking.start_time
+            end_time = booking.end_time
+            start = datetime.combine(datetime.today(), start_time)
+            end = datetime.combine(datetime.today(), end_time)
+            duration = (end - start).seconds // 3600
+            book_time += duration
+        if self.is_weekend(date):
+            return int((book_time / self.WEEKEND_DAY_HOURS) * 100)
+        return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
+
+    def get_week_load(self, week: list) -> list:
+        """Distribute load on week"""
+        week_load = []
+        for day in week:
+            date = f'{self.year}-{self.month}-{day}'
+            slots = SlotsFinder(date).find_available_slots()
+            day_load = (day, self.get_day_load(date), slots)
+            week_load.append(day_load)
+        return week_load
+
+    def is_weekend(self, date: str) -> bool:
+        """Check if day is a weekend"""
+        f_date = datetime.strptime(date, "%Y-%m-%d")
+        return f_date.weekday() >= self.FRIDAY
+
+    def get_month_load(self):
+        """Calculate full month load"""
+        return [self.get_week_load(week) for week in self.calendar]
 
 
 check_available_field_as = sync_to_async(check_available_field)
