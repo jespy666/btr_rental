@@ -13,6 +13,7 @@ from .states.admin.check_booking import CheckBookingState
 
 from .handlers.start import Start
 from .handlers.help import Help
+from .handlers.prices import Prices
 from .handlers.create import CreateAccount
 from .handlers.cancel import Cancel
 from .handlers.reset import ResetPassword
@@ -23,7 +24,9 @@ from .handlers.admin.check_booking import CheckBooking
 
 
 class BookingBot:
+    """
 
+    """
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
@@ -36,6 +39,7 @@ class BookingBot:
     def _setup(self):
         self.dp.message.register(Start.handle, Command(commands='start'))
         self.dp.message.register(Help.handle, Command(commands='help'))
+        self.dp.message.register(Prices.handle, Command(commands='prices'))
         self.dp.message.register(
             CreateAccount.ask_name,
             Command(commands='create'),
@@ -149,8 +153,20 @@ class BookingBot:
             F.data == 'help',
         )
         self.dp.callback_query.register(
+            Prices().callback_handle,
+            F.data == 'price',
+        )
+        self.dp.callback_query.register(
             CreateAccount.ask_name,
             F.data == 'create',
+        )
+        self.dp.callback_query.register(
+            ResetPassword.ask_email,
+            F.data == 'reset',
+        )
+        self.dp.callback_query.register(
+            BookingRide.ask_email,
+            F.data == 'book',
         )
 
     async def run(self):
