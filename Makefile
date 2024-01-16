@@ -22,3 +22,9 @@ bot:
 
 shell:
 	python3 manage.py shell
+
+messages:
+	python3 manage.py makemessages --ignore="static" -l ru
+
+compile:
+	python3 manage.py compilemessages

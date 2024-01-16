@@ -1,0 +1,1398 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-16 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+#: btr/auth/forms.py:7
+msgid "Write your valid email where the confirmation code will be sent"
+msgstr "Напишите ваш действительный адрес электронной почты, куда будет отправлен код подтверждения"
+
+#: btr/auth/forms.py:14 btr/templates/users/profile.html:52
+#: btr/users/models.py:27
+msgid "Email"
+msgstr "Адрес электронной почты"
+
+#: btr/auth/forms.py:20
+msgid "Type verification code from email"
+msgstr "Напишите код подтверждения из письма"
+
+#: btr/auth/forms.py:25
+msgid "Verification Code"
+msgstr "Код подтверждения"
+
+#: btr/auth/views.py:19
+msgid "You are log in"
+msgstr "Вход выполнен успешно"
+
+#: btr/auth/views.py:28
+msgid "You are logout"
+msgstr "Вы вышли"
+
+#: btr/auth/views.py:38
+msgid "Verification code was send to your email"
+msgstr "Код подтверждения был отправлен на почту"
+
+#: btr/auth/views.py:39
+msgid "User with this email does not exist"
+msgstr "Пользователя с таким адресом электронной почты не существует"
+
+#: btr/auth/views.py:61
+msgid ""
+"Your password was successfully reset!\n"
+"New password was send on your email"
+msgstr "Ваш пароль был успешно сброшен!\n Новый пароль был отправлен на вашу почту"
+
+#: btr/auth/views.py:81
+msgid "Verification codes not match"
+msgstr "Неверный код подтверждения"
+
+#: btr/bookings/forms.py:49
+msgid "Selected start time can't be in past"
+msgstr "Время начала не может быть в прошлом"
+
+#: btr/bookings/forms.py:54 btr/bookings/forms.py:58
+msgid "Selected time is not available for booking"
+msgstr "Выбранное время недоступно для бронирования"
+
+#: btr/bookings/models.py:19
+msgid "Client's phone"
+msgstr "Телефон клиента"
+
+#: btr/bookings/models.py:24
+msgid "Book day"
+msgstr "День проката"
+
+#: btr/bookings/models.py:29
+msgid "Time of start"
+msgstr "Время начала"
+
+#: btr/bookings/models.py:34
+msgid "Time of end"
+msgstr "Время окончания"
+
+#: btr/bookings/models.py:39
+msgid "bikes_count"
+msgstr "Количество байков"
+
+#: btr/bookings/models.py:43
+msgid "wait to confirm"
+msgstr "ожидает подтверждения"
+
+#: btr/bookings/models.py:44
+msgid "accepted"
+msgstr "принят"
+
+#: btr/bookings/models.py:45
+msgid "finished"
+msgstr "завершен"
+
+#: btr/bookings/models.py:46 btr/tg_bot/handlers/admin/change_status.py:48
+msgid "canceled"
+msgstr "отменен"
+
+#: btr/bookings/models.py:51 btr/templates/users/profile.html:95
+#: btr/templates/users/profile.html:138
+msgid "Status"
+msgstr "Статус"
+
+#: btr/bookings/models.py:62
+#, python-brace-format
+msgid "Status: {status}. Date: {date} {start} - {end}"
+msgstr "Статус: {status}. Дата: {date} {start} - {end}"
+
+#: btr/bookings/signals.py:37
+#, python-brace-format
+msgid ""
+"#{id}\n"
+"Admin make foreign book just now!\n"
+"Client phone: {phone}\n"
+"Date: {date}\n"
+"Time: {start}-{end}\n"
+"Bikes booked: {bike}\n"
+msgstr ""
+"#{id}\n"
+"Админ только что создал бронирование!\n"
+"Телефон клиента: {phone}\n"
+"Дата: {date}\n"
+"Время: {start}-{end}\n"
+"Байков в прокате: {bike} шт.\n"
+
+#: btr/bookings/signals.py:52
+#, python-brace-format
+msgid ""
+"#{id}\n"
+"User with name {name} book a ride just now!\n"
+"User phone: {phone}\n"
+"Date: {date}\n"
+"Time: {start}-{end}\n"
+"Bikes requested: {bike}\n"
+"\n"
+"https://t.me/BTRBookingBot"
+msgstr ""
+"#{id}\n"
+"Пользователь с именем {name} только что записался на прокат!\n"
+"Телефон пользователя: {phone}\n"
+"Дата: {date}\n"
+"Время: {start}-{end}\n"
+"Запрошено байков: {bike}\n"
+"\n"
+"https://t.me/BTRBookingBot"
+
+#: btr/bookings/signals.py:79
+#, python-brace-format
+msgid "Booking #{id} confirmed by admin"
+msgstr "Бронирование #{id} подтверждено администратором"
+
+#: btr/bookings/signals.py:83
+#, python-brace-format
+msgid "Booking #{id} canceled by admin"
+msgstr "Бронирование #{id} отменено администратором"
+
+#: btr/bookings/views.py:55
+msgid "Reservation created successfully"
+msgstr "Запись на прокат успешно создана"
+
+#: btr/bookings/views.py:56
+msgid "You must to be login to book ride"
+msgstr "Выполните вход для записи на прокат"
+
+#: btr/bookings/views.py:58
+msgid "Rental Reservation for"
+msgstr ""
+
+#: btr/bookings/views.py:59 btr/templates/bookings/modal_window.html:46
+#: btr/templates/bookings/modal_window.html:97 btr/templates/navbar.html:12
+msgid "Book"
+msgstr "Запись"
+
+#: btr/bookings/views.py:117
+msgid "Reservation change successfully"
+msgstr "Запись изменена успешно"
+
+#: btr/bookings/views.py:118
+msgid "You must to be login to edit bookings"
+msgstr ""
+
+#: btr/bookings/views.py:119
+msgid "You can't change another user bookings!"
+msgstr ""
+
+#: btr/bookings/views.py:122
+msgid "Edit Reservation"
+msgstr ""
+
+#: btr/bookings/views.py:123
+msgid "Apply"
+msgstr ""
+
+#: btr/bookings/views.py:134
+msgid "Booking delete successfully"
+msgstr ""
+
+#: btr/bookings/views.py:136
+msgid "You do not have permission to delete booking of another user!"
+msgstr ""
+
+#: btr/bookings/views.py:139 btr/users/views.py:34 btr/users/views.py:60
+#: btr/users/views.py:79
+msgid "You must to be log in"
+msgstr "Необходимо выполнить вход"
+
+#: btr/emails.py:7
+msgid "Created an new account on broteamracing.ru"
+msgstr "Создание аккаунта на broteamracing.ru"
+
+#: btr/emails.py:9
+#, python-brace-format
+msgid ""
+"Hello, {name}!\n"
+"You are received this mail, because you are signed up with telegram\n"
+"Here are your sign-in details:\n"
+"Email: {user_email}\n"
+"Username: {username}\n"
+"Phone number: {phone_number}\n"
+"*to enter the site you can use any of the three fieldsPassword: {password}"
+msgstr ""
+"Привет, {name}!\n"
+"Ты получил это письмо, потому-что создал аккаунт через тг бота\n"
+"Данные для входа на сайт:\n"
+"Адрес электронной почты: {user_email}\n"
+"Юзернейм: {username}\n"
+"Номер телефона: {phone_number}\n"
+"Пароль: {password}"
+
+#: btr/emails.py:34
+msgid "Verification code for password reset"
+msgstr "Код подтверждения для сброса пароля"
+
+#: btr/emails.py:36
+#, python-brace-format
+msgid ""
+"Hi! You are received this message, because a password reset was requested "
+"for your account on broteamracing.ru.\n"
+"If it wasn't you, ignore this message.\n"
+"YOUR VERIFICATION CODE: {code}"
+msgstr ""
+"Ты получил это письмо, потому что был запрошен сброс пароля "
+"для этого аккаунта на broteamracing.ru.\n"
+"Если это был не ты, проигнорируй сообщение.\n"
+"КОД ПОДТВЕРЖДЕНИЯ: {code}"
+
+#: btr/emails.py:51
+msgid "Recovered Sign in message"
+msgstr "Письмо с восстановленым паролем"
+
+#: btr/emails.py:59
+#, python-brace-format
+msgid ""
+"There are recovered data to sign in:\n"
+"Login: {email}\n"
+"Password: {password}\n"
+msgstr ""
+
+#: btr/emails.py:74
+msgid "A new booking create"
+msgstr ""
+
+#: btr/emails.py:76
+#, python-brace-format
+msgid ""
+"Hi, Rider!\n"
+"We get a info about booking your made nearly!\n"
+"Here's details:\n"
+"Date: {date}\n"
+"Time: from {start} to {end}\n"
+"Number of bikes: {bike_count}\n"
+"If you are late or cancel your race, please notify us in advance!\n"
+"Contact number: +7 999 235-00-91\n"
+"See you soon!"
+msgstr ""
+
+#: btr/templates/auth_form.html:25 btr/templates/guest_modal.html:13
+#: btr/templates/password_reset_form.html:17
+msgid "Don\\"
+msgstr ""
+
+#: btr/templates/auth_form.html:29
+msgid "Forgot the "
+msgstr "Забыли "
+
+#: btr/templates/auth_form.html:30
+msgid "Password?"
+msgstr "Пароль?"
+
+#: btr/templates/auth_form.html:34 btr/templates/guest_modal.html:14
+#: btr/templates/password_reset_form.html:18 btr/users/views.py:20
+msgid "Sign Up"
+msgstr "Регистрация"
+
+#: btr/templates/bookings/calendar.html:10
+#: btr/templates/bookings/next_calendar.html:10
+msgid "Monday"
+msgstr "Понедельник"
+
+#: btr/templates/bookings/calendar.html:11
+#: btr/templates/bookings/next_calendar.html:11
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: btr/templates/bookings/calendar.html:12
+#: btr/templates/bookings/next_calendar.html:12
+msgid "Wednesday"
+msgstr "Среда"
+
+#: btr/templates/bookings/calendar.html:13
+#: btr/templates/bookings/next_calendar.html:13
+msgid "Thursday"
+msgstr "Четверг"
+
+#: btr/templates/bookings/calendar.html:14
+#: btr/templates/bookings/next_calendar.html:14
+msgid "Friday"
+msgstr "Пятница"
+
+#: btr/templates/bookings/calendar.html:15
+#: btr/templates/bookings/next_calendar.html:15
+msgid "Saturday"
+msgstr "Суббота"
+
+#: btr/templates/bookings/calendar.html:16
+#: btr/templates/bookings/next_calendar.html:16
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#: btr/templates/bookings/delete.html:8
+msgid "Cancel reservation"
+msgstr "Отмена записи"
+
+#: btr/templates/bookings/delete.html:9
+msgid "Are you sure to cancel"
+msgstr "Вы уверены, что хотите отменить"
+
+#: btr/templates/bookings/delete.html:12 btr/templates/users/delete.html:12
+msgid "Yes, delete"
+msgstr "Да, удалить"
+
+#: btr/templates/bookings/form.html:21
+msgid "Available time:"
+msgstr "Свободное время:"
+
+#: btr/templates/bookings/form.html:25
+msgid "from"
+msgstr "с"
+
+#: btr/templates/bookings/form.html:27
+msgid "to"
+msgstr "по"
+
+#: btr/templates/bookings/index.html:11
+msgid "Below you can select the available day and time for rental"
+msgstr "Ниже, вы можете выбрать свободный день и время проката"
+
+#: btr/templates/bookings/index.html:26
+msgid "Also you can book a ride via TG bot "
+msgstr "Попробуйте также запись через бота"
+
+#: btr/templates/bookings/legend.html:9
+msgid "Busy"
+msgstr "Мест нет"
+
+#: btr/templates/bookings/legend.html:12
+msgid "Limited"
+msgstr "Ограничено"
+
+#: btr/templates/bookings/legend.html:15
+msgid "Available"
+msgstr "Свободно"
+
+#: btr/templates/bookings/modal_window.html:15
+#: btr/templates/bookings/modal_window.html:66
+msgid "Available booking slots:"
+msgstr "Свободное время:"
+
+#: btr/templates/bookings/modal_window.html:21
+#: btr/templates/bookings/modal_window.html:72
+msgid "No available slots :( Check another day!"
+msgstr "Свободного времени нет :( Проверь соседние дни!"
+
+#: btr/templates/bookings/modal_window.html:27
+#: btr/templates/bookings/modal_window.html:78
+msgid "From"
+msgstr "С"
+
+#: btr/templates/bookings/modal_window.html:28
+#: btr/templates/bookings/modal_window.html:79
+msgid "To"
+msgstr "По"
+
+#: btr/templates/bookings/modal_window.html:44
+#: btr/templates/bookings/modal_window.html:95
+#: btr/templates/guest_modal.html:17 btr/templates/user_modal.html:16
+msgid "Close"
+msgstr "Закрыть"
+
+#: btr/templates/briefing/show.html:9
+msgid "Safety instructions for riding a pit bike or enduro motorcycle."
+msgstr "Инструкции по безопасности для Пит-Байков и Эндуро мотоциклов."
+
+#: btr/templates/briefing/show.html:17
+msgid ""
+"In case of injury, bruises or other harm to your health, we are not "
+"responsible."
+msgstr "В случае получения травм, мы не несем ответственности!"
+
+#: btr/templates/briefing/show.html:45
+msgid "Following these instructions will help you avoid injury."
+msgstr "Соблюдение этих инструкций поможет предотвратить травмы."
+
+#: btr/templates/contacts/show.html:9 btr/templates/navbar.html:27
+msgid "Contacts"
+msgstr "Контакты"
+
+#: btr/templates/contacts/show.html:19
+msgid "We"
+msgstr "Мы"
+
+#: btr/templates/contacts/show.html:19
+msgid ""
+"rent enduro motorcycles from St. Petersburg. We will gladly accept both "
+"experienced riders and beginners, we will show you everything and teach you "
+"everything."
+msgstr ""
+"сдаем на прокат Эндуро байки в г.Санкт-Петербурге. Будем рады как новичкам, так и опытным райдерам. Все покажем и расскажем!"
+
+#: btr/templates/contacts/show.html:20
+msgid "Below are the contacts where you can contact us."
+msgstr "Контакты, по которым с нами можно связаться."
+
+#: btr/templates/contacts/show.html:31
+msgid "St. Petersburg, Molodezchnoe, Viborgskoe h. 659"
+msgstr "Санкт-Петербург, п.Молодежное, Выборгское шоссе 659"
+
+#: btr/templates/email/recover.html:19
+msgid "Recovered Sign-in data"
+msgstr ""
+
+#: btr/templates/email/recover.html:26
+msgid "There are your new sign-in details"
+msgstr ""
+
+#: btr/templates/email/recover.html:33
+msgid "Login:"
+msgstr ""
+
+#: btr/templates/email/recover.html:34
+msgid "Password:"
+msgstr ""
+
+#: btr/templates/guest_modal.html:9 btr/templates/user_modal.html:9
+msgid "Authorisation"
+msgstr ""
+
+#: btr/templates/guest_modal.html:12
+msgid "Log In"
+msgstr ""
+
+#: btr/templates/index.html:13
+msgid "Enduro bikes rental"
+msgstr ""
+
+#: btr/templates/index.html:14
+msgid "In Saint-Petersburg"
+msgstr ""
+
+#: btr/templates/index.html:18
+msgid "Book now"
+msgstr ""
+
+#: btr/templates/index.html:26
+msgid "Bikes"
+msgstr ""
+
+#: btr/templates/index.html:34
+msgid "Carefully Maintained and Tuned"
+msgstr ""
+
+#: btr/templates/index.html:38
+msgid ""
+"All our motorcycles have undergone meticulous maintenance and tuning, "
+"ensuring high quality and safety"
+msgstr ""
+
+#: btr/templates/index.html:47
+msgid "Take a simle Try"
+msgstr ""
+
+#: btr/templates/index.html:54
+msgid "Guide accompaniment"
+msgstr ""
+
+#: btr/templates/index.html:57
+msgid ""
+"Throughout the trip you will be accompanied by an experienced guide who will "
+"teach you riding techniques and give advice."
+msgstr ""
+
+#: btr/templates/index.html:66
+msgid "Safety Equipment"
+msgstr ""
+
+#: btr/templates/index.html:69
+msgid "All equipment for safe driving is already included in the rental price"
+msgstr ""
+
+#: btr/templates/index.html:78
+msgid "No license required"
+msgstr ""
+
+#: btr/templates/index.html:81
+msgid "To operate an enduro motorcycle you do not need a driver\\"
+msgstr ""
+
+#: btr/templates/index.html:92
+msgid "Routes"
+msgstr ""
+
+#: btr/templates/index.html:100
+msgid "Combining Beautiful Scenery with Adrenaline"
+msgstr ""
+
+#: btr/templates/index.html:104
+msgid ""
+"Experience the perfect blend of stunning landscapes and exhilarating "
+"adventure"
+msgstr ""
+
+#: btr/templates/navbar.html:15
+msgid "Gallery"
+msgstr ""
+
+#: btr/templates/navbar.html:18 btr/templates/reviews/reviews_list.html:8
+msgid "Reviews"
+msgstr ""
+
+#: btr/templates/navbar.html:21
+msgid "Briefing"
+msgstr ""
+
+#: btr/templates/navbar.html:24
+msgid "FAQ"
+msgstr ""
+
+#: btr/templates/reviews/reviews_list.html:18
+msgid "Did you have fun? Share your impressions, leave a"
+msgstr ""
+
+#: btr/templates/reviews/reviews_list.html:18
+msgid "Review"
+msgstr ""
+
+#: btr/templates/user_modal.html:12 btr/templates/users/profile.html:8
+msgid "Profile"
+msgstr ""
+
+#: btr/templates/user_modal.html:13
+msgid "Log Out"
+msgstr ""
+
+#: btr/templates/users/delete.html:8
+msgid "User remove"
+msgstr ""
+
+#: btr/templates/users/delete.html:9
+msgid "Are you sure to remove"
+msgstr ""
+
+#: btr/templates/users/profile.html:30
+msgid "Book Now"
+msgstr ""
+
+#: btr/templates/users/profile.html:39
+msgid "Personal info"
+msgstr ""
+
+#: btr/templates/users/profile.html:43 btr/users/models.py:19
+msgid "Name"
+msgstr ""
+
+#: btr/templates/users/profile.html:61 btr/users/models.py:33
+msgid "Phone"
+msgstr ""
+
+#: btr/templates/users/profile.html:69
+msgid "Edit Profile"
+msgstr ""
+
+#: btr/templates/users/profile.html:78
+msgid "Current bookings"
+msgstr ""
+
+#: btr/templates/users/profile.html:84
+msgid "There are not current bookings yet..."
+msgstr ""
+
+#: btr/templates/users/profile.html:92 btr/templates/users/profile.html:135
+msgid "Date"
+msgstr ""
+
+#: btr/templates/users/profile.html:93 btr/templates/users/profile.html:136
+msgid "Begin time"
+msgstr ""
+
+#: btr/templates/users/profile.html:94 btr/templates/users/profile.html:137
+msgid "End time"
+msgstr ""
+
+#: btr/templates/users/profile.html:121
+msgid "History"
+msgstr ""
+
+#: btr/templates/users/profile.html:127
+msgid "There are not completed bookings yet..."
+msgstr ""
+
+#: btr/templates/users/profile.html:165
+msgid "If you liked the ride, leave a "
+msgstr ""
+
+#: btr/templates/users/profile.html:166
+msgid "review"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:26
+#, python-brace-format
+msgid ""
+"🙋🏼‍♂️<em>Hi, <strong>{admin}</strong>!\n"
+"Let's change booking status!\n"
+"\n"
+"Please, tell me booking <strong>id</strong></em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:35
+#: btr/tg_bot/handlers/admin/check_booking.py:33
+#: btr/tg_bot/handlers/admin/foreign_book.py:53
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>ACCESS DENIED!\n"
+"You are not Admin!</strong>\n"
+"😜 <em>Get lost</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:48
+msgid "confirmed"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:59
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Booking status with id </em><strong>#{id}:\n"
+"\n"
+"{emoji} {status}</strong>\n"
+"\n"
+"<em>Full booking details</em> ↙️\n"
+"\n"
+"<strong>📆 Booking date: {date}\n"
+"\n"
+"🕛 Start time: {start}\n"
+"\n"
+"🕜 End time: {end}\n"
+"\n"
+"📞 Client phone: {phone}</strong>\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:77
+#, python-brace-format
+msgid "<em>Choose new status for booking</em><strong> #{id} ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:87
+#: btr/tg_bot/handlers/admin/check_booking.py:82
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Booking with id #{id} does not exist!</strong>\n"
+"\n"
+"<em>Check your spelling and try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:104
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<em>Status for id <strong>#{id}</strong> changed successfully!</em><strong>\n"
+"\n"
+"Old status: {old_e} {old_s}\n"
+"\n"
+"New status: {new_e} {new_s}</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:120
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>You choose the same status!</strong>\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/change_status.py:123
+msgid "<em>Try again ⤵️</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/check_booking.py:24
+#, python-brace-format
+msgid ""
+"🙋🏼‍♂️<em>Hi, <strong>{admin}</strong>!\n"
+"To see full booking info type an <strong>ID</strong></em> ⤵️\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/check_booking.py:57
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<strong>#{id} <em>find successfully!</em>\n"
+"\n"
+"👤 Rider: {rider}\n"
+"\n"
+"📞 Contact: {phone}\n"
+"\n"
+"🏍 Bikes rented: {bikes}\n"
+"\n"
+"📆 Booking date: {date}\n"
+"\n"
+"🕛 Start time: {start}\n"
+"\n"
+"🕜 End time: {end}\n"
+"\n"
+"Status: \n"
+"\n"
+"{emoji} {status}</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:37
+#, python-brace-format
+msgid ""
+"🙋🏼‍♂️<em>Hi, <strong>{admin}</strong>!\n"
+"Let's book unregistered rider!\n"
+"\n"
+"🏍 How many <strong>bikes</strong> do you need?</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:42
+msgid "<strong>Choose value</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:69
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Ok! I prepared {bikes} Bikes\n"
+"\n"
+"What phone number should I use to book?</em>\n"
+"\n"
+"📝 <strong>Format: +7xxxxxxxxxx</strong>\n"
+"\n"
+"⚠️ <strong>Case sensitive</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:82 btr/tg_bot/handlers/book.py:100
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Bikes count must be at <em>1 - 4</em>!\n"
+"\n"
+"</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:87 btr/tg_bot/handlers/book.py:105
+msgid "<em>Choose again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:101
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Got it!\n"
+"\n"
+"What <strong>date</strong> should I use to book?</em>\n"
+"\n"
+"<strong>📆 Format: YYYY:MM:DD\n"
+"\n"
+"⚠️ Type with ':' ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:114
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid phone number format!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:134
+#: btr/tg_bot/handlers/book.py:124
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Ok! On 📆 {date} available slots is</em> ↙️\n"
+"\n"
+"<strong>{slots}</strong>\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:139
+#: btr/tg_bot/handlers/book.py:129
+msgid "<strong>Please, choose available start time</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:148
+#: btr/tg_bot/handlers/book.py:143
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>On 📆 {date} no available slots!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:156
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid date format!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:164
+#: btr/tg_bot/handlers/book.py:159
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Date can't be in past!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:192
+#: btr/tg_bot/handlers/book.py:185
+msgid "<strong>Choose hours ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:200
+#: btr/tg_bot/handlers/admin/foreign_book.py:261
+#: btr/tg_bot/handlers/book.py:193 btr/tg_bot/handlers/book.py:262
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid time format!\n"
+"\n"
+"</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:204
+#: btr/tg_bot/handlers/admin/foreign_book.py:216
+#: btr/tg_bot/handlers/admin/foreign_book.py:264
+#: btr/tg_bot/handlers/admin/foreign_book.py:273
+#: btr/tg_bot/handlers/book.py:197 btr/tg_bot/handlers/book.py:209
+#: btr/tg_bot/handlers/book.py:265 btr/tg_bot/handlers/book.py:274
+msgid "<strong>Try again ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:210
+#: btr/tg_bot/handlers/book.py:203
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>🕒 Time {time} is already booked!\n"
+"\n"
+"</strong><em>Available start times are ↙️</em>\n"
+"\n"
+"<strong>{slots}</strong>\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:242
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<strong>Booking created successfully!</strong>\n"
+"\n"
+"<em>Book data ↙️\n"
+"\n"
+"📞 Rider contact: <strong>{phone}</strong>\n"
+"\n"
+"📆 Booking date: <strong>{date}</strong>\n"
+"\n"
+"🕛 Start time: <strong>{start}</strong>\n"
+"\n"
+"🕜 End time: <strong>{end}</strong>\n"
+"\n"
+"⏰ Hours: <strong>{hours}</strong></em>\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:270
+#: btr/tg_bot/handlers/book.py:271
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>End time must be bigger Start time!\n"
+"\n"
+"</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:279
+#: btr/tg_bot/handlers/book.py:280
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>🕒 This time slot is already booked!\n"
+"\n"
+"</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/admin/foreign_book.py:283
+#: btr/tg_bot/handlers/book.py:284
+#, python-brace-format
+msgid ""
+"<em>Available slots are ↙️\n"
+"\n"
+"<strong>{slots}</strong>\n"
+"\n"
+"<em>Your start time is: <strong>{start}</strong></em>\n"
+"\n"
+"<strong>Try again (choose hours) ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:33
+msgid ""
+"<strong>Make booking</strong>\n"
+"\n"
+"<em>To book a new ride, please type your valid email</em>\n"
+"\n"
+"⚠️ <strong>Case sensitive</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:50
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>User with email <strong>{email}</strong> find successfully!\n"
+"\n"
+"How many bikes should i served?</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:55
+msgid "<em>Choose available bikes count</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:63 btr/tg_bot/handlers/create.py:113
+#: btr/tg_bot/handlers/reset.py:57
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid email format <em>{email}</em></strong>\n"
+"\n"
+"<em>Check your spelling and try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:70 btr/tg_bot/handlers/reset.py:64
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>User with email {email} does not exist!</strong>\n"
+"\n"
+"<em>Do not have an account?\n"
+"- Cancel dialog and choose /create command!\n"
+"\n"
+"Or try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:87
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Ok, i prepared {bikes} bikes to this ride!\n"
+"\n"
+"What <strong>date</strong> should I use to book?</em>\n"
+"\n"
+"<strong>📆 Format: YYYY:MM:DD\n"
+"\n"
+"⚠️ Type with ':' ⤵️</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:151
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid date format \"{date}\"!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/book.py:234
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<strong>Booking created successfully!</strong>\n"
+"\n"
+"<em>Book data ↙️\n"
+"\n"
+"🆔 Booking id: <strong>#{id}</strong>\n"
+"\n"
+"📆 Booking date: <strong>{date}</strong>\n"
+"\n"
+"🕛 Start time: <strong>{start}</strong>\n"
+"\n"
+"🕜 End time: <strong>{end}</strong>\n"
+"\n"
+"⏰ Hours: <strong>{hours}</strong>\n"
+"\n"
+"🏍 Bikes: {bikes}\n"
+"\n"
+"Booking status ↙️\n"
+"\n"
+"🟡 <strong>Pending</strong>\n"
+"\n"
+"All booking info was send to ↙️\n"
+"\n"
+"{email}\n"
+"\n"
+"You can track your booking status on profile page ↙️\n"
+"\n"
+"broteamracing.ru</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/cancel.py:12
+msgid ""
+"🚫🚫🚫\n"
+"\n"
+"<strong>Dialog has been canceled</strong>\n"
+"\n"
+"<em>You can try again, or choose another command</em> ↙️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:26
+msgid ""
+"<strong>Create Account</strong>\n"
+"\n"
+"<em>Let's create an account!\n"
+"Please, type your Name ⤵️</em>"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:41
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"👋 <em>Hello,</em> <strong>{name}</strong>!\n"
+"\n"
+"<em>Come up with a username</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:50
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Name length must be less than 40 symbols!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:66
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Great! Username</em> <strong>{username}</strong><em> is available!</em>\n"
+"<em>Now, i need your valid</em> ✉️ <strong> Email</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:77
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Username length must be less than 40 symbols!\n"
+"\n"
+"</strong><em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:85
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Username <em>{username}</em> already exists!</strong>\n"
+"\n"
+"<em>Try another username</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:101
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Great! We are almost finished!\n"
+"All that remains is to enter phone number</em>\n"
+"\n"
+"📝 <strong>Format: +7xxxxxxxxxx</strong>\n"
+"\n"
+"⚠️ <strong>Case sensitive</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:120
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>User with email <em>{email}</em> alreadyexists!</strong>\n"
+"\n"
+"<em>Forgot password? Type <strong>/reset</strong>command\n"
+"Or try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:148
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<strong>Account created successfully!</strong>\n"
+"\n"
+"<em>All sign in info was send to</em> ↙️\n"
+"\n"
+"✉️ {email}"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:157
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Invalid phone format <em>{phone}</em></strong>\n"
+"\n"
+"<em>Check your spelling and try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/create.py:164
+#, python-brace-format
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>User with phone number <em>{email}</em> alreadyexists!</strong>\n"
+"\n"
+"<em>Forgot password? Type <strong>/reset</strong>command\n"
+"Or try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/help.py:12
+msgid ""
+"<strong>Any issues and questions?</strong>\n"
+"<em>Contact us:</em>\n"
+"vk.me/broteamracing\n"
+"\n"
+"<strong>All contacts:</strong>\n"
+"\n"
+"📞 <strong>+79992350091</strong> <em>Vladimir</em>\n"
+"\n"
+"📞 <strong>+79817850451</strong> <em>Alexander</em>\n"
+"\n"
+"🌐 broteamracing.ru\n"
+"\n"
+"👥 vk.com/broteamracing\n"
+"\n"
+msgstr ""
+
+#: btr/tg_bot/handlers/prices.py:12
+msgid ""
+"💵💵💵 <strong>Prices 💵💵💵\n"
+"\n"
+"🏍 X-motos 250</strong>\n"
+"\n"
+"<strong>⚙️ 250cc\n"
+"🚀 21 hp\n"
+"💰 2000₽ / hour\n"
+"\n"
+"🏍 GR-7 300\n"
+"\n"
+"⚙️ 300cc\n"
+"🚀 26 hp\n"
+"💰 2500₽ / hour\n"
+"\n"
+"🏍 Progasi Ibiza 300\n"
+"\n"
+"⚙️ 300cc\n"
+"🚀 27 hp\n"
+"💰 2500₽ / hour</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/reset.py:27
+msgid ""
+"<strong>Password reset</strong>\n"
+"\n"
+"<em>To reset your forgotten password, please type your valid email</em>\n"
+"\n"
+"⚠️ <strong>Case sensitive</strong> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/reset.py:45
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>User with email <strong>{email}</strong> find successfully!\n"
+"\n"
+"Verification code was sent to your mail!\n"
+"\n"
+"Type the six-digit code from the email</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/reset.py:85
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<em>Your password has been reset successfully!\n"
+"\n"
+"New password and other details was send to</em> ↙️\n"
+"\n"
+"✉️ <strong>{email}</strong>"
+msgstr ""
+
+#: btr/tg_bot/handlers/reset.py:94
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Wrong verification code!\n"
+"\n"
+"⚠️ Case sensitive!</strong>\n"
+"\n"
+"<em>Try again</em> ⤵️"
+msgstr ""
+
+#: btr/tg_bot/handlers/start.py:12
+msgid ""
+"<strong>16+❗️</strong>\n"
+"\n"
+"<em>Hi!\n"
+"I'm BroTeamRacing Bot!\n"
+"With my help, you'll be able to:</em>\n"
+"\n"
+"👤 <strong>Quick Sign Up</strong>\n"
+"\n"
+"📆 <strong>Make Bookings</strong>\n"
+"\n"
+"🔓 <strong>Reset your password</strong>\n"
+"\n"
+"📱 <strong>Get our contacts</strong>\n"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:10
+msgid "Book a ride"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:11
+msgid "See help"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:12 btr/tg_bot/utils/commands.py:23
+msgid "Create account"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:13
+msgid "Reset password"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:17 btr/tg_bot/utils/commands.py:11
+msgid "Main menu"
+msgstr ""
+
+#: btr/tg_bot/keyboards/inline_menu.py:27
+msgid "See prices"
+msgstr ""
+
+#: btr/tg_bot/keyboards/kb_cancel.py:10
+msgid "Cancel dialog"
+msgstr ""
+
+#: btr/tg_bot/utils/commands.py:15
+msgid "Prices for bikes"
+msgstr ""
+
+#: btr/tg_bot/utils/commands.py:19
+msgid "Help message"
+msgstr ""
+
+#: btr/tg_bot/utils/commands.py:27
+msgid "Make booking (Account required)"
+msgstr ""
+
+#: btr/tg_bot/utils/commands.py:31
+msgid "Reset your forgotten password"
+msgstr ""
+
+#: btr/users/forms.py:14 btr/users/forms.py:52
+msgid "Unique. No more than 40 characters"
+msgstr ""
+
+#: btr/users/forms.py:20 btr/users/forms.py:58
+msgid "Required. No more than 40 characters"
+msgstr ""
+
+#: btr/users/forms.py:26 btr/users/forms.py:64
+msgid "Required. Enter a valid email address"
+msgstr ""
+
+#: btr/users/forms.py:32 btr/users/forms.py:70
+msgid "Required. Enter a valid phone number"
+msgstr ""
+
+#: btr/users/models.py:12
+msgid "Username, Phone or Email"
+msgstr ""
+
+#: btr/users/models.py:48
+msgid "Newbie"
+msgstr ""
+
+#: btr/users/models.py:49
+msgid "Amateur"
+msgstr ""
+
+#: btr/users/models.py:50
+msgid "Professional"
+msgstr ""
+
+#: btr/users/models.py:51
+msgid "Master"
+msgstr ""
+
+#: btr/users/models.py:56
+msgid "Level"
+msgstr ""
+
+#: btr/users/views.py:17
+msgid "User created successfully"
+msgstr ""
+
+#: btr/users/views.py:19
+msgid "Registration"
+msgstr ""
+
+#: btr/users/views.py:57
+msgid "Profile successfully updated"
+msgstr ""
+
+#: btr/users/views.py:61
+msgid "You can't edit another profile!"
+msgstr ""
+
+#: btr/users/views.py:64
+msgid "Profile Edit"
+msgstr ""
+
+#: btr/users/views.py:65
+msgid "Save"
+msgstr ""
+
+#: btr/users/views.py:76
+msgid "User delete successfully"
+msgstr ""
+
+#: btr/users/views.py:77
+msgid "You do not have permission to delete another user"
+msgstr ""
