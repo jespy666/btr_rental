@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '0.0.0.0',
+    '332f-5-34-1-205.ngrok-free.app',
 ]
 
 
@@ -52,6 +53,13 @@ INSTALLED_APPS = [
     'btr.reviews',
     'django_bootstrap5',
 
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+    'https://127.0.0.1',
+    'https://localhost',
+    'https://0.0.0.0',
 ]
 
 MIDDLEWARE = [
