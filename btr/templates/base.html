@@ -10,16 +10,24 @@
       {% bootstrap_javascript %}
       <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
       <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
-      <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
+      <link href="{% static 'dist/css/lightbox.css' %}" rel="stylesheet" />
   </head>
-  <body class="scrollable-background">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <div class="container diagonal-gradient px-0">
-      <header>{% include 'navbar.html' %}</header>
-      {% bootstrap_messages %}
-      <div class="mb-4"></div>
-      {% block content %}{% endblock %}
+  <body style="overflow-x: hidden;">
+    <div class="head-gradient">
+      <div class="row">
+        <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-8 col-12">
+        <header>{% include 'navbar.html' %}</header>
+        {% bootstrap_messages %}
+        <div class="mb-4"></div>
+        </div>
+        <div class="col-lg-2 col-0"></div>
+      </div>
     </div>
+    {% block content %}{% endblock %}
+    <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'dist/js/lightbox.js' %}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
 
@@ -32,6 +40,12 @@
           });
       });
     </script>
+    <script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true
+  });
+</script>
   </body>
 <footer>
 </footer>

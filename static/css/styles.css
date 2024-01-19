@@ -1,36 +1,10 @@
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+.head-gradient {
+    background-color: rgba(34, 37, 54, 0.9);
 }
 
-.diagonal-gradient {
-    background: linear-gradient(to bottom, rgba(34, 37, 54, 0.9), rgba(118, 100, 106, 0.9));
-    width: 100%;
-    flex: 1;
-}
-
-.scrollable-background {
-    background-image: url('../images/bike4k.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    width: 100%;
-    height: 100vh;
-}
-
-.frame {
-    padding: 0;
-}
-
-.frame .frame-row {
-    display: flex;
-    max-height: 500px;
-}
-
-.frame .frame-row img {
-    object-fit: none;
+.gallery-gradient {
+    background-color: rgb(142, 142, 146);
+    padding: 50px;
 }
 
 .black-border {
@@ -87,10 +61,28 @@ body {
     border: 1px solid;
 }
 
+.h-line-light {
+    border: 3px solid rgb(156, 157, 165);
+    border-radius: 10px;
+    opacity: 1;
+}
+
+.h-line-dark {
+    border: 3px solid rgb(56, 58, 74);
+    border-radius: 10px;
+    opacity: 1;
+}
+
+.dark-text {
+    color: rgb(56, 58, 74);
+}
 /* Moto Cards */
 
 .card-bg {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgb(28, 29, 37);
+    border: 10px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px 40px 40px 40px;
+    padding: 20px;
 }
 
 /* Booking Cards */
