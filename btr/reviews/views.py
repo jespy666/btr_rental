@@ -10,7 +10,7 @@ load_dotenv()
 
 
 class VKCommentsView(View):
-    template_name = 'reviews/reviews_list.html'
+    template_name = 'reviews/reviews.html'
     access_token = os.getenv('VK_ACCESS_TOKEN')
     app_id = os.getenv('VK_APP_ID')
     app_secret = os.getenv('VK_APP_SECRET')

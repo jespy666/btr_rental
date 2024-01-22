@@ -6,11 +6,11 @@ class IndexView(TemplateView):
 
 
 class BriefingView(TemplateView):
-    template_name = 'briefing/show.html'
+    template_name = 'briefing/briefing.html'
 
 
 class ContactsView(TemplateView):
-    template_name = 'contacts/show.html'
+    template_name = 'contacts/contacts.html'
 
 
 class GalleryView(TemplateView):
