@@ -2,19 +2,13 @@
 {% load i18n %}
 
 <div class="row mt-2">
-    <div class="col-lg-6 col-3"></div>
-    <div class="col-lg-6 col-6">
-        <div class="legend">
-            <div class="legend-item legend-w">
-                <span>{% translate 'Available' %}</span>
-            </div>
-            <div class="legend-item legend-orange">
-                <span>{% translate 'Limited' %}</span>
-            </div>
-            <div class="legend-item legend-red">
-                <span>{% translate 'Busy' %}</span>
-            </div>
+    <div class="col-lg-6 col-0"></div>
+    <div class="col-lg-4 col-12">
+        <div class="d-flex justify-content-between">
+            <h5 class="fs-4"><span class="badge text-bg-light">{% translate 'Available' %}</span></h5>
+            <h5 class="fs-4"><span class="badge text-bg-warning">{% translate 'Limited' %}</span></h5>
+            <h5 class="fs-4"><span class="badge text-bg-danger">{% translate 'Busy' %}</span></h5>
         </div>
     </div>
-    <div class="col-lg-0 col-3"></div>
+    <div class="col-lg-2 col-0"></div>
 </div>

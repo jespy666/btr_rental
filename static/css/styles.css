@@ -1,10 +1,14 @@
-.head-gradient {
+.dark-bg {
     background-color: rgba(34, 37, 54, 0.9);
 }
 
-.gallery-gradient {
+.light-bg-p {
     background-color: rgb(142, 142, 146);
     padding: 50px;
+}
+
+.light-bg {
+    background-color: rgb(142, 142, 146);
 }
 
 .black-border {
@@ -15,50 +19,14 @@
     border-radius: 20px;
 }
 
-/* Carousels */
-
-.my-carousel {
-    padding: 0;
-}
-
-.my-carousel .carousel-item {
-    display: flex;
-    max-height: 500px;
-}
-
-.my-carousel .carousel-item img {
-    object-fit: none;
-}
-
-.r-carousel .carousel-item img {
-    height: 600px;
-    object-fit: cover;
-}
-
-.red-text {
-    color: red;
-}
-
-.blue-text {
-    color: #2400FF;
-}
-
-.inline-bg {
-    background-color: rgba(0, 0, 0, 0.8);
-    margin: 20px;
-}
-
-.p-inline-slide {
-    text-indent: 40px;
-}
-
-.main-header-color {
-    color: #FFF1F0;
+.badge {
+    width: 130px;
 }
 
 .h-line {
     color: red;
     border: 1px solid;
+    opacity: 1;
 }
 
 .h-line-light {
@@ -139,8 +107,9 @@ background: #ec407a;
     margin-left: 10px;
 }
 
-.bg-form {
-    background-color: rgba(0, 0, 0, 0.4);
+.lg-p-y {
+    padding-top: 100px;
+    padding-bottom: 100px;
 }
 
 .round-image {
@@ -167,39 +136,6 @@ background: #ec407a;
     flex-grow: 1;
 }
 
-.legend {
-    display: flex;
-    align-items: center;
-}
-
-/* Стили для каждого элемента легенды */
-.legend-item {
-    display: flex;
-    align-items: center;
-    width: 25px;
-    height: 15px;
-    margin-right: 100px;
-
-}
-
-.legend-item span {
-    color: white;
-    margin-left: 30px; /* Расстояние между цветом и текстом */
-}
-
-/* Стили для цветов */
-.legend-red {
-    background-color: red;
-}
-
-.legend-orange {
-    background-color: orange;
-}
-
-.legend-w {
-    background-color: white;
-}
-
 .hover-effect:hover {
     background-color: white;
     color: black;
@@ -208,4 +144,45 @@ background: #ec407a;
 .auth-bg {
     background: linear-gradient(to bottom right, #242735, #565656);
     color: white;
+}
+
+.custom-border {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 10px solid rgba(255, 255, 255, 0.5);
+    border-radius: 60px 0 0 60px;
+    border-right: none;
+    padding: 50px;
+}
+
+.img-style {
+    width: 350px;
+    height: 300px;
+    border-radius: 15px;
+    object-fit: cover;
+    margin: 30px; /* Добавлен отступ сбоку */
+}
+
+.frame-light {
+    background-color: rgb(56, 58, 74);
+    border: 10px solid rgba(255, 255, 255, 0.5);
+    border-radius: 60px 60px 60px 60px;
+}
+
+.frame-dark {
+    background-color: rgb(36, 39, 53);
+    border: 10px solid rgba(255, 255, 255, 0.5);
+    border-radius: 60px 60px 60px 60px;
+}
+
+.img-ico {
+    width: 250px;
+    height: 250px;
+    margin: auto;
+    display: block;
+}
+
+.img-ico-s {
+    width: 50px;
+    height: auto;
+    margin-inline: 10px;
 }

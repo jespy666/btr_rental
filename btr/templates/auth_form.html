@@ -1,40 +1,43 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
 {% load i18n %}
+
 {% block content %}
 
-    <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $('#id_phone_number').inputmask('+7(999) 999-99-99');
-                });
-            </script>
-<div class="container">
-    <div class="row bg-form">
-        <div class="col-3"></div>
-        <div class="col-6  lg-m-y">
-            <h1 class="mb-5 text-center text-white">{{ header }}</h1>
-            <form method="post" class="text-white">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <input class="btn btn-success" type="submit" value="{{ button }}">
-            </form>
-            {% if header == 'Sign In' %}
-            <hr class="text-white">
-            <div class="row">
-                <div class="col-5"><h6 class="fs-6 text-white mt-3 mb-3">{% translate 'Don\'t have an account?' %}</h6></div>
-                <div class="col-2"></div>
-                <div class="col-5 text-center">
-                    <h6 class="fs-6 text-white mt-3 mb-3">
-                        {% translate 'Forgot the ' %}
-                        <a href="{% url 'auth-reset' %}">{% translate 'Password?' %}</a>
-                    </h6>
-                </div>
+<div class="dark-bg">
+    <div class="container lg-p-y">
+        <div class="row frame-dark">
+            <div class="col-lg-3 col-0"></div>
+            <div class="col-lg-6 col-12 lg-m-y">
+                <h1 class="mb-5 text-center text-white">{{ header }}</h1>
+                <form method="post" class="text-white">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <input class="btn btn-success" type="submit" value="{{ button }}">
+                </form>
+                {% if header == 'Sign In' %}
+                    <hr class="text-white">
+                    <div class="row">
+                        <div class="col-5"><h6 class="fs-6 text-white">{% translate 'Don\'t have an account?' %}</h6></div>
+                        <div class="col-2"></div>
+                        <div class="col-5 text-center">
+                            <h6 class="fs-6 text-white mt-3 mb-3">
+                                {% translate 'Forgot the ' %}
+                                <a href="{% url 'auth-reset' %}">{% translate 'Password?' %}</a>
+                            </h6>
+                        </div>
+                    </div>
+                    <a class="btn btn-outline-info" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>
+                {% endif %}
             </div>
-            <a class="btn btn-outline-info" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>
-            {% endif %}
+            <div class="col-3"></div>
         </div>
-        <div class="col-3"></div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_phone_number').inputmask('+7(999) 999-99-99');
+    });
+</script>
 {% endblock %}

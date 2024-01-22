@@ -4,66 +4,70 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container">
-    <div class="row text-center text-white">
-        <h1 class="display-5">{% translate 'Contacts' %}</h1>
-        <div class="col"></div>
-        <div class="col text-center">
-            <hr class="h-line" style="opacity: 1;">
-        </div>
-        <div class="col"></div>
-    </div>
-    <div class="row lg-m-t mb-3">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <p class="text-white mb-3 fs-5">{% translate 'We' %}, <strong>BroTeamRacing</strong> - {% translate 'rent enduro motorcycles from St. Petersburg. We will gladly accept both experienced riders and beginners, we will show you everything and teach you everything.' %}</p>
-            <p class="text-white fs-5"><small>{% translate 'Below are the contacts where you can contact us.' %}</small></p>
-            <hr class="text-white">
-        </div>
-        <div class="col-2"></div>
-    </div>
-    <div class="container lg-m-t mb-3">
-        <div class="row text-white">
-            <div class="col-12 mb-3">
-                <img src="{% static 'images/location.png' %}" class="img-fluid mx-auto d-block" alt="Картинка">
+<div class="dark-bg">
+    <div class="container">
+        <div class="row text-center text-white">
+            <h1 class="display-5">{% translate 'Contacts' %}</h1>
+            <div class="col-lg-3 col-0"></div>
+            <div class="col-lg-6 col-0 text-center">
+                <hr class="h-line-light">
             </div>
-            <div class="col-12 mb-3">
-                <h3 class="fs-4 text-center">{% translate 'St. Petersburg, Molodezchnoe, Viborgskoe h. 659' %}</h3>
+            <div class="col-lg-3 col-0"></div>
+        </div>
+        <div class="row lg-m-t">
+            <div class="col-lg-2 col-0"></div>
+            <div class="col-lg-8 col-12">
+                <p class="text-white mb-3 fs-5">{% translate 'We' %}, <strong>BroTeamRacing</strong> - {% translate 'rent enduro motorcycles from St. Petersburg' %}<br>{% translate 'We will gladly accept both experienced riders and beginners, we will show you everything and teach you everything.' %}</p>
+                <p class="text-white fs-5"><small>{% translate 'Below are the contacts where you can contact us.' %}</small></p>
+                <hr class="text-white">
             </div>
-            <div class="col-12 mb-3">
-                <h3 class="fs-4 text-center">60.192232,29.514908</h3>
+            <div class="col-lg-2 col-0"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-0"></div>
+            <div class="col-lg-8 col-12 d-flex align-items-center">
+                <img src="{% static 'images/tel.png' %}" alt="Tel" width="auto" height="45%">
+                <div class="d-flex flex-column justify-content-end">
+                    <h2 class="fs-1 text-white">{% translate 'Aleksandr' %}<br>+79817850451<br>{% translate 'Vladimir' %}<br>+79992350091</h2>
+                </div>
+            </div>
+            <div class="col-lg-1 col-0"></div>
+        </div>
+        <div class="container mb-3">
+            <div class="row text-white">
+                <div class="col-12 mb-3">
+                    <img src="{% static 'images/location.png' %}" class="img-fluid mx-auto d-block" alt="Point">
+                </div>
+                <div class="col-12 mb-3">
+                    <h3 class="fs-4 text-center">{% translate 'St. Petersburg, Molodezchnoe, Viborgskoe h. 659' %}</h3>
+                </div>
+                <div class="col-12 mb-3">
+                    <h3 class="fs-4 text-center">60.192232,29.514908</h3>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row lg-m-b text-center text-white">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div style="position:relative; overflow:hidden; border-radius: 10px;">
-                <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee; font-size:12px; position:absolute; top:0px;">Санкт‑Петербург</a>
-                <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?ll=29.517243%2C60.192276&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" style="color:#eee; font-size:12px; position:absolute; top:14px;">60.192232,29.514908 — Яндекс Карты</a>
-                <iframe src="https://yandex.kz/map-widget/v1/?ll=29.517243%2C60.192276&mode=whatshere&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" width="100%" height="400" frameborder="1" allowfullscreen="true" style="position:relative; border-radius: 10px;"></iframe>
+        <div class="row lg-m-b text-center text-white">
+            <div class="col-lg-2 col-0"></div>
+            <div class="col-lg-8 col-12">
+                <div style="position:relative; overflow:hidden; border-radius: 10px;">
+                    <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee; font-size:12px; position:absolute; top:0px;">Санкт‑Петербург</a>
+                    <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?ll=29.517243%2C60.192276&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" style="color:#eee; font-size:12px; position:absolute; top:14px;">60.192232,29.514908 — Яндекс Карты</a>
+                    <iframe src="https://yandex.kz/map-widget/v1/?ll=29.517243%2C60.192276&mode=whatshere&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" width="100%" height="400" frameborder="1" allowfullscreen="true" style="position:relative; border-radius: 10px;"></iframe>
+                </div>
             </div>
+            <div class="col-lg-2 col-0"></div>
         </div>
-        <div class="col-2"></div>
-    </div>
-    <div class="row text-center text-white">
-        <div class="col-12 mb-3">
-            <img src="{% static 'images/tel.png' %}" alt="tel" width="100" height="auto">
+        <div class="row text-center">
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-12 mb-3">
+                <hr class="h-line-light">
+                <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="TG" width="50" height="50"></a>
+                <a href="https://wa.me/89992350091"><img class="mx-1" src="{% static 'images/socials/wts.png' %}" alt="Watsapp" width="50" height="50"></a>
+                <a href="https://vk.com/broteamracing"><img class="mx-1" src="{% static 'images/socials/vk1.png' %}" alt="VK" width="50" height="50"></a>
+                <a href="https://www.youtube.com/@VovkaLife365"><img class="mx-1" src="{% static 'images/socials/yt.png' %}" alt="YouTube" width="50" height="50"></a>
+            </div>
+            <div class="col-lg-4 col-0"></div>
         </div>
-        <div class="col-12 mb-3">
-            <h3 class="fs-2">+7 (999) 235-00-91</h3>
-        </div>
-    </div>
-    <div class="row text-center mb-4">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <hr class="h-line" style="opacity: 1;">
-            <a href="https://t.me/VovaFerra"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="TG" width="50" height="50"></a>
-            <a href="https://wa.me/89992350091"><img class="mx-1" src="{% static 'images/socials/wts.png' %}" alt="Watsapp" width="50" height="50"></a>
-            <a href="https://vk.com/broteamracing"><img class="mx-1" src="{% static 'images/socials/vk1.png' %}" alt="VK" width="50" height="50"></a>
-            <a href="https://www.youtube.com/@VovkaLife365"><img class="mx-1" src="{% static 'images/socials/yt.png' %}" alt="YouTube" width="50" height="50"></a>
-        </div>
-        <div class="col-4"></div>
     </div>
 </div>
 {% endblock %}

@@ -6,39 +6,7 @@
 
 {% block content %}
 
-<style>
-  .custom-border {
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 10px solid rgba(255, 255, 255, 0.5);
-    border-radius: 60px 0 0 60px;
-    border-right: none;
-    padding: 50px;
-  }
-  .img-style {
-    width: 350px;
-    height: 300px;
-    border-radius: 15px;
-    object-fit: cover;
-    margin: 30px; /* Добавлен отступ сбоку */
-  }
-  .gallery-bg {
-    background-color: rgb(56, 58, 74);
-    border: 10px solid rgba(255, 255, 255, 0.5);
-    border-radius: 60px 60px 60px 60px;
-  }
-  .img-ico {
-    width: 250px;
-    height: 250px;
-    margin: auto;
-    display: block;
-  }
-  .img-ico-s {
-    width: 50px;
-    height: auto;
-    margin-inline: 10px;
-  }
-</style>
-<div class="head-gradient">
+<div class="dark-bg">
   <div class="container">
     <div class="row">
       <img src="{% static 'images/head.png' %}" alt="Head">
@@ -69,9 +37,9 @@
     </div>
   </div>
 </div>
-<div class="gallery-gradient">
+<div class="light-bg-p">
   <div class="container">
-    <div class="row gallery-bg">
+    <div class="row frame-light">
       <div class="col-lg-4 col-sm-12 text-center mt-4">
         <a href="{% static 'images/carousel/slide1.jpg' %}" data-lightbox="gallery">
           <img class="img-style" src="{% static 'images/carousel/slide1.jpg' %}" alt="1">
@@ -107,7 +75,7 @@
 </div>
 
 
-<div class="head-gradient pt-5">
+<div class="dark-bg pt-5">
   <div class="container">
     <div class="row text-center">
       <h1 class="display-4 text-white">{% translate 'Bikes' %}</h1>
@@ -200,16 +168,8 @@
   </div>
 </div>
 
-<div class="gallery-gradient pt-5">
+<div class="light-bg-p pt-5">
   <div class="container-fluid">
-    <div class="row text-center">
-      <div class="col-lg-3 col-0"></div>
-      <div class="col-lg-6 col-12">
-        <h1 class="display-4 text-white">{% translate 'Take a simle Try' %}</h1>
-        <hr class="h-line-dark">
-      </div>
-      <div class="col-lg-3 col-0"></div>
-    </div>
     <div class="row justify-content-evenly pt-4">
       <div class="col-12 col-sm-12 col-md-12 col-lg-3 gallery-bg text-white mt-3">
         <img class="img-ico" src="{% static 'images/ico_block/helmet.png' %}" alt="Equip">

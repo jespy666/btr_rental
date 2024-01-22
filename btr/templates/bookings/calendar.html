@@ -1,12 +1,13 @@
 {% load static %}
 {% load i18n %}
 
-<table class="table text-white text-center">
+
+<table class="table text-center" style="color: rgb(56, 58, 74); border-color: rgb(156, 157, 165);">
     <thead>
-       <tr class="text-center">
+       <tr class="text-center text-white">
            <th scope="col" colspan="7">{{ current_month }}, {{ current_year }}</th>
        </tr>
-       <tr>
+       <tr class="text-white">
            <th scope="col">{% translate 'Monday' %}</th>
            <th scope="col">{% translate 'Tuesday' %}</th>
            <th scope="col">{% translate 'Wednesday' %}</th>
@@ -18,7 +19,7 @@
     </thead>
     <tbody>
         {% for week in current_calendar %}
-            <tr>
+            <tr class="text-white">
                 {% for day in week %}
                     {% with number=day.0 load=day.1 %}
                         {% if number == 0 %}

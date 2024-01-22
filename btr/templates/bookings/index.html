@@ -4,30 +4,51 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-lg-2 col-0"></div>
-        <div class="col-lg-8 col-12">
-            <h3 class="fs-3 text-white text-center mt-4">{% translate 'Below you can select the available day and time for rental' %}</h3>
-            <hr class="h-line" style="opacity: 1;">
-            <div class="table-responsive table-responsive-sm mt-4">
-                {% include 'bookings/calendar.html' %}
-                {% include 'bookings/next_calendar.html' %}
+
+<div class="dark-bg">
+    <div class="container pt-4">
+        <div class="row">
+            <div class="col-lg-2 col-0"></div>
+            <div class="col-lg-8 col-12">
+                <h3 class="fs-3 text-white text-center mt-4">{% translate 'Booking calendar' %}</h3>
+                <hr class="h-line-light">
+                <div class="table-responsive table-responsive-sm lg-m-t">
+                    {% include 'bookings/calendar.html' %}
+                </div>
             </div>
+            <div class="col-lg-2 col-0"></div>
+            {% include 'bookings/modal_window.html' %}
         </div>
-        <div class="col-lg-2 col-0"></div>
-        {% include 'bookings/modal_window.html' %}
-    </div>
-    {% include 'bookings/legend.html' %}
-    <div class="row lg-m-y">
-        <div class="col-lg-3 col-0"></div>
-        <div class="col-lg-6 col-12">
-            <h3 class="fs-3 text-center text-white">
-                {% translate 'Also you can book a ride via TG bot ' %}
-                <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="bot" width="50" height="50"></a>
-            </h3>
-        </div>
-        <div class="col-lg-3 col-0"></div>
     </div>
 </div>
+<div class="dark-bg">
+    <div class="container pt-4">
+        <div class="row">
+            <div class="col-lg-2 col-0"></div>
+            <div class="col-lg-8 col-12">
+                <div class="table-responsive table-responsive-sm lg-m-t">
+                    {% include 'bookings/next_calendar.html' %}
+                </div>
+            </div>
+            <div class="col-lg-2 col-0"></div>
+            {% include 'bookings/legend.html' %}
+            <div class="lg-m-b"></div>
+        </div>
+    </div>
+</div>
+<div class="dark-bg">
+    <div class="container">
+        <div class="row lg-p-y">
+            <div class="col-lg-3 col-0"></div>
+            <div class="col-lg-6 col-12">
+                <h3 class="fs-3 text-center text-white">
+                    {% translate 'Also you can book a ride via TG bot ' %}
+                    <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="bot" width="50" height="50"></a>
+                </h3>
+            </div>
+            <div class="col-lg-3 col-0"></div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

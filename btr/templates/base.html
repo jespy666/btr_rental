@@ -5,6 +5,7 @@
     {% load i18n %}
     {% load static %}
     <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
       <title>{% block title %}{% endblock %}</title>
       {% bootstrap_css %}
       {% bootstrap_javascript %}
@@ -12,16 +13,14 @@
       <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
       <link href="{% static 'dist/css/lightbox.css' %}" rel="stylesheet" />
   </head>
-  <body style="overflow-x: hidden;">
-    <div class="head-gradient">
-      <div class="row">
-        <div class="col-lg-2 col-0"></div>
-        <div class="col-lg-8 col-12">
-        <header>{% include 'navbar.html' %}</header>
-        {% bootstrap_messages %}
-        <div class="mb-4"></div>
+  <body>
+    <div class="dark-bg">
+      <div class="container">
+        <div class="row">
+          {% include 'navbar.html' %}
+          {% bootstrap_messages %}
+          <div class="mb-4"></div>
         </div>
-        <div class="col-lg-2 col-0"></div>
       </div>
     </div>
     {% block content %}{% endblock %}
