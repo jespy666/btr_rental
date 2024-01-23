@@ -28,3 +28,6 @@ messages:
 
 compile:
 	python3 manage.py compilemessages
+
+lint:
+	poetry run flake8 --exclude=static,*migrations,settings.py
