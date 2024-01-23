@@ -40,10 +40,10 @@ class Booking(models.Model):
     )
 
     STATUS_CHOICES = [
-        ('pending', _('wait to confirm')),
-        ('confirmed', _('accepted')),
-        ('completed', _('finished')),
-        ('canceled', _('canceled')),
+        (_('pending'), _('wait to confirm')),
+        (_('confirmed'), _('accepted')),
+        (_('completed'), _('finished')),
+        (_('canceled'), _('canceled')),
     ]
 
     status = models.CharField(
