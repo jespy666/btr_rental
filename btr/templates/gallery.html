@@ -1,40 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Галерея на Bootstrap с увеличением изображений</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    .thumbnail {
-      max-width: 100px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+{% load static %}
+{% load i18n %}
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <img src="https://disk.yandex.ru/d/6jg2VcMvPKCMzg/IMG_3380.heic" class="thumbnail img-fluid" alt="Изображение 1" data-toggle="modal" data-target="#exampleModal1">
+<div class="light-bg-p">
+  <div class="container-fluid">
+    <div class="row frame-light">
+      <div class="col-lg-4 col-sm-12 text-center mt-4">
+        <a href="{% static 'images/carousel/slide1.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide1.jpg' %}" alt="1">
+        </a>
       </div>
-      <!-- Добавьте другие изображения с таким же форматом -->
+      <div class="col-lg-4 col-sm-12 text-center mt-4">
+        <a href="{% static 'images/carousel/slide5.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide5.jpg' %}" alt="5">
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center mt-4">
+        <a href="{% static 'images/carousel/slide6.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide6.jpg' %}" alt="6">
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
+        <a href="{% static 'images/carousel/slide4.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide4.jpg' %}" alt="4">
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
+        <a href="{% static 'images/carousel/slide2.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide2.jpg' %}" alt="2">
+        </a>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
+        <a href="{% static 'images/carousel/slide3.jpg' %}" data-lightbox="gallery">
+          <img class="img-fluid" src="{% static 'images/carousel/slide3.jpg' %}" alt="3">
+        </a>
+      </div>
     </div>
   </div>
-
-  <!-- Модальное окно для отображения изображений в полном размере -->
-  <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <img src="https://yadi.sk/i/example_image_1_large.jpg" class="img-fluid" alt="Изображение 1 в полном размере">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+</div>

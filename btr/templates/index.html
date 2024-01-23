@@ -16,7 +16,7 @@
         <h1 class="fs-1 text-left text-white custom-border">{% translate 'Pit-bikes and Enduro motorcycles rental' %}<br>{% translate 'in Saint-Petersburg' %}</h1>
       </div>
       <div class="col-lg-6 col-12 d-flex align-items-center">
-        <img src="{% static 'images/point1.png' %}" alt="point" width="auto" height="45%">
+        <img src="{% static 'images/point1.png' %}" alt="point" width="auto" height="40%">
         <div class="d-flex flex-column justify-content-between">
           <p class="fs-2 mt-4 text-white">{% translate 'Saint-Petersburg' %}<br>{% translate 'Molodezhnoe' %}<br>{% translate 'Primorskoe h.659' %}</p>
         </div>
@@ -37,159 +37,9 @@
     </div>
   </div>
 </div>
-<div class="light-bg-p">
-  <div class="container">
-    <div class="row frame-light">
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide1.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide1.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide2.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide2.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide3.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide3.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide4.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide4.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide5.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide5.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide6.jpg' %}" data-lightbox="gallery">
-          <img class="img-style" src="{% static 'images/carousel/slide6.jpg' %}" alt="1">
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
 
+{% include 'ico_block.html' %}
+{% include 'cards.html' %}
+{% include 'gallery.html' %}
 
-<div class="dark-bg pt-5">
-  <div class="container">
-    <div class="row text-center">
-      <h1 class="display-4 text-white">{% translate 'Bikes' %}</h1>
-      <div class="col-lg-3 col-0"></div>
-      <div class="col-lg-6 col-12 text-center">
-        <hr class="h-line-light">
-      </div>
-      <div class="col-lg-3 col-0"></div>
-    </div>
-    <div class="row text-center">
-      <h2 class="mt-4 text-white">{% translate 'Carefully Maintained and Tuned' %}</h2>
-    </div>
-    <div class="row text-center">
-      <p class="h4 text-white mt-3 mb-5">
-        {% translate 'All our motorcycles have undergone meticulous maintenance and tuning, ensuring high quality and safety' %}
-      </p>
-    </div>
-    <div class="container">
-    <div class="row text-center">
-      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-        <div class="card card-bg text-white mb-5">
-          <img src="{% static 'images/gr7_300/main.jpg' %}" class="card-img-top" alt="GR-7">
-            <div class="card-body">
-              <h5 class="card-title">GR-7 300</h5>
-              <p class="card-text">
-                {% translate 'The suspension is quite stiff, designed to avoid damaging it during landings after jumps' %}
-              </p>
-              <hr>
-              <p class="card-text">
-                {% translate 'Suitable for riders with a height of at least 175cm' %}
-              </p>
-            </div>
-            <ul class="list-rectangle ">
-              <li>{% translate '300cc engine' %}</li>
-              <li>{% translate '26 hp' %}</li>
-              <li>{% translate '2500₽ / hour' %}</li>
-            </ul>
-            <div class="card-body d-flex justify-content-center">
-              <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
-            </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-        <div class="card card-bg text-white mb-5">
-          <img src="{% static 'images/xmotos_250/main.jpg' %}" class="card-img-top" alt="X-motos">
-            <div class="card-body">
-              <h5 class="card-title">X Motos 250</h5>
-              <p class="card-text">
-                {% translate 'Excellent enduro motorcycle, very friendly with a very soft suspension' %}
-              </p>
-              <hr>
-              <p class="card-text">
-                {% translate 'Suitable for riders with a height of at least 160cm' %}
-              </p>
-            </div>
-            <ul class="list-rectangle ">
-              <li>{% translate '250cc engine' %}</li>
-              <li>{% translate '21 hp' %}</li>
-              <li>{% translate '2000₽ / hour' %}</li>
-            </ul>
-            <div class="card-body d-flex justify-content-center">
-              <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
-            </div>
-        </div>
-      </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-        <div class="card card-bg text-white mb-5">
-          <img src="{% static 'images/progasi_ibiza_300/main.jpg' %}" class="card-img-top" alt="Progasi">
-          <div class="card-body">
-            <h5 class="card-title">Progasi Ibiza 300</h5>
-            <p class="card-text">
-              {% translate 'Powerful, yet a friendly motorcycle with a soft KYB-TECH suspension' %}
-            </p>
-            <hr>
-            <p class="card-text">
-              {% translate 'Suitable for riders with a height of at least 175cm' %}
-            </p>
-          </div>
-          <ul class="list-rectangle ">
-            <li>{% translate '300cc engine' %}</li>
-            <li>{% translate '27 hp' %}</li>
-            <li>{% translate '2500₽ / hour' %}</li>
-          </ul>
-          <div class="card-body d-flex justify-content-center">
-            <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="light-bg-p pt-5">
-  <div class="container-fluid">
-    <div class="row justify-content-evenly pt-4">
-      <div class="col-12 col-sm-12 col-md-12 col-lg-3 gallery-bg text-white mt-3">
-        <img class="img-ico" src="{% static 'images/ico_block/helmet.png' %}" alt="Equip">
-        <h4 class="fs-2 mb-3">{% translate 'Equipment' %}</h4>
-        <hr class="h-line-light">
-        <p class="fs-4 text-left">{% translate 'Do not worry about safety, all necessary equipment is already included in the rental price' %}</p>
-      </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-3 gallery-bg text-white mt-3">
-        <img class="img-ico" src="{% static 'images/ico_block/guide.png' %}" alt="Guide">
-        <h4 class="fs-2 mb-3">{% translate 'Guide' %}</h4>
-        <hr class="h-line-light">
-        <p class="fs-4 text-left">{% translate 'Even if you have never sat in the saddle, our experienced guide will teach you everything' %}</p>
-      </div>
-      <div class="col-12 col-sm-12 col-md-12 col-lg-3 gallery-bg text-white mt-3">
-        <img class="img-ico" src="{% static 'images/ico_block/license.png' %}" alt="License">
-        <h4 class="fs-2 mb-3">{% translate 'No license' %}</h4>
-        <hr class="h-line-light">
-        <p class="fs-4 text-left">{% translate 'To operate an enduro motorcycle you do not need a driver license, because it is sports equipment' %}</p>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

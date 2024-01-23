@@ -23,10 +23,10 @@
     width: 130px;
 }
 
-.h-line {
-    color: red;
-    border: 1px solid;
-    opacity: 1;
+@media only screen and (max-width: 767px) {
+    .badge {
+        width: 120px;
+    }
 }
 
 .h-line-light {
@@ -44,7 +44,6 @@
 .dark-text {
     color: rgb(56, 58, 74);
 }
-/* Moto Cards */
 
 .card-bg {
     background-color: rgb(28, 29, 37);
@@ -52,8 +51,6 @@
     border-radius: 40px 40px 40px 40px;
     padding: 20px;
 }
-
-/* Booking Cards */
 
 .booking-card-header {
     margin-left: 1rem;
@@ -127,14 +124,6 @@ background: #ec407a;
     padding: 20px;
 }
 
-.image-с {
-    width: 200px;
-    height: auto;
-}
-
-.text-с {
-    flex-grow: 1;
-}
 
 .hover-effect:hover {
     background-color: white;
@@ -155,17 +144,21 @@ background: #ec407a;
 }
 
 .img-style {
-    width: 350px;
-    height: 300px;
+    width: 100%;
+    height: auto;
     border-radius: 15px;
     object-fit: cover;
-    margin: 30px; /* Добавлен отступ сбоку */
+}
+
+.img-fluid {
+    border-radius: 5px;
 }
 
 .frame-light {
     background-color: rgb(56, 58, 74);
     border: 10px solid rgba(255, 255, 255, 0.5);
     border-radius: 60px 60px 60px 60px;
+    padding: 10px;
 }
 
 .frame-dark {
@@ -173,6 +166,7 @@ background: #ec407a;
     border: 10px solid rgba(255, 255, 255, 0.5);
     border-radius: 60px 60px 60px 60px;
 }
+
 
 .img-ico {
     width: 250px;
