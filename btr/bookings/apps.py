@@ -6,4 +6,4 @@ class BookingsConfig(AppConfig):
     name = 'btr.bookings'
 
     def ready(self):
-        import btr.bookings.signals
+        import btr.bookings.signals  # noqa: F401
