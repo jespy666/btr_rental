@@ -23,7 +23,7 @@
               {% if user.profile_image %}
                 <img src="{{ user.profile_image.url|safe }}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
               {% else %}
-                <img src="{% static 'images/user_image.png' %}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
+                <img src="{% static 'images/Profile.png' %}" alt="user" width="150" height="150" style="border-radius: 50%; object-fit: cover;">
               {% endif %}
               <div class="mt-3">
                 <h4 class="text-white">{{ user.username }}</h4>
@@ -86,32 +86,34 @@
                       </h4>
                   </div>
                 {% else %}
-                  <table class="table">
-                    <thead class="text-white">
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">{% translate 'Date' %}</th>
-                        <th scope="col">{% translate 'Begin time' %}</th>
-                        <th scope="col">{% translate 'End time' %}</th>
-                        <th scope="col">{% translate 'Status' %}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for ride in current_bookings %}
-                        {% if ride.status == 'pending' %}
-                          <tr class="table-warning">
-                        {% else %}
-                          <tr class="table-success">
-                        {% endif %}
-                          <th scope="row">{{ ride.id }}</th>
-                          <td>{{ ride.booking_date }}</td>
-                          <td>{{ ride.start_time }}</td>
-                          <td>{{ ride.end_time }}</td>
-                          <td>{{ ride.status }}</td>
+                  <div class="table table-responsive">
+                    <table class="table">
+                      <thead class="text-white">
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">{% translate 'Date' %}</th>
+                          <th scope="col">{% translate 'Begin time' %}</th>
+                          <th scope="col">{% translate 'End time' %}</th>
+                          <th scope="col">{% translate 'Status' %}</th>
                         </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {% for ride in current_bookings %}
+                          {% if ride.status == 'pending' %}
+                            <tr class="table-warning">
+                          {% else %}
+                            <tr class="table-success">
+                          {% endif %}
+                            <th scope="row">{{ ride.id }}</th>
+                            <td>{{ ride.booking_date }}</td>
+                            <td>{{ ride.start_time }}</td>
+                            <td>{{ ride.end_time }}</td>
+                            <td>{{ ride.status }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
                 {% endif %}
               </div>
             </div>
@@ -129,32 +131,34 @@
                     </h4>
                   </div>
                 {% else %}
-                  <table class="table">
-                    <thead class="text-white">
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">{% translate 'Date' %}</th>
-                        <th scope="col">{% translate 'Begin time' %}</th>
-                        <th scope="col">{% translate 'End time' %}</th>
-                        <th scope="col">{% translate 'Status' %}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {% for booking in completed_bookings %}
-                      {% if booking.status == 'completed' %}
-                        <tr class="table-primary">
-                      {% else %}
-                        <tr class="table-danger">
-                      {% endif %}
-                        <th scope="row">{{ booking.id }}</th>
-                        <td>{{ booking.booking_date }}</td>
-                        <td>{{ booking.start_time }}</td>
-                        <td>{{ booking.end_time }}</td>
-                        <td>{{ booking.status }}</td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
+                  <div class="table table-responsive">
+                    <table class="table">
+                      <thead class="text-white">
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">{% translate 'Date' %}</th>
+                          <th scope="col">{% translate 'Begin time' %}</th>
+                          <th scope="col">{% translate 'End time' %}</th>
+                          <th scope="col">{% translate 'Status' %}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for booking in completed_bookings %}
+                        {% if booking.status == 'completed' %}
+                          <tr class="table-primary">
+                        {% else %}
+                          <tr class="table-danger">
+                        {% endif %}
+                          <th scope="row">{{ booking.id }}</th>
+                          <td>{{ booking.booking_date }}</td>
+                          <td>{{ booking.start_time }}</td>
+                          <td>{{ booking.end_time }}</td>
+                          <td>{{ booking.status }}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
                 {% endif %}
               </div>
             </div>
