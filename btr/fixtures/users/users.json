@@ -1,0 +1,35 @@
+[
+  {
+    "model": "users.siteuser",
+    "pk": 1,
+    "fields": {
+      "username": "user1",
+      "first_name": "John",
+      "email": "user1@example.com",
+      "phone_number": "+79998887766",
+      "created_at": "2022-01-23T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.siteuser",
+    "pk": 2,
+    "fields": {
+      "username": "user2",
+      "first_name": "Jane",
+      "email": "user2@example.com",
+      "phone_number": "+79996665544",
+      "created_at": "2022-01-23T13:00:00Z"
+    }
+  },
+  {
+    "model": "users.siteuser",
+    "pk": 3,
+    "fields": {
+      "username": "user3",
+      "first_name": "Doe",
+      "email": "user3@example.com",
+      "phone_number": "+76665425346",
+      "created_at": "2022-01-23T14:00:00Z"
+    }
+  }
+]

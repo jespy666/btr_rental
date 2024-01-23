@@ -1,0 +1,10 @@
+{
+    "valid": {
+      "username": "ValidUserName",
+      "first_name": "ValidName",
+      "email": "valid@mail.ru",
+      "phone_number": "+71234567890",
+      "password1": "qwertycvbn",
+      "password2": "qwertycvbn"
+    }
+}
