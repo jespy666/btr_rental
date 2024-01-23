@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 
 from btr.orm_utils import check_booking_info_as, change_booking_status_as
-from btr.tasks.book_tasks import send_booking_notify
+# from btr.tasks.book_tasks import send_booking_notify
 from ...utils.handlers import (check_admin_access, get_emoji_for_status,
                                remove_seconds)
 from ...keyboards.kb_cancel import CancelKB
