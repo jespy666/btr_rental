@@ -1,3 +1,6 @@
+install:
+	poetry install
+
 dev:
 	python3 manage.py runserver
 
@@ -31,3 +34,9 @@ compile:
 
 lint:
 	poetry run flake8 --exclude=static,*migrations,settings.py
+
+test:
+	docker-compose -f docker-compose.test.yml up -d && poetry run python3 manage.py test && docker-compose -f docker-compose.test.yml down
+
+test-coverage:
+	docker-compose -f docker-compose.test.yml up -d && poetry run coverage run manage.py test && poetry run coverage report -m --include=btr/* --omit=btr/settings.py && poetry run coverage xml --include=btr/* --omit=btr/settings.py && docker-compose -f docker-compose.test.yml down
