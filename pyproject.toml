@@ -4,7 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Anton Georgievsky <123451311+jespy666@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "btr_rental"}]
+packages = [
+    {include = "btr"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
