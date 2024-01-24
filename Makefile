@@ -8,8 +8,8 @@ collectstatic:
 	python3 manage.py collectstatic --clear --ignore 'admin'
 
 migrate:
-	python3 manage.py makemigrations
-	python3 manage.py migrate
+	poetry run python3 manage.py makemigrations
+	poetry run python3 manage.py migrate
 
 celery-run:
 	celery -A btr worker -l info
