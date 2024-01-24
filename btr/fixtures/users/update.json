@@ -1,8 +1,8 @@
 {
-    "username": "NewUsername",
-    "first_name": "NewFirstName",
-    "email": "new@mail.ru",
-    "phone_number": "+76667776655",
+    "username": "user1",
+    "first_name": "John",
+    "email": "user1@example.com",
+    "phone_number": "+79998887766",
     "password1": "newpassword123",
     "password2": "newpassword123"
 }

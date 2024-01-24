@@ -1,10 +1,34 @@
 {
     "valid": {
-      "username": "ValidUserName",
-      "first_name": "ValidName",
-      "email": "valid@mail.ru",
-      "phone_number": "+71234567890",
-      "password1": "qwertycvbn",
-      "password2": "qwertycvbn"
+        "username": "ValidUserName",
+        "first_name": "ValidName",
+        "email": "valid@mail.com",
+        "phone_number": "+79213868775",
+        "password1": "qwertycvbn",
+        "password2": "qwertycvbn"
+    },
+    "existed_username": {
+        "username": "user1",
+        "first_name": "ValidName",
+        "email": "valid@mail.com",
+        "phone_number": "+79213868775",
+        "password1": "qwertycvbn",
+        "password2": "qwertycvbn"
+    },
+    "existed_email": {
+        "username": "Valid",
+        "first_name": "ValidName",
+        "email": "user2@example.com",
+        "phone_number": "+79213868775",
+        "password1": "qwertycvbn",
+        "password2": "qwertycvbn"
+    },
+    "existed_phone": {
+        "username": "user1",
+        "first_name": "ValidName",
+        "email": "valid@mail.com",
+        "phone_number": "+76665425346",
+        "password1": "qwertycvbn",
+        "password2": "qwertycvbn"
     }
 }
