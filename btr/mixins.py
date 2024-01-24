@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
 
 
@@ -37,3 +38,16 @@ class ObjectDoesNotExistMixin:
         except ObjectDoesNotExist:
             messages.error(request, self.not_existed_message)
             return redirect(self.not_existed_url)
+
+
+class DeleteProtectionMixin:
+
+    protection_message = None
+    protected_url = None
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(request, self.protection_message)
+            return redirect(self.protected_url)
