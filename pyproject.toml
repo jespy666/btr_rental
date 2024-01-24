@@ -22,6 +22,9 @@ aiogram = "^3.3.0"
 flake8 = "^7.0.0"
 
 
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.4.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
