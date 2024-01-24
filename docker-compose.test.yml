@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  redis-test:
+    image: redis:latest
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--protected-mode", "no"]
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
