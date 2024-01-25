@@ -1,0 +1,57 @@
+{% load static %}
+{% load i18n %}
+
+<section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <div class="me-5 d-none d-lg-block">
+      <span>{% translate 'Get connected with us on social networks:' %}</span>
+    </div>
+    <div>
+      <a href="#" class="me-4 f-a">
+        <img class="f-ico" src="{% static 'images/footer/wts.png' %}" alt="Wts">
+      </a>
+      <a href="#" class="me-4 f-a">
+        <img class="f-ico" src="{% static 'images/footer/vk.png' %}" alt="Vk">
+      </a>
+      <a href="#" class="me-4 f-a">
+        <img class="f-ico" src="{% static 'images/footer/tg.png' %}" alt="Tg">
+      </a>
+      <a href="#" class="me-4 f-a">
+        <img class="f-ico" src="{% static 'images/footer/yt.png' %}" alt="YT">
+      </a>
+    </div>
+</section>
+
+<section class="text-white">
+  <div class="container text-center text-md-start mt-5">
+    <div class="row mt-3">
+      <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+        <h6 class="text-uppercase fw-bold mb-4">Bro Team Racing</h6>
+        <p>
+          {% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles.' %}
+        </p>
+      </div>
+      <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+        <h6 class="text-uppercase fw-bold mb-4">{% translate 'Come to us' %}</h6>
+        <p><a href="{% url 'book_create' %}" class="text-reset">{% translate 'Booking a ride' %}</a></p>
+        <p><a href="{% url 'contacts' %}" class="text-reset">{% translate 'Contacts' %}</a></p>
+      </div>
+      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+        <h6 class="text-uppercase fw-bold mb-4">{% translate 'Useful links' %}</h6>
+        <p><a href="{% url 'briefing' %}" class="text-reset">{% translate 'Briefing' %}</a></p>
+        <p><a href="{% url 'reviews' %}" class="text-reset">{% translate 'Reviews' %}</a></p>
+        <p><a href="#" class="text-reset">{% translate 'Blog' %}</a></p>
+      </div>
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+        <h6 class="text-uppercase fw-bold mb-4">{% translate 'Contacts' %}</h6>
+        <p>{% translate 'SPB, Molodezhnoe, Primorskoe h.659' %}</p>
+        <p>broteamracing@yandex.ru</p>
+        <p>+7 981 785 04 51</p>
+        <p>+7 999 235 00 91</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+  © 2024 Copyright:
+  <a class="text-reset fw-bold" href="https://mdbootstrap.com/">{% translate 'All rights reserved' %}</a>
+</div>
