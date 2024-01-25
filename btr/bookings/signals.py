@@ -16,13 +16,13 @@ def update_user_status(sender, instance, **kwargs):
     book_count = rider.booking_set.filter(status='completed').count()
     match book_count:
         case count if count < 3:
-            rider.status = 'Newbie'
+            rider.status = _('Newbie')
         case count if 3 <= count < 5:
-            rider.status = 'Amateur'
+            rider.status = _('Amateur')
         case count if 5 <= count < 10:
-            rider.status = 'Professional'
+            rider.status = _('Professional')
         case _:
-            rider.status = 'Master'
+            rider.status = _('Master')
     rider.save()
 
 
