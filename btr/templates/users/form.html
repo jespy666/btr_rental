@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
@@ -9,22 +10,22 @@
     });
 </script>
 <div class="dark-bg">
-<div class="container">
-    <div class="row frame-dark">
-        <div class="col-3"></div>
-        <div class="col-6  lg-m-y">
-            <h1 class="mb-5 text-center text-white">{{ header }}</h1>
-            <form method="post" class="text-white" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <input class="btn btn-success" type="submit" value="{{ button }}">
-            </form>
-            {% if header == 'Profile Edit' %}
-            <div class="my-4"></div>
-            <a class="btn btn-danger" href="{% url 'user_delete' pk=user.pk %}">Delete Profile</a>
-            {% endif %}
+    <div class="container">
+        <div class="row frame-dark">
+            <div class="col-3"></div>
+            <div class="col-6  lg-m-y">
+                <h1 class="mb-5 text-center text-white">{{ header }}</h1>
+                <form method="post" class="text-white" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <input class="btn btn-success" type="submit" value="{{ button }}">
+                </form>
+                {% if header == _('Profile Edit') %}
+                    <div class="my-4"></div>
+                    <a class="btn btn-danger" href="{% url 'user_delete' pk=user.pk %}">{% translate 'Delete profile' %}</a>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 </div>
 {% endblock %}

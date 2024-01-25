@@ -99,7 +99,7 @@
                       </thead>
                       <tbody>
                         {% for ride in current_bookings %}
-                          {% if ride.status == 'pending' %}
+                          {% if ride.status == _('pending') %}
                             <tr class="table-warning">
                           {% else %}
                             <tr class="table-success">
@@ -144,7 +144,7 @@
                       </thead>
                       <tbody>
                       {% for booking in completed_bookings %}
-                        {% if booking.status == 'completed' %}
+                        {% if booking.status == _('completed') %}
                           <tr class="table-primary">
                         {% else %}
                           <tr class="table-danger">

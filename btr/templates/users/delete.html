@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
-
 {% load django_bootstrap5 %}
 {% load i18n %}
 
 {% block content %}
 <div class="dark-bg">
     <div class="container wrapper flex-grow-1 text-center text-white">
-        <div class="row frame-dark lg-m-y">
+        <div class="row frame-dark form-p-y">
             <h1 class="my-4">{% translate 'User remove' %}</h1>
             <p>{% translate 'Are you sure to remove' %} {{ user }}?</p>
             <form method="post">
                 {% csrf_token %}
-                <input class="btn btn-danger" type="submit" value="{% translate 'Yes, delete' %}">
+                <input class="btn btn-danger" type="submit" value="{% translate 'Yes, delete my profile' %}">
             </form>
         </div>
     </div>
