@@ -97,9 +97,9 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
         form.instance.booking_date = self.format_date_for_orm(selected_date)
         form.instance.rider = user
         if user.is_superuser:
-            form.instance.status = 'confirmed'
+            form.instance.status = _('confirmed')
         else:
-            form.instance.status = 'pending'
+            form.instance.status = _('pending')
         form.save()
         send_details.delay(user_email, selected_date,
                            start_time, end_time, bike_count)

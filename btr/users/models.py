@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -45,10 +45,10 @@ class SiteUser(AbstractUser):
     )
 
     LEVEL_CHOICES = [
-        ('Newbie', _('Newbie')),
-        ('Amateur', _('Amateur')),
-        ('Professional', _('Professional')),
-        ('Master', _('Master')),
+        (_('Newbie'), _('Newbie')),
+        (_('Amateur'), _('Amateur')),
+        (_('Professional'), _('Professional')),
+        (_('Master'), _('Master')),
     ]
 
     status = models.CharField(

@@ -27,9 +27,9 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ['start_time', 'end_time', 'bike_count']
         widgets = {
-            'start_time': forms.TimeInput(attrs={'type': 'time'}),
-            'end_time': forms.TimeInput(attrs={'type': 'time'}),
-            'bike_count': forms.NumberInput(attrs={'type': 'number'})
+            _('start_time'): forms.TimeInput(attrs={'type': 'time'}),
+            _('end_time'): forms.TimeInput(attrs={'type': 'time'}),
+            _('bike_count'): forms.NumberInput(attrs={'type': 'number'})
         }
 
     def clean(self):

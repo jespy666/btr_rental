@@ -18,8 +18,8 @@ class AuthLoginView(SuccessMessageMixin, LoginView):
     next_page = reverse_lazy('home')
     success_message = _('You are log in')
     extra_context = {
-        'header': 'Sign In',
-        'button': 'Entry',
+        'header': _('Sign In'),
+        'button': _('Entry'),
     }
 
 
@@ -40,8 +40,8 @@ class AuthResetView(SuccessMessageMixin, ObjectDoesNotExistMixin, FormView):
     not_existed_url = reverse_lazy('auth-reset')
     template_name = 'password_reset_form.html'
     extra_context = {
-        'header': 'Password reset',
-        'button': 'Send',
+        'header': _('Password reset'),
+        'button': _('Send'),
     }
 
     def form_valid(self, form):
@@ -63,8 +63,8 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
     )
     template_name = 'confirm_code_form.html'
     extra_context = {
-        'header': 'Verification code confirm',
-        'button': 'Confirm',
+        'header': _('Verification code confirm'),
+        'button': _('Confirm'),
     }
 
     def form_valid(self, form):
