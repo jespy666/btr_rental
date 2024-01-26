@@ -57,13 +57,6 @@ class Booking(models.Model):
         auto_now_add=True,
     )
 
-    def __str__(self):
-        str_view = _(
-            'Status: {status}. Date: {date} {start} - {end}'
-        ).format(
-            status=self.status,
-            date=self.booking_date,
-            start=self.start_time,
-            end=self.end_time,
-        )
-        return str_view
+    class Meta:
+        verbose_name = _('Booking')
+        verbose_name_plural = _('Bookings')
