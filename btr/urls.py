@@ -1,24 +1,9 @@
-"""
-URL configuration for btr project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from .views import VKCommentsView
 from .views import IndexView, BriefingView, ContactsView, GalleryView
 
 urlpatterns = [
@@ -27,7 +12,7 @@ urlpatterns = [
     path('auth/', include('btr.auth.urls')),
     path('users/', include('btr.users.urls')),
     path('bookings/', include('btr.bookings.urls')),
-    path('reviews/', include('btr.reviews.urls')),
+    path('reviews/', VKCommentsView.as_view(), name='reviews'),
     path('contacts/', ContactsView.as_view(), name='contacts'),
     path('gallery/', GalleryView.as_view(), name='gallery'),
     path('admin/', admin.site.urls),

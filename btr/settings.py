@@ -28,9 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'btr.auth',
-    'btr.users',
-    'btr.bookings',
-    'btr.reviews',
+    'btr.users.apps.UsersConfig',
+    'btr.bookings.apps.BookingsConfig',
     'django_bootstrap5',
 
 ]
