@@ -118,7 +118,7 @@ class CreateAccount:
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with email <em>{email}</em> already'
+                '<strong>User with email <em>{email}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'
@@ -162,7 +162,7 @@ class CreateAccount:
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with phone number <em>{email}</em> already'
+                '<strong>User with phone number <em>{email}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'
