@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-26 12:11+0300\n"
+"POT-Creation-Date: 2024-01-26 12:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "Write your valid email where the confirmation code will be sent"
 msgstr "Адрес электронной почты"
 
-#: btr/auth/forms.py:14 btr/templates/users/profile.html:53
+#: btr/auth/forms.py:14 btr/templates/users/profile.html:57
 #: btr/users/forms.py:31 btr/users/forms.py:75 btr/users/models.py:27
 msgid "Email"
 msgstr "Адрес электронной почты"
@@ -172,7 +172,7 @@ msgid "bikes_count"
 msgstr "Количество байков"
 
 #: btr/bookings/models.py:43 btr/bookings/views.py:102
-#: btr/templates/users/profile.html:102
+#: btr/templates/users/profile.html:106
 msgid "pending"
 msgstr "ожидает подтверждения"
 
@@ -184,7 +184,7 @@ msgstr "ожидает подтверждения"
 msgid "accepted"
 msgstr "принят"
 
-#: btr/bookings/models.py:45 btr/templates/users/profile.html:147
+#: btr/bookings/models.py:45 btr/templates/users/profile.html:151
 msgid "completed"
 msgstr "завершен"
 
@@ -192,8 +192,8 @@ msgstr "завершен"
 msgid "finished"
 msgstr "завершен"
 
-#: btr/bookings/models.py:51 btr/templates/users/profile.html:97
-#: btr/templates/users/profile.html:142
+#: btr/bookings/models.py:51 btr/templates/users/profile.html:101
+#: btr/templates/users/profile.html:146
 msgid "Status"
 msgstr "Статус"
 
@@ -579,7 +579,7 @@ msgid "2500₽ / hour"
 msgstr "2500₽ / час"
 
 #: btr/templates/cards.html:43 btr/templates/cards.html:66
-#: btr/templates/cards.html:89 btr/templates/users/profile.html:31
+#: btr/templates/cards.html:89 btr/templates/users/profile.html:34
 msgid "Book Now"
 msgstr "Записаться сейчас"
 
@@ -820,57 +820,61 @@ msgstr "Изменение профиля"
 msgid "Delete profile"
 msgstr "Удаление аккаунта"
 
-#: btr/templates/users/profile.html:40
+#: btr/templates/users/profile.html:32
+msgid "Manage Site"
+msgstr "Управление сайтом"
+
+#: btr/templates/users/profile.html:44
 msgid "Personal info"
 msgstr "Личная информация"
 
-#: btr/templates/users/profile.html:44 btr/users/forms.py:23
+#: btr/templates/users/profile.html:48 btr/users/forms.py:23
 #: btr/users/forms.py:68 btr/users/models.py:19
 msgid "Name"
 msgstr "Имя"
 
-#: btr/templates/users/profile.html:62 btr/users/forms.py:40
+#: btr/templates/users/profile.html:66 btr/users/forms.py:40
 #: btr/users/forms.py:83 btr/users/models.py:33
 msgid "Phone"
 msgstr "Телефон"
 
-#: btr/templates/users/profile.html:70
+#: btr/templates/users/profile.html:74
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
-#: btr/templates/users/profile.html:79
+#: btr/templates/users/profile.html:83
 msgid "Current bookings"
 msgstr "Текущие поездки"
 
-#: btr/templates/users/profile.html:85
+#: btr/templates/users/profile.html:89
 msgid "There are not current bookings yet..."
 msgstr "У вас пока нет предстоящих поездок..."
 
-#: btr/templates/users/profile.html:94 btr/templates/users/profile.html:139
+#: btr/templates/users/profile.html:98 btr/templates/users/profile.html:143
 msgid "Date"
 msgstr "Дата"
 
-#: btr/templates/users/profile.html:95 btr/templates/users/profile.html:140
+#: btr/templates/users/profile.html:99 btr/templates/users/profile.html:144
 msgid "Begin time"
 msgstr "Время начала"
 
-#: btr/templates/users/profile.html:96 btr/templates/users/profile.html:141
+#: btr/templates/users/profile.html:100 btr/templates/users/profile.html:145
 msgid "End time"
 msgstr "Время окончания"
 
-#: btr/templates/users/profile.html:124
+#: btr/templates/users/profile.html:128
 msgid "History"
 msgstr "История поездок"
 
-#: btr/templates/users/profile.html:130
+#: btr/templates/users/profile.html:134
 msgid "There are not completed bookings yet..."
 msgstr "У вас пока нет завершенных поездок..."
 
-#: btr/templates/users/profile.html:171
+#: btr/templates/users/profile.html:175
 msgid "If you liked the ride, leave a "
 msgstr "Если вам понравился прокат, оставьте "
 
-#: btr/templates/users/profile.html:172
+#: btr/templates/users/profile.html:176
 msgid "review"
 msgstr "отзыв"
 
@@ -1695,6 +1699,7 @@ msgstr ""
 "<em>Проверь ввод и попробуй еще раз</em> ⤵️"
 
 #: btr/tg_bot/handlers/create.py:164
+#, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
 "\n"
