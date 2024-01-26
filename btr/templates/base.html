@@ -40,11 +40,17 @@
       });
     </script>
     <script>
-  lightbox.option({
-    'resizeDuration': 200,
-    'wrapAround': true
-  });
-</script>
+      lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_phone_number').inputmask('+7(999) 999-99-99');
+        });
+    </script>
   </body>
 <footer class="text-white" style="background-color: rgb(28, 29, 37);">
   {% include 'footer.html' %}
