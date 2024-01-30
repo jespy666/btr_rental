@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 from ..mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .models import Booking
 from .forms import BookingForm
+from .locale import locale_month_name
 from ..orm_utils import LoadCalc
 from ..tasks.book_tasks import send_details
 
@@ -35,10 +36,16 @@ class BookingIndexView(TemplateView):
         next_cal = calendar.monthcalendar(next_year, next_month)
         next_load = LoadCalc(next_cal, next_year, next_month).get_month_load()
         context['current_month'] = calendar.month_name[current_month]
+        context['verbose_month'] = locale_month_name(
+            calendar.month_name[current_month]
+        )
         context['current_year'] = current_year
         context['today'] = current_day
         context['current_calendar'] = current_load
         context['next_month'] = calendar.month_name[next_month]
+        context['verbose_next_month'] = locale_month_name(
+            calendar.month_name[next_month]
+        )
         context['next_year'] = next_year
         context['next_calendar'] = next_load
         return context
@@ -68,10 +75,14 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_date = self.request.GET.get('selected_date')
+        verbose_month = self.request.GET.get('verbose_month')
+        verbose_current_month = verbose_month if verbose_month else (
+            self.request.GET.get('verbose_next_month'))
         slots = self.request.GET.get('slots')
         formatted_date = self.format_date_for_form(selected_date)
         context['selected_date'] = formatted_date
         context['ranges'] = eval(slots)
+        context['verbose_month'] = verbose_current_month
         return context
 
     @staticmethod
