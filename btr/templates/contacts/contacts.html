@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
-{% load static %}
-{% load i18n %}
+{% load django_bootstrap5 static i18n %}
 
 {% block content %}
 <div class="dark-bg">
@@ -17,7 +15,13 @@
         <div class="row lg-m-t">
             <div class="col-lg-2 col-0"></div>
             <div class="col-lg-8 col-12">
-                <p class="text-white mb-3 fs-5">{% translate 'We' %}, <strong>BroTeamRacing</strong> - {% translate 'rent enduro motorcycles from St. Petersburg' %}<br>{% translate 'We will gladly accept both experienced riders and beginners, we will show you everything and teach you everything.' %}</p>
+                <p class="text-white mb-3 fs-5">
+                    {% translate 'We' %},
+                    <strong>BroTeamRacing</strong>
+                    - {% translate 'rent enduro motorcycles from St. Petersburg' %}
+                    <br>
+                    {% translate 'We will gladly accept both experienced riders and beginners, we will show you everything and teach you everything.' %}
+                </p>
                 <p class="text-white fs-5"><small>{% translate 'Below are the contacts where you can contact us.' %}</small></p>
                 <hr class="text-white">
             </div>
@@ -28,7 +32,15 @@
             <div class="col-lg-8 col-12 d-flex align-items-center">
                 <img src="{% static 'images/tel.png' %}" alt="Tel" width="auto" height="35%">
                 <div class="d-flex flex-column justify-content-end">
-                    <h2 class="fs-1 text-white">{% translate 'Aleksandr' %}<br>+79817850451<br>{% translate 'Vladimir' %}<br>+79992350091</h2>
+                    <h2 class="fs-1 text-white">
+                        {% translate 'Aleksandr' %}
+                        <br>
+                        +79817850451
+                        <br>
+                        {% translate 'Vladimir' %}
+                        <br>
+                        +79992350091
+                    </h2>
                 </div>
             </div>
             <div class="col-lg-1 col-0"></div>
@@ -50,9 +62,11 @@
             <div class="col-lg-2 col-0"></div>
             <div class="col-lg-8 col-12">
                 <div style="position:relative; overflow:hidden; border-radius: 10px;">
-                    <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps" style="color:#eee; font-size:12px; position:absolute; top:0px;">Санкт‑Петербург</a>
-                    <a href="https://yandex.kz/maps/ru/2/saint-petersburg/?ll=29.517243%2C60.192276&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" style="color:#eee; font-size:12px; position:absolute; top:14px;">60.192232,29.514908 — Яндекс Карты</a>
-                    <iframe src="https://yandex.kz/map-widget/v1/?ll=29.517243%2C60.192276&mode=whatshere&whatshere%5Bpoint%5D=29.514908%2C60.192232&whatshere%5Bzoom%5D=17&z=18" width="100%" height="400" frameborder="1" allowfullscreen="true" style="position:relative; border-radius: 10px;"></iframe>
+                    <iframe
+                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A233968824c8a6dbdaff05b1683937b084ed7b842db1491000f4f7227a39a82af&amp;source=constructor"
+                        width="667" height="400" frameborder="0">
+
+                    </iframe>
                 </div>
             </div>
             <div class="col-lg-2 col-0"></div>
@@ -61,10 +75,18 @@
             <div class="col-lg-4 col-0"></div>
             <div class="col-lg-4 col-12 mb-3">
                 <hr class="h-line-light">
-                <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="TG" width="50" height="50"></a>
-                <a href="https://wa.me/89992350091"><img class="mx-1" src="{% static 'images/socials/wts.png' %}" alt="Watsapp" width="50" height="50"></a>
-                <a href="https://vk.com/broteamracing"><img class="mx-1" src="{% static 'images/socials/vk1.png' %}" alt="VK" width="50" height="50"></a>
-                <a href="https://www.youtube.com/@VovkaLife365"><img class="mx-1" src="{% static 'images/socials/yt.png' %}" alt="YouTube" width="50" height="50"></a>
+                <a href="https://t.me/BTRBookingBot">
+                    <img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="TG" width="50" height="50">
+                </a>
+                <a href="https://wa.me/89992350091">
+                    <img class="mx-1" src="{% static 'images/socials/wts.png' %}" alt="Watsapp" width="50" height="50">
+                </a>
+                <a href="https://vk.com/broteamracing">
+                    <img class="mx-1" src="{% static 'images/socials/vk1.png' %}" alt="VK" width="50" height="50">
+                </a>
+                <a href="https://www.youtube.com/@VovkaLife365">
+                    <img class="mx-1" src="{% static 'images/socials/yt.png' %}" alt="YouTube" width="50" height="50">
+                </a>
             </div>
             <div class="col-lg-4 col-0"></div>
         </div>

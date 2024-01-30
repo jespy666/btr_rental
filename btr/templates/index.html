@@ -1,45 +1,71 @@
 {% extends 'base.html' %}
 
-{% load django_bootstrap5 %}
-{% load i18n %}
-{% load static %}
+{% load django_bootstrap5 i18n static %}
 
 {% block content %}
-
-<div class="dark-bg">
-  <div class="container">
-    <div class="row">
-      <img src="{% static 'images/head.png' %}" alt="Head">
+{% include 'modals/location.html' %}
+{% include 'modals/contacts.html' %}
+<div class="head-bg">
+    <div class="navbar-bg mb-5">
+        {% include 'navbar.html' %}
     </div>
-    <div class="row">
-      <div class="col-lg-6 col-12 d-flex align-items-center">
-        <h1 class="fs-1 text-left text-white custom-border">{% translate 'Pit-bikes and Enduro motorcycles rental' %}<br>{% translate 'in Saint-Petersburg' %}</h1>
-      </div>
-      <div class="col-lg-6 col-12 d-flex align-items-center">
-        <img src="{% static 'images/point1.png' %}" alt="point" width="auto" height="40%">
-        <div class="d-flex flex-column justify-content-between">
-          <p class="fs-2 mt-4 text-white">{% translate 'Saint-Petersburg' %}<br>{% translate 'Molodezhnoe' %}<br>{% translate 'Primorskoe h.659' %}</p>
+    {% include 'messages.html' %}
+    <div class="container">
+        <div class="row mb-5">
+            <img class="coral-img" src="{% static 'images/head.png' %}" alt="Head">
         </div>
-      </div>
-      <div class="row text-white text-center mb-5">
-        <div class="col-lg-4 col-0"></div>
-        <div class="col-lg-4 col-12">
-          <h3 class="fs-3">{% translate 'Book a ride now' %}</h3>
-          <hr class="h-line-light">
-          <img class="img-ico-s" src="{% static 'images/socials/tg.png' %}" alt="Tg">
-          <img class="img-ico-s" src="{% static 'images/socials/vk1.png' %}" alt="Vk">
-          <img class="img-ico-s" src="{% static 'images/socials/wts.png' %}" alt="WatsUp">
-          <img class="img-ico-s" src="{% static 'images/favicon.ico' %}" alt="Web">
-          <img class="img-ico-s" src="{% static 'images/tel.png' %}" alt="Tel">
+        <div class="row mb-5">
+            <div class="col-lg-6 col-12 d-flex align-items-center">
+                <h1 class="fs-1 text-left text-white custom-border">
+                    {% translate 'Pit-bikes and Enduro motorcycles rental' %}
+                    <br>
+                    {% translate 'in Saint-Petersburg' %}
+                </h1>
+            </div>
+            <div class="col-lg-6 col-12 d-flex align-items-center my-5">
+                <a data-bs-toggle="modal" data-bs-target="#locationMap">
+                    <img class="coral-img img-fluid" src="{% static 'images/point1.png' %}" alt="point">
+                </a>
+                <div class="d-flex flex-column justify-content-between">
+                    <p class="fs-2 mt-4 text-white">
+                        {% translate 'Saint-Petersburg' %}
+                        <br>
+                        {% translate 'Molodezhnoe' %}
+                        <br>
+                        {% translate 'Primorskoe h.659' %}
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-4 col-0"></div>
-      </div>
+        <div class="row text-white text-center">
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-12 mb-5">
+                <h3 class="fs-3">{% translate 'Book a ride now' %}</h3>
+                <hr class="h-line-light">
+                <a href="https://t.me/BTRBookingBot" style="text-decoration: none;">
+                    <img class="img-ico-s coral-img" src="{% static 'images/head_icos/tg.png' %}" alt="Tg">
+                </a>
+                <a href="https://vk.me/broteamracing" style="text-decoration: none;">
+                    <img class="img-ico-s coral-img" src="{% static 'images/head_icos/vk.png' %}" alt="Vk">
+                </a>
+                <a href="https://wa.me/+79992350091" style="text-decoration: none;">
+                    <img class="img-ico-s coral-img" src="{% static 'images/head_icos/wts.png' %}" alt="WatsUp">
+                </a>
+                <a href="{% url 'bookings' %}" style="text-decoration: none;">
+                    <img class="img-ico-s coral-img" src="{% static 'images/head_icos/web.png' %}" alt="Web">
+                </a>
+                <a data-bs-toggle="modal" data-bs-target="#telWindow" style="text-decoration: none;">
+                    <img class="img-ico-s coral-img" src="{% static 'images/head_icos/tel.png' %}" alt="Tel">
+                </a>
+            </div>
+            <div class="col-lg-4 col-0"></div>
+        </div>
     </div>
-  </div>
 </div>
-
-{% include 'ico_block.html' %}
+<div class="mb-5"></div>
+{% include 'advantages.html' %}
+<div class="mb-5"></div>
 {% include 'cards.html' %}
+<div class="mb-5"></div>
 {% include 'gallery.html' %}
-
 {% endblock %}

@@ -11,7 +11,7 @@
                             <div class="modal-content auth-bg">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="currentModalLabel{{ number }}">
-                                        {{ number }} {{ current_month }}, {{ current_year }}<br>
+                                        {{ number }} {{ verbose_month }}, {{ current_year }}<br>
                                         {% translate 'Available booking slots:' %}
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -43,7 +43,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_month }}" class="btn btn-success">{% translate 'Book' %}</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                             <div class="modal-content auth-bg">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">
-                                        {{ number }} {{ next_month }}, {{ next_year }}<br>
+                                        {{ number }} {{ verbose_next_month }}, {{ next_year }}<br>
                                         {% translate 'Available booking slots:' %}
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -94,7 +94,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_next_month }}" class="btn btn-success">{% translate 'Book' %}</a>
                                     {% endif %}
                                 </div>
                             </div>

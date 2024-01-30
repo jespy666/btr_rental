@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div class="modal fade" id="telWindow" tabindex="-1" aria-labelledby="contactsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-white modal-contacts">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="contactsLabel">{% translate 'Call Us for a ride' %}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="fs-2">{% translate 'Vladimir' %}</h2>
+                <h3 class="fs-3">+79992350091</h3>
+                <hr class="h-line-light">
+                <h2 class="fs-2">{% translate 'Aleksandr' %}</h2>
+                <h3 class="fs-3">+79817850451</h3>
+            </div>
+        </div>
+    </div>
+</div>

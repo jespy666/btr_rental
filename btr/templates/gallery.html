@@ -1,39 +1,14 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
-<div class="light-bg-p">
-  <div class="container-fluid">
-    <div class="row frame-light">
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide1.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide1.jpg' %}" alt="1">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide5.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide5.jpg' %}" alt="5">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4">
-        <a href="{% static 'images/carousel/slide6.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide6.jpg' %}" alt="6">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide4.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide4.jpg' %}" alt="4">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide2.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide2.jpg' %}" alt="2">
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-12 text-center mt-4 mb-4">
-        <a href="{% static 'images/carousel/slide3.jpg' %}" data-lightbox="gallery">
-          <img class="img-fluid" src="{% static 'images/carousel/slide3.jpg' %}" alt="3">
-        </a>
-      </div>
+<div class="container">
+    <div class="row text-center">
+        <h1 class="display-4">{% translate 'Come Up for Adrenaline' %}</h1>
+        <div class="col-lg-3 col-0"></div>
+        <div class="col-lg-6 col-12 text-center">
+            <hr class="h-line-dark">
+        </div>
+        <div class="col-lg-3 col-0"></div>
     </div>
-  </div>
+    {% include 'video.html' %}
+    {% include 'pictures.html' %}
 </div>

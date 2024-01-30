@@ -1,93 +1,100 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
-<div class="dark-bg pt-5">
+<div class="container">
+  <div class="row text-center">
+    <h1 class="display-4">{% translate 'Bikes' %}</h1>
+    <div class="col-lg-3 col-0"></div>
+    <div class="col-lg-6 col-12 text-center">
+      <hr class="h-line-dark">
+    </div>
+    <div class="col-lg-3 col-0"></div>
+  </div>
+  <div class="row text-center">
+    <h2 class="mt-4">{% translate 'Carefully Maintained and Tuned' %}</h2>
+  </div>
+  <div class="row text-center">
+    <p class="h4 mt-3 mb-5">
+      {% translate 'All our motorcycles have undergone meticulous maintenance and tuning, ensuring high quality and safety' %}
+    </p>
+  </div>
   <div class="container">
     <div class="row text-center">
-      <h1 class="display-4 text-white">{% translate 'Bikes' %}</h1>
-      <div class="col-lg-3 col-0"></div>
-      <div class="col-lg-6 col-12 text-center">
-        <hr class="h-line-light">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="card card-bg text-white mb-5">
+          <a href="{% static 'images/motos/gr7.jpg' %}" data-lightbox="gr7" data-title="GR-7 300">
+            <img src="{% static 'images/motos/gr7.jpg' %}" class="card-img-top img-fluid" alt="GR-7" style="object-fit: cover;">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">GR-7 300</h5>
+            <p class="card-text">
+              {% translate 'The suspension is quite stiff, designed to avoid damaging it during landings after jumps' %}
+            </p>
+            <hr>
+            <p class="card-text">
+              {% translate 'Suitable for riders with a height of at least 175cm' %}
+            </p>
+          </div>
+          <ul class="list-rectangle ">
+            <li>{% translate '300cc engine' %}</li>
+            <li>{% translate '26 hp' %}</li>
+            <li>{% translate '2500₽ / hour' %}</li>
+          </ul>
+          <div class="card-body d-flex justify-content-center">
+            <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
+          </div>
+        </div>
       </div>
-      <div class="col-lg-3 col-0"></div>
-    </div>
-    <div class="row text-center">
-      <h2 class="mt-4 text-white">{% translate 'Carefully Maintained and Tuned' %}</h2>
-    </div>
-    <div class="row text-center">
-      <p class="h4 text-white mt-3 mb-5">
-        {% translate 'All our motorcycles have undergone meticulous maintenance and tuning, ensuring high quality and safety' %}
-      </p>
-    </div>
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-          <div class="card card-bg text-white mb-5">
-            <img src="{% static 'images/gr7_300/main.jpg' %}" class="card-img-top" alt="GR-7">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="card card-bg text-white mb-5">
+          <a href="{% static 'images/motos/xmotos.jpg' %}" data-lightbox="xmotos" data-title="X Motos 250">
+            <img src="{% static 'images/motos/xmotos.jpg' %}" class="card-img-top img-fluid" alt="X-motos">
+          </a>
             <div class="card-body">
-              <h5 class="card-title">GR-7 300</h5>
+              <h5 class="card-title">X Motos 250</h5>
               <p class="card-text">
-                {% translate 'The suspension is quite stiff, designed to avoid damaging it during landings after jumps' %}
+                {% translate 'Excellent enduro motorcycle, very friendly with a very soft suspension' %}
               </p>
               <hr>
               <p class="card-text">
-                {% translate 'Suitable for riders with a height of at least 175cm' %}
+                {% translate 'Suitable for riders with a height of at least 160cm' %}
               </p>
             </div>
             <ul class="list-rectangle ">
-              <li>{% translate '300cc engine' %}</li>
-              <li>{% translate '26 hp' %}</li>
-              <li>{% translate '2500₽ / hour' %}</li>
+              <li>{% translate '250cc engine' %}</li>
+              <li>{% translate '21 hp' %}</li>
+              <li>{% translate '2000₽ / hour' %}</li>
             </ul>
             <div class="card-body d-flex justify-content-center">
               <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
             </div>
-          </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-          <div class="card card-bg text-white mb-5">
-            <img src="{% static 'images/xmotos_250/main.jpg' %}" class="card-img-top" alt="X-motos">
-              <div class="card-body">
-                <h5 class="card-title">X Motos 250</h5>
-                <p class="card-text">
-                  {% translate 'Excellent enduro motorcycle, very friendly with a very soft suspension' %}
-                </p>
-                <hr>
-                <p class="card-text">
-                  {% translate 'Suitable for riders with a height of at least 160cm' %}
-                </p>
-              </div>
-              <ul class="list-rectangle ">
-                <li>{% translate '250cc engine' %}</li>
-                <li>{% translate '21 hp' %}</li>
-                <li>{% translate '2000₽ / hour' %}</li>
-              </ul>
-              <div class="card-body d-flex justify-content-center">
-                <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
-              </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="card card-bg text-white mb-5">
+          <a href="{% static 'images/motos/progasi.jpg' %}" data-lightbox="progasi" data-title="Progasi Ibiza 300">
+            <img src="{% static 'images/motos/progasi.jpg' %}" class="card-img-top img-fluid" alt="Progasi">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">Progasi Ibiza 300</h5>
+            <p class="card-text">
+              {% translate 'Powerful, yet a friendly motorcycle' %}
+              <br>
+              {% translate 'with a soft suspension' %}
+              <br>
+              {% translate 'KYB-TECH' %}
+            </p>
+            <hr>
+            <p class="card-text">
+              {% translate 'Suitable for riders with a height of at least 175cm' %}
+            </p>
           </div>
-        </div>
-        <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-          <div class="card card-bg text-white mb-5">
-            <img src="{% static 'images/progasi_ibiza_300/main.jpg' %}" class="card-img-top" alt="Progasi">
-            <div class="card-body">
-              <h5 class="card-title">Progasi Ibiza 300</h5>
-              <p class="card-text">
-                {% translate 'Powerful, yet a friendly motorcycle with a soft KYB-TECH suspension' %}
-              </p>
-              <hr>
-              <p class="card-text">
-                {% translate 'Suitable for riders with a height of at least 175cm' %}
-              </p>
-            </div>
-            <ul class="list-rectangle ">
-              <li>{% translate '300cc engine' %}</li>
-              <li>{% translate '27 hp' %}</li>
-              <li>{% translate '2500₽ / hour' %}</li>
-            </ul>
-            <div class="card-body d-flex justify-content-center">
-              <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
-            </div>
+          <ul class="list-rectangle ">
+            <li>{% translate '300cc engine' %}</li>
+            <li>{% translate '27 hp' %}</li>
+            <li>{% translate '2500₽ / hour' %}</li>
+          </ul>
+          <div class="card-body d-flex justify-content-center">
+            <a href="{% url 'book_create' %}" class="btn btn-outline-success">{% translate 'Book Now' %}</a>
           </div>
         </div>
       </div>
