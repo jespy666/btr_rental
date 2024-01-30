@@ -1,0 +1,64 @@
+/*styles for youtube video widget*/
+
+.ram-video-3 {
+    position: relative;
+    max-width: 800px;
+    margin: auto;
+}
+.ram-video-3 .tv-wrap  {
+    margin: 6% 14% 16%;
+    position: relative;
+}
+.ram-video-3 .tv-ram  {
+    position: absolute;
+    z-index: 1;
+    top: -8%;
+    left: -17.5%;
+    width: 135%;
+    height: 143%;
+    pointer-events: none;
+}
+.ram-video-3 .tv-ram img  {
+    width: 100%;
+    height: 100%;
+}
+.ram-video-3 .tv-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+    cursor: pointer;
+}
+.ram-video-3 .tv-video:before {
+    content: "";
+    border: 3px solid #6a6a6c;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BFE2FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3ccircle cx='12' cy='12' r='10'%3e%3c/circle%3e%3cpolygon points='10 8 16 12 10 16 10 8'%3e%3c/polygon%3e%3c/svg%3e ");
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-position: 50% 50%;
+    width: 20%;
+    height: 25%;
+    z-index: 2;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.4), 0 28px 30px rgba(0,0,0,0.3);
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    transition: 0.3s;
+}
+.ram-video-3 .tv-video:hover:before {
+    background-color: #337AB7;
+    border-color: #BFE2FF;
+}
+.ram-video-3 .tv-video.show:before {
+    display: none;
+}
+.ram-video-3 .tv-video iframe,
+.ram-video-3 .tv-video img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

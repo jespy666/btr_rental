@@ -1,16 +1,3 @@
-.dark-bg {
-    background-color: rgba(34, 37, 54, 0.9);
-}
-
-.light-bg-p {
-    background-color: rgb(142, 142, 146);
-    padding: 50px;
-}
-
-.light-bg {
-    background-color: rgb(142, 142, 146);
-}
-
 .black-border {
     padding: 30px;
     margin: 20px;
@@ -43,13 +30,6 @@
 
 .dark-text {
     color: rgb(56, 58, 74);
-}
-
-.card-bg {
-    background-color: rgb(28, 29, 37);
-    border: 10px solid rgba(255, 255, 255, 0.5);
-    border-radius: 40px 40px 40px 40px;
-    padding: 20px;
 }
 
 .booking-card-header {
@@ -148,6 +128,11 @@ background: #ec407a;
     padding: 50px;
 }
 
+.custom-border:hover {
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
 .img-style {
     width: 100%;
     height: auto;
@@ -170,7 +155,7 @@ background: #ec407a;
     background-color: rgb(36, 39, 53);
     border: 10px solid rgba(255, 255, 255, 0.5);
     border-radius: 60px 60px 60px 60px;
-}
+}transition: filter 0.3s ease-in-out;
 
 
 .img-ico {
@@ -193,4 +178,24 @@ background: #ec407a;
 
 .f-a {
     text-decoration: none;
+}
+
+.cyan-img {
+    transition: filter 0.3s ease-in-out;
+}
+
+.cyan-img:hover {
+    filter: drop-shadow(0 0 10px #64FFFA);
+}
+
+.coral-img {
+    transition: filter 0.3s ease-in-out;
+}
+
+.coral-img:hover {
+    filter: drop-shadow(0 0 10px #FF6469);
+}
+
+.modal-contacts {
+    background-color: rgb(22, 29, 32);
 }

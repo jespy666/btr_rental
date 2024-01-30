@@ -1,0 +1,33 @@
+/*styles for head block*/
+
+.head-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/lp1.jpg') center/cover no-repeat;
+}
+
+.body-bg {
+    background-color: rgb(237, 233, 232);
+}
+
+.navbar-bg {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.navbar-bg:hover {
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  }
+
+.nav-item:hover {
+    background-color: rgba(237, 233, 232, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.nav-item a.nav-link {
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.nav-item:hover a.nav-link {
+    color: black;
+}
