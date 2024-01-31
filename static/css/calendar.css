@@ -54,3 +54,14 @@ tr:hover .semi-load:hover {
 .bot-link:hover img {
     filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8));
 }
+
+.sm-h {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+    .sm-h {
+        background-color: rgb(222, 215, 212);
+        padding: 0;
+    }
+}

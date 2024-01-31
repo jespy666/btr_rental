@@ -10,3 +10,14 @@
     background-color: black;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
+
+.sm-h {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+    .sm-h {
+        background-color: rgb(222, 215, 212);
+        padding: 0;
+    }
+}
