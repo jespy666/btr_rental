@@ -11,10 +11,10 @@ tr:hover .semi-load:hover {
 }
 
 tr:hover .valid:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
     cursor: pointer;
 }
 
