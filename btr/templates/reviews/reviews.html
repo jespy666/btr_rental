@@ -1,35 +1,36 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
-{% load i18n %}
+{% load django_bootstrap5 i18n static %}
 
 {% block content %}
-<div class="dark-bg">
-    <div class="container">
-        <div class="row lg-m-b">
-            <div class="col-lg-3 col-0"></div>
-            <div class="col-lg-6 col-12 text-center text-white">
-                <h1 class="display-5">{% translate 'Reviews' %}</h1>
-                <hr class="h-line-light">
-                <h5 class="h5">{% translate 'Did you have fun? Share your impressions, leave a' %} <a href="https://vk.com/topic-211850637_49522524" style="color: red; font-weight: bold;">{% translate 'Review' %}</a></h5>
-            </div>
-            <div class="col-lg-3 col-0"></div>
+<link rel="stylesheet" type="text/css" href="{% static 'css/reviews.css' %}">
+<div class="navbar-bg lg-m-b">{% include 'navbar.html' %}</div>
+<div class="container">
+    <div class="row lg-m-b">
+        <div class="col-lg-3 col-0"></div>
+        <div class="col-lg-6 col-12 text-center">
+            <h1 class="display-5">{% translate 'Reviews' %}</h1>
+            <hr class="h-line-dark">
+            <h5 class="h5">{% translate 'Did you have fun? Share your impressions, leave a' %}
+                <a href="https://vk.com/topic-211850637_49522524" style="color: red; font-weight: bold;">{% translate 'Review' %}</a>
+            </h5>
         </div>
-        {% for comment in comments %}
-            <div class="row text-white text-center">
-                <div class="col-lg-2 col-0"></div>
-                <div class="col-lg-8 col-12">
-                    <div class="card-bg mb-5">
-                        {% if comment.user.photo_100 %}
-                            <img class="round-image" src="{{ comment.user.photo_100 }}" alt="photo">
-                        {% endif %}
-                        <h3 class="fs-3">{{ comment.user.first_name }} {{ comment.user.last_name }}</h3>
-                        <hr class="text-white mb-3">
-                        <p class="overflow-y-scroll fs-5">{{ comment.comment.text }}</p>
-                    </div>
-                </div>
-                <div class="col-2 col-0"></div>
-            </div>
-        {% endfor %}
+        <div class="col-lg-3 col-0"></div>
     </div>
+    {% for comment in comments %}
+        <div class="row text-white text-center">
+            <div class="col-lg-2 col-0"></div>
+            <div class="col-lg-8 col-12">
+                <div class="review-bg mb-5">
+                    {% if comment.user.photo_100 %}
+                        <img class="round-image" src="{{ comment.user.photo_100 }}" alt="photo">
+                    {% endif %}
+                    <h3 class="fs-3">{{ comment.user.first_name }} {{ comment.user.last_name }}</h3>
+                    <hr class="text-white mb-3">
+                    <p class="overflow-y-scroll fs-5">{{ comment.comment.text }}</p>
+                </div>
+            </div>
+            <div class="col-2 col-0"></div>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
