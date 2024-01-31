@@ -50,11 +50,13 @@
     .panel-container {
         flex-direction: column;
         height: 580px;
+
     }
 
     .panel {
         flex: 1;
-        margin: 8px 0;
+        margin: 8px;
         border-radius: 30px;
+        background-size: contain;
     }
 }
