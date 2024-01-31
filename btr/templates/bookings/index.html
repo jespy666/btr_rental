@@ -1,53 +1,48 @@
 {% extends 'base.html' %}
-{% load i18n %}
-{% load django_bootstrap5 %}
-{% load static %}
+{% load django_bootstrap5 i18n static %}
 
 {% block content %}
-
-<div class="dark-bg">
-    <div class="container pt-4">
-        <div class="row">
-            <div class="col-lg-2 col-0"></div>
-            <div class="col-lg-8 col-12">
-                <h3 class="fs-3 text-white text-center mt-4">{% translate 'Booking calendar' %}</h3>
-                <hr class="h-line-light">
-                <div class="table-responsive table-responsive-sm lg-m-t">
-                    {% include 'bookings/calendar.html' %}
-                </div>
+{% include 'modals/booking.html' %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">
+<div class="black-bg lg-m-b">{% include 'navbar.html' %}</div>
+<div class="container pt-4">
+    <div class="row">
+        <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-8 col-12">
+            <h3 class="display-3 text-center mt-4">{% translate 'Booking calendar' %}</h3>
+            <hr class="h-line-dark">
+            <div class="table-responsive table-responsive-sm lg-m-t">
+                {% include 'bookings/calendar.html' %}
             </div>
-            <div class="col-lg-2 col-0"></div>
         </div>
+        <div class="col-lg-2 col-0"></div>
     </div>
 </div>
-<div class="dark-bg">
-    <div class="container pt-4">
-        <div class="row">
-            <div class="col-lg-2 col-0"></div>
-            <div class="col-lg-8 col-12">
-                <div class="table-responsive table-responsive-sm lg-m-t">
-                    {% include 'bookings/next_calendar.html' %}
-                </div>
+<div class="container pt-4">
+    <div class="row">
+        <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-8 col-12">
+            <div class="table-responsive table-responsive-sm lg-m-t">
+                {% include 'bookings/calendar2.html' %}
             </div>
-            <div class="col-lg-2 col-0"></div>
-            {% include 'bookings/legend.html' %}
-            <div class="lg-m-b"></div>
         </div>
+        <div class="col-lg-2 col-0"></div>
+        {% include 'bookings/legend.html' %}
+        <div class="lg-m-b"></div>
     </div>
 </div>
-<div class="dark-bg">
-    <div class="container">
-        <div class="row lg-p-y">
-            <div class="col-lg-3 col-0"></div>
-            <div class="col-lg-6 col-12">
-                <h3 class="fs-3 text-center text-white">
-                    {% translate 'Also you can book a ride via TG bot ' %}
-                    <a href="https://t.me/BTRBookingBot"><img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="bot" width="50" height="50"></a>
-                </h3>
-            </div>
-            <div class="col-lg-3 col-0"></div>
+<div class="container">
+    <div class="row lg-m-y">
+        <div class="col-lg-3 col-0"></div>
+        <div class="col-lg-6 col-12">
+            <h3 class="fs-3 text-center">
+                {% translate 'Also you can book a ride via TG bot ' %}
+                <a class="bot-link" href="https://t.me/BTRBookingBot">
+                    <img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="bot" width="50" height="50">
+                </a>
+            </h3>
         </div>
+        <div class="col-lg-3 col-0"></div>
     </div>
 </div>
-{% include 'bookings/modal_window.html' %}
 {% endblock %}

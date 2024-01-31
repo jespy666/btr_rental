@@ -1,7 +1,6 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
-<table class="table text-white text-center" style="color: rgb(56, 58, 74); border-color: rgb(156, 157, 165);">
+<table class="table text-center b-cal">
     <thead>
        <tr class="text-center">
            <th scope="col" colspan="7">{{ next_month }}, {{ next_year }}</th>
@@ -25,11 +24,11 @@
                             <td style="width: calc(100% / 7);"></td>
                         {% else %}
                             {% if load < 30 %}
-                                <td style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="valid" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}">{{ number }}</td>
                             {% elif load > 70 %}
-                                <td style="width: calc(100% / 7); background-color: rgba(255, 0, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="overload" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}">{{ number }}</td>
                             {% else %}
-                                <td style="width: calc(100% / 7); background-color: rgba(255, 165, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="semi-load" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}">{{ number }}</td>
                             {% endif %}
                         {% endif %}
                     {% endwith %}

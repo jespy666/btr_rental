@@ -1,13 +1,11 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
-
-<table class="table text-center" style="color: rgb(56, 58, 74); border-color: rgb(156, 157, 165);">
+<table class="table text-center b-cal">
     <thead>
-       <tr class="text-center text-white">
+       <tr class="text-center">
            <th scope="col" colspan="7">{{ current_month }}, {{ current_year }}</th>
        </tr>
-       <tr class="text-white">
+       <tr>
            <th scope="col">{% translate 'Monday' %}</th>
            <th scope="col">{% translate 'Tuesday' %}</th>
            <th scope="col">{% translate 'Wednesday' %}</th>
@@ -19,20 +17,20 @@
     </thead>
     <tbody>
         {% for week in current_calendar %}
-            <tr class="text-white">
+            <tr>
                 {% for day in week %}
                     {% with number=day.0 load=day.1 %}
                         {% if number == 0 %}
                             <td style="width: calc(100% / 7);"></td>
                         {% elif number < today %}
-                            <td class="text-black" style="width: calc(100% / 7);">{{ number }}</td>
+                            <td class="text-past" style="width: calc(100% / 7);">{{ number }}</td>
                         {% else %}
                             {% if load < 30 %}
-                                <td style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="valid" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}">{{ number }}</td>
                             {% elif load > 99 %}
-                                <td style="width: calc(100% / 7); background-color: rgba(255, 0, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="overload" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}">{{ number }}</td>
                             {% else %}
-                                <td style="width: calc(100% / 7); background-color: rgba(255, 165, 0, 0.7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}" class="hover-effect">{{ number }}</td>
+                                <td class="semi-load" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}">{{ number }}</td>
                             {% endif %}
                         {% endif %}
                     {% endwith %}

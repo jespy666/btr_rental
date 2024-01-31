@@ -1,0 +1,56 @@
+/*styles for booking calendar*/
+
+.b-cal th, .b-cal td {
+    border-bottom: 2px solid #000;
+}
+
+tr:hover .valid:hover,
+tr:hover .overload:hover,
+tr:hover .semi-load:hover {
+    transition: background-color 0.4s ease, color 0.4s ease, font-weight 0.4s ease, box-shadow 0.4s ease, cursor 0.4s ease;
+}
+
+tr:hover .valid:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 15px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important;
+    cursor: pointer;
+}
+
+.overload {
+    background-color: rgb(220, 53, 69) !important;
+    border-radius: 15px;
+}
+
+tr:hover .overload:hover {
+    background-color: red !important;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.semi-load {
+    background-color: rgb(255, 193, 7) !important;
+    border-radius: 15px;
+}
+
+tr:hover .semi-load:hover {
+    background-color: yellow !important;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+    cursor: pointer;
+}
+
+.text-past {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.bot-link img {
+    transition: filter 0.3s ease;
+}
+
+.bot-link:hover img {
+    filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8));
+}
