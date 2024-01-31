@@ -2,94 +2,39 @@
 {% load django_bootstrap5 static i18n %}
 
 {% block content %}
-<div class="dark-bg">
-    <div class="container">
-        <div class="row text-center text-white">
-            <h1 class="display-5">{% translate 'Contacts' %}</h1>
-            <div class="col-lg-3 col-0"></div>
-            <div class="col-lg-6 col-0 text-center">
-                <hr class="h-line-light">
-            </div>
-            <div class="col-lg-3 col-0"></div>
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css' %}">
+<div class="navbar-bg lg-m-b">{% include 'navbar.html' %}</div>
+<div class="container">
+    <div class="row text-center">
+        <h1 class="display-5">{% translate 'Contacts' %}</h1>
+        <div class="col-lg-3 col-0"></div>
+        <div class="col-lg-6 col-0 text-center">
+            <hr class="h-line-dark">
         </div>
-        <div class="row lg-m-t">
-            <div class="col-lg-2 col-0"></div>
-            <div class="col-lg-8 col-12">
-                <p class="text-white mb-3 fs-5">
-                    {% translate 'We' %},
-                    <strong>BroTeamRacing</strong>
-                    - {% translate 'rent enduro motorcycles from St. Petersburg' %}
-                    <br>
-                    {% translate 'We will gladly accept both experienced riders and beginners, we will show you everything and teach you everything.' %}
-                </p>
-                <p class="text-white fs-5"><small>{% translate 'Below are the contacts where you can contact us.' %}</small></p>
-                <hr class="text-white">
-            </div>
-            <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-3 col-0"></div>
+    </div>
+</div>
+<div class="mb-5"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 text-center mb-3">
+            <iframe
+                class="map"
+                src="https://yandex.ru/map-widget/v1/?um=constructor%3A233968824c8a6dbdaff05b1683937b084ed7b842db1491000f4f7227a39a82af&amp;source=constructor"
+                width="600" height="400" frameborder="0">
+            </iframe>
         </div>
-        <div class="row">
-            <div class="col-lg-3 col-0"></div>
-            <div class="col-lg-8 col-12 d-flex align-items-center">
-                <img src="{% static 'images/tel.png' %}" alt="Tel" width="auto" height="35%">
-                <div class="d-flex flex-column justify-content-end">
-                    <h2 class="fs-1 text-white">
-                        {% translate 'Aleksandr' %}
-                        <br>
-                        +79817850451
-                        <br>
-                        {% translate 'Vladimir' %}
-                        <br>
-                        +79992350091
-                    </h2>
-                </div>
+        <div class="col-md-6">
+            <div class="contact-block">
+                <h2>{% translate 'Below are the contacts where you can contact us.' %}</h2>
+                <hr>
+                <p>{% translate 'Saint-Peterburg, Molodezhnoe, Primorskoe h.659' %}</p>
+                <p>{% translate 'Vladimir' %}: +7 (999) 235-00-91</p>
+                <p>{% translate 'Aleksandr' %}: +7 (981) 785-04-51</p>
+                <p>Email: broteamracing@yandex.com</p>
             </div>
-            <div class="col-lg-1 col-0"></div>
-        </div>
-        <div class="container mb-3">
-            <div class="row text-white">
-                <div class="col-12 mb-3">
-                    <img src="{% static 'images/location.png' %}" class="img-fluid mx-auto d-block" alt="Point">
-                </div>
-                <div class="col-12 mb-3">
-                    <h3 class="fs-4 text-center">{% translate 'St. Petersburg, Molodezchnoe, Viborgskoe h. 659' %}</h3>
-                </div>
-                <div class="col-12 mb-3">
-                    <h3 class="fs-4 text-center">60.192232,29.514908</h3>
-                </div>
-            </div>
-        </div>
-        <div class="row lg-m-b text-center text-white">
-            <div class="col-lg-2 col-0"></div>
-            <div class="col-lg-8 col-12">
-                <div style="position:relative; overflow:hidden; border-radius: 10px;">
-                    <iframe
-                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A233968824c8a6dbdaff05b1683937b084ed7b842db1491000f4f7227a39a82af&amp;source=constructor"
-                        width="667" height="400" frameborder="0">
-
-                    </iframe>
-                </div>
-            </div>
-            <div class="col-lg-2 col-0"></div>
-        </div>
-        <div class="row text-center">
-            <div class="col-lg-4 col-0"></div>
-            <div class="col-lg-4 col-12 mb-3">
-                <hr class="h-line-light">
-                <a href="https://t.me/BTRBookingBot">
-                    <img class="mx-1" src="{% static 'images/socials/tg.png' %}" alt="TG" width="50" height="50">
-                </a>
-                <a href="https://wa.me/89992350091">
-                    <img class="mx-1" src="{% static 'images/socials/wts.png' %}" alt="Watsapp" width="50" height="50">
-                </a>
-                <a href="https://vk.com/broteamracing">
-                    <img class="mx-1" src="{% static 'images/socials/vk1.png' %}" alt="VK" width="50" height="50">
-                </a>
-                <a href="https://www.youtube.com/@VovkaLife365">
-                    <img class="mx-1" src="{% static 'images/socials/yt.png' %}" alt="YouTube" width="50" height="50">
-                </a>
-            </div>
-            <div class="col-lg-4 col-0"></div>
         </div>
     </div>
 </div>
+<div class="mb-5"></div>
 {% endblock %}
