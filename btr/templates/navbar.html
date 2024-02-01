@@ -39,7 +39,7 @@
                           {% if user.profile_image %}
                             <img src="{{ user.profile_image.url|safe }}" alt="lk" width="35" height="35" style="border-radius: 50%; object-fit: cover;">
                           {% else %}
-                            <img src="{% static 'images/lk.png' %}" alt="lk" width="35" height="35">
+                            <img src="{% static 'images/lk.png' %}" alt="lk" width="20" height="20">
                           {% endif %}
                         </a>
                         {% include 'modals/user.html' %}

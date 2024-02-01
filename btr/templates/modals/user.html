@@ -1,21 +1,53 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block content %}
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm" id="customModalDialog">
-    <div class="modal-content auth-bg">
-      <div class="row text-center my-4">
-        <h1 class="fs-5 text-white" id="userModalLabel">{% translate 'Authorisation' %}</h1>
-      </div>
-      <div class="row my-3 mx-3">
-        <a class="btn btn-info text-center" href="{% url 'profile' pk=user.pk %}">{% translate 'Profile' %}</a>
-        <a class="btn btn-outline-danger text-center mt-4" href="{% url 'logout' %}">{% translate 'Log Out' %}</a>
-      </div>
-      <div class="modal-footer mt-4">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-      </div>
+    <div class="modal-dialog auth-modal" id="customModalDialog">
+        <div class="modal-content modal-bg">
+            <div class="container-fluid text-center py-3 c-body-color">
+                {% if user.profile_image %}
+                  <img class="img-modal" src="{{ user.profile_image.url|safe }}" alt="lk">
+                {% else %}
+                  <img src="{% static 'images/lk.png' %}" alt="lk" width="60" height="60">
+                {% endif %}
+                <h5 class="mt-4">{{ user.username }}</h5>
+                <p>{{ user.email }}</p>
+            </div>
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <a class="btn btn-outline-light d-flex align-items-center justify-content-center" href="{% url 'profile' pk=user.pk %}">
+                          {% translate 'Profile' %}
+                        </a>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                        <a class="link-light modal-link" href="{% url 'user_edit' pk=user.pk %}">
+                          {% translate 'Edit profile' %}
+                        </a>
+                    </div>
+                    <div class="col-6"></div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                        <a class="link-danger modal-link" href="{% url 'logout' %}">
+                          {% translate 'Logout' %}
+                        </a>
+                    </div>
+                    <div class="col-6"></div>
+                </div>
+            </div>
+            <div class="container-fluid c-black-color p-3">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                  {% translate 'Close' %}
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}

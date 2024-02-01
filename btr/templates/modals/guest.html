@@ -1,22 +1,49 @@
-{% load static %}
-{% load i18n %}
+{% load django_bootstrap5 static i18n %}
 
 {% block content %}
 <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content auth-bg">
-      <div class="row text-center my-4">
-        <h1 class="fs-5 text-white" id="guestModalLabel">{% translate 'Authorisation' %}</h1>
-      </div>
-      <div class="row mx-3 mt-3">
-        <a class="btn btn-success text-center" href="{% url 'login' %}">{% translate 'Log In' %}</a>
-        <span class="text-sm-center mt-3">{% translate 'Do not have an account?' %}</span>
-        <a class="btn btn-outline-primary text-center mt-1" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>
-      </div>
-      <div class="modal-footer mt-4">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-      </div>
+    <div class="modal-dialog auth-modal">
+        <div class="modal-content modal-bg">
+            <div class="container-fluid text-center py-3 c-body-color">
+                <img class="img-modal" src="{% static 'images/default_pi.png' %}" alt="lk">
+                <h4 class="mt-4">{% translate 'Authorisation' %}</h4>
+            </div>
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <a class="btn btn-lg btn-outline-light d-flex align-items-center justify-content-center" href="{% url 'login' %}">
+                          {% translate 'Entry' %}
+                        </a>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col text-center">
+                        <a class="link-light modal-link-s" href="{% url 'auth-reset' %}">
+                          {% translate 'Forgot password?' %}
+                        </a>
+                    </div>
+                    <div class="col text-center">
+                        <a class="link-info modal-link-s" href="{% url 'registration' %}">
+                          {% translate 'Create account' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid c-black-color p-3">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                  {% translate 'Close' %}
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
+
+<!--<div class="row mx-3 mt-3">-->
+<!--<a class="btn btn-success text-center" href="{% url 'login' %}">{% translate 'Log In' %}</a>-->
+<!--<span class="text-sm-center mt-3">{% translate 'Do not have an account?' %}</span>-->
+<!--<a class="btn btn-outline-primary text-center mt-1" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>-->
+<!--</div>-->
+<!--<div class="modal-footer mt-4">-->

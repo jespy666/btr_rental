@@ -14,7 +14,7 @@ from ..mixins import ObjectDoesNotExistMixin
 
 
 class AuthLoginView(SuccessMessageMixin, LoginView):
-    template_name = 'auth_form.html'
+    template_name = 'modals/guest.html'
     next_page = reverse_lazy('home')
     success_message = _('You are log in')
     extra_context = {

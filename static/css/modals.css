@@ -1,0 +1,42 @@
+.auth-modal {
+    position: fixed;
+    top: 60px;
+    right: 350px;
+    margin: 0;
+    width: 350px;
+    border: 3px #FFFFFF solid;
+    border-radius: 10px;
+}
+
+.modal-bg {
+    background-color: rgb(89, 86, 85);
+}
+
+.c-body-color {
+    background-color: rgb(222, 215, 212);
+}
+
+.c-black-color {
+    background-color: black;
+    text-align: right;
+}
+
+.img-modal {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    image-rendering: crisp-edges;
+    object-fit: cover;
+}
+
+.modal-link {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.modal-link-s {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+}
