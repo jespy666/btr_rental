@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from ..mixins import UserAuthRequiredMixin, UserPermissionMixin
 from .models import Booking
 from .forms import BookingForm
-from .locale import locale_month_name
+from .locale import locale_month_name_plural, locale_month_name
 from ..orm_utils import LoadCalc
 from ..tasks.book_tasks import send_details
 
@@ -36,14 +36,20 @@ class BookingIndexView(TemplateView):
         next_cal = calendar.monthcalendar(next_year, next_month)
         next_load = LoadCalc(next_cal, next_year, next_month).get_month_load()
         context['current_month'] = calendar.month_name[current_month]
-        context['verbose_month'] = locale_month_name(
+        context['verbose_month'] = locale_month_name_plural(
             calendar.month_name[current_month]
+        )
+        context['verbose_current_al'] = locale_month_name(
+            calendar.month_name[current_month]
+        )
+        context['verbose_next_al'] = locale_month_name(
+            calendar.month_name[next_month]
         )
         context['current_year'] = current_year
         context['today'] = current_day
         context['current_calendar'] = current_load
         context['next_month'] = calendar.month_name[next_month]
-        context['verbose_next_month'] = locale_month_name(
+        context['verbose_next_month'] = locale_month_name_plural(
             calendar.month_name[next_month]
         )
         context['next_year'] = next_year
@@ -58,13 +64,9 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     form_class = BookingForm
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('login')
-    template_name = 'bookings/form.html'
+    template_name = 'forms/booking_create.html'
     success_message = _('Reservation created successfully')
     permission_denied_message = _('You must to be login to book ride')
-    extra_context = {
-        'header': _('Rental Reservation for'),
-        'button': _('Book')
-    }
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -75,21 +77,28 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_date = self.request.GET.get('selected_date')
-        verbose_month = self.request.GET.get('verbose_month')
-        verbose_current_month = verbose_month if verbose_month else (
-            self.request.GET.get('verbose_next_month'))
+        verbose_month = self.request.GET.get('verbose')
         slots = self.request.GET.get('slots')
-        formatted_date = self.format_date_for_form(selected_date)
-        context['selected_date'] = formatted_date
+        verbose_date = self.format_date_for_form(
+            selected_date, verbose_month
+        )
         context['ranges'] = eval(slots)
-        context['verbose_month'] = verbose_current_month
+        context['verbose'] = (
+            f"{verbose_date.get('day')}"
+            f" {verbose_date.get('month')},"
+            f" {verbose_date.get('year')}"
+        )
         return context
 
     @staticmethod
-    def format_date_for_form(date: str) -> str:
+    def format_date_for_form(date: str, verbose_month: str) -> dict:
         """Friendly view date format"""
         date_elements = date.split('-')
-        return f'{date_elements[2]} {date_elements[1]}, {date_elements[0]}'
+        return {
+            'year': date_elements[0],
+            'month': verbose_month,
+            'day': date_elements[2],
+        }
 
     @staticmethod
     def format_date_for_orm(date: str) -> str:
@@ -139,7 +148,7 @@ class BookingDeleteView(UserAuthRequiredMixin, UserPermissionMixin,
                         SuccessMessageMixin, DeleteView):
 
     model = Booking
-    template_name = 'bookings/delete.html'
+    template_name = 'bookings/user_delete.html'
     login_url = reverse_lazy('login')
     success_url = reverse_lazy('home')
     success_message = _('Booking delete successfully')

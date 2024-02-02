@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 from .models import Booking
 from .validators import validate_slots, validate_start_time

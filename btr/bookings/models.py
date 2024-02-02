@@ -36,7 +36,7 @@ class Booking(models.Model):
 
     bike_count = models.IntegerField(
         blank=False,
-        verbose_name=_('bikes_count')
+        verbose_name=_('bikes count')
     )
 
     STATUS_CHOICES = [
