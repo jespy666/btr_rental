@@ -39,7 +39,7 @@ class TestUserCreate(BTRTestCase):
             message.message,
             'User created successfully'
         )
-        self.assertTemplateUsed(response, 'auth_form.html')
+        self.assertTemplateUsed(response, 'forms/auth.html')
 
     def test_existed_username(self):
         response = self.client.post(
@@ -47,7 +47,7 @@ class TestUserCreate(BTRTestCase):
             data=self.created_cases['existed_username'],
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'auth_form.html')
+        self.assertTemplateUsed(response, 'forms/registration.html')
         self.assertEqual(SiteUser.objects.count(), self.count)
 
     def test_existed_email(self):
@@ -56,7 +56,7 @@ class TestUserCreate(BTRTestCase):
             data=self.created_cases['existed_email'],
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'auth_form.html')
+        self.assertTemplateUsed(response, 'forms/registration.html')
         self.assertEqual(SiteUser.objects.count(), self.count)
 
     def test_existed_phone(self):
@@ -65,5 +65,5 @@ class TestUserCreate(BTRTestCase):
             data=self.created_cases['existed_phone'],
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'auth_form.html')
+        self.assertTemplateUsed(response, 'forms/registration.html')
         self.assertEqual(SiteUser.objects.count(), self.count)

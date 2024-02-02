@@ -60,7 +60,7 @@ class TestBookingCreate(BTRTestCase):
         )
         self.assertTemplateUsed(
             response,
-            'auth_form.html'
+            'forms/auth.html'
         )
         self.assertEqual(Booking.objects.count(), self.count)
 

@@ -34,7 +34,7 @@ class TestUserUpdate(BTRTestCase):
             message.message,
             'You must to be log in'
         )
-        self.assertTemplateUsed(response, 'auth_form.html')
+        self.assertTemplateUsed(response, 'forms/auth.html')
 
     def test_update_other_user(self):
         response = self.client.post(
