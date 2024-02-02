@@ -4,8 +4,16 @@
     right: 350px;
     margin: 0;
     width: 350px;
-    border: 3px #FFFFFF solid;
-    border-radius: 10px;
+}
+
+@media (max-width: 800px) {
+    .auth-modal {
+        position: static;
+        top: auto;
+        right: auto;
+        margin: 0;
+        width: auto;
+    }
 }
 
 .modal-bg {

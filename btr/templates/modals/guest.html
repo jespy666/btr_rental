@@ -1,6 +1,5 @@
 {% load django_bootstrap5 static i18n %}
 
-{% block content %}
 <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
     <div class="modal-dialog auth-modal">
         <div class="modal-content modal-bg">
@@ -39,11 +38,3 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-<!--<div class="row mx-3 mt-3">-->
-<!--<a class="btn btn-success text-center" href="{% url 'login' %}">{% translate 'Log In' %}</a>-->
-<!--<span class="text-sm-center mt-3">{% translate 'Do not have an account?' %}</span>-->
-<!--<a class="btn btn-outline-primary text-center mt-1" href="{% url 'registration' %}">{% translate 'Sign Up' %}</a>-->
-<!--</div>-->
-<!--<div class="modal-footer mt-4">-->

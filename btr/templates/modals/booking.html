@@ -1,5 +1,4 @@
-{% load static %}
-{% load i18n %}
+{% load static i18n %}
 
 <div class="modal-container">
     {% for week in current_calendar %}
@@ -8,17 +7,18 @@
                 {% if number != 0 %}
                     <div class="modal fade" id="currentModal{{ number }}" tabindex="-1" aria-labelledby="currentModalLabel{{ number }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content auth-bg">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="currentModalLabel{{ number }}">
-                                        {{ number }} {{ verbose_month }}, {{ current_year }}<br>
-                                        {% translate 'Available booking slots:' %}
-                                    </h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-content modal-bg">
+                                <div class="container-fluid text-center py-3 c-body-color">
+                                    <img class="img-modal" src="{% static 'images/calendar.png' %}" alt="calendar">
+                                    <h4 class="modal-title" id="currentModalLabel{{ number }}">
+                                        {{ number }} {{ verbose_month }}, {{ current_year }}
+                                    </h4>
+                                    <div class="mb-3"></div>
+                                    <h5>{% translate 'Available booking slots:' %}</h5>
                                 </div>
-                                <div class="modal-body" style="padding: 0;">
+                                <div class="container">
                                     {% if not slots %}
-                                        <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
+                                        <h2>{% translate 'No available slots :( Check another day!' %}</h2>
                                     {% else %}
                                         <table class="table">
                                             <thead>
@@ -40,10 +40,11 @@
                                         </table>
                                     {% endif %}
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+                                <div class="container-fluid c-black-color p-3">
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_month }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_month }}" class="btn btn-lg btn-outline-success">
+                                            {% translate 'Go to Time Selection' %}
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -59,15 +60,16 @@
                 {% if number != 0 %}
                     <div class="modal fade" id="nextModal{{ number }}" tabindex="-1" aria-labelledby="nextModalLabel{{ number }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content auth-bg">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="nextModalLabel{{ number }}">
-                                        {{ number }} {{ verbose_next_month }}, {{ next_year }}<br>
-                                        {% translate 'Available booking slots:' %}
-                                    </h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-content modal-bg">
+                                <div class="container-fluid text-center py-3 c-body-color">
+                                    <img class="img-modal" src="{% static 'images/calendar.png' %}" alt="calendar">
+                                    <h4 class="modal-title" id="nextModalLabel{{ number }}">
+                                        {{ number }} {{ verbose_next_month }}, {{ next_year }}
+                                    </h4>
+                                    <div class="mb-3"></div>
+                                    <h5>{% translate 'Available booking slots:' %}</h5>
                                 </div>
-                                <div class="modal-body" style="padding: 0;">
+                                <div class="container">
                                     {% if not slots %}
                                         <h1 class="fs-1">{% translate 'No available slots :( Check another day!' %}</h1>
                                     {% else %}
@@ -91,10 +93,11 @@
                                         </table>
                                     {% endif %}
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+                                <div class="container-fluid c-black-color p-3">
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_next_month }}" class="btn btn-success">{% translate 'Book' %}</a>
+                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_next_month }}" class="btn btn-lg btn-outline-success">
+                                            {% translate 'Go to Time Selection' %}
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>

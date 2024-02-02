@@ -1,19 +1,50 @@
-{% load i18n %}
+{% load static i18n %}
 
 <div class="modal fade" id="telWindow" tabindex="-1" aria-labelledby="contactsLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white modal-contacts">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="contactsLabel">{% translate 'Call Us for a ride' %}</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content modal-bg">
+            <div class="container-fluid text-center py-3 c-body-color">
+                <img class="img-modal" src="{% static 'images/head_icos/tel.png' %}" alt="tel">
+                <div class="mb-3"></div>
+                <h4 class="modal-title" id="contactsLabel">{% translate 'Call Us for a ride' %}</h4>
             </div>
-            <div class="modal-body">
-                <h2 class="fs-2">{% translate 'Vladimir' %}</h2>
-                <h3 class="fs-3">+79992350091</h3>
-                <hr class="h-line-light">
-                <h2 class="fs-2">{% translate 'Aleksandr' %}</h2>
-                <h3 class="fs-3">+79817850451</h3>
+            <div class="container text-white p-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fs-2">{% translate 'Vladimir' %}</h3>
+                        <h4 class="fs-3" id="vladimir-phone">+79992350091</h4>
+                    </div>
+                    <button class="btn" onclick="copyText('vladimir-phone')">
+                        <img src="{% static 'images/copy.png' %}" width="35" height="35" alt="copy">
+                    </button>
+                </div>
+                <hr class="h-line-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fs-2">{% translate 'Aleksandr' %}</h3>
+                        <h4 class="fs-3" id="aleksandr-phone">+79817850451</h4>
+                    </div>
+                    <button class="btn" onclick="copyText('aleksandr-phone')">
+                        <img src="{% static 'images/copy.png' %}" width="35" height="35" alt="copy">
+                    </button>
+                </div>
+            </div>
+            <div class="container-fluid c-black-color p-3">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                  {% translate 'Close' %}
+                </button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function copyText(elementId) {
+        var textToCopy = document.getElementById(elementId);
+        var range = document.createRange();
+        range.selectNode(textToCopy);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+    }
+</script>
