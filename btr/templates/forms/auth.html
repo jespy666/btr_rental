@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 i18n static %}
+
+{% block content %}
+<div class="black-bg">{% include 'navbar.html' %}</div>
+<div class="container-fluid sm-h">
+    <div class="container body-bg">
+        {% include 'messages.html' %}
+        <div class="container pt-4">
+            <div class="row text-center mt-5">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <img src="{% static 'images/default_pi.png' %}" width="170" height="170" alt="Auth">
+                    <h2 class="text-center mt-3">{% translate 'Authorisation' %}</h2>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <div class="d-flex justify-content-between">
+                            <a class="modal-link-s" href="{% url 'auth-reset' %}">{% translate 'Forgot password?' %}</a>
+                            <a class="modal-link-s" href="{% url 'registration' %}">{% translate 'Create account' %}</a>
+                        </div>
+                        <div class="mb-4"></div>
+                        <input class="btn btn-success" type="submit" value="{% translate 'Entry' %}">
+                    </form>
+                    <div class="lg-m-b"></div>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

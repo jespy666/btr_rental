@@ -14,13 +14,9 @@ from ..mixins import ObjectDoesNotExistMixin
 
 
 class AuthLoginView(SuccessMessageMixin, LoginView):
-    template_name = 'modals/guest.html'
+    template_name = 'forms/auth.html'
     next_page = reverse_lazy('home')
     success_message = _('You are log in')
-    extra_context = {
-        'header': _('Sign In'),
-        'button': _('Entry'),
-    }
 
 
 class AuthLogoutView(SuccessMessageMixin, LogoutView):
@@ -38,11 +34,7 @@ class AuthResetView(SuccessMessageMixin, ObjectDoesNotExistMixin, FormView):
     success_message = _('Verification code was send to your email')
     not_existed_message = _('User with this email does not exist')
     not_existed_url = reverse_lazy('auth-reset')
-    template_name = 'password_reset_form.html'
-    extra_context = {
-        'header': _('Password reset'),
-        'button': _('Send'),
-    }
+    template_name = 'forms/password_reset.html'
 
     def form_valid(self, form):
         email = form.cleaned_data.get('email')
@@ -61,11 +53,7 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
         'Your password was successfully reset!\n'
         'New password was send on your email'
     )
-    template_name = 'confirm_code_form.html'
-    extra_context = {
-        'header': _('Verification code confirm'),
-        'button': _('Confirm'),
-    }
+    template_name = 'forms/confirm_code.html'
 
     def form_valid(self, form):
         verification_code = self.request.session.get('verification_code')

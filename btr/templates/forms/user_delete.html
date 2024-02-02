@@ -1,17 +1,35 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
-{% load i18n %}
+{% load django_bootstrap5 i18n static %}
 
 {% block content %}
-<div class="dark-bg">
-    <div class="container wrapper flex-grow-1 text-center text-white">
-        <div class="row frame-dark form-p-y">
-            <h1 class="my-4">{% translate 'User remove' %}</h1>
-            <p>{% translate 'Are you sure to remove' %} {{ user }}?</p>
-            <form method="post">
-                {% csrf_token %}
-                <input class="btn btn-danger" type="submit" value="{% translate 'Yes, delete my profile' %}">
-            </form>
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+<div class="black-bg">{% include 'navbar.html' %}</div>
+<div class="container-fluid sm-h">
+    <div class="container body-bg">
+        <div class="container pt-4">
+            <div class="row mt-4 text-center">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <img src="{% static 'images/delete.png' %}" width="150" height="150" alt="delete">
+                    <h2 class="mt-2">{% translate 'User remove' %}</h2>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+            </div>
+            <div class="row mt-4 text-center">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <p>{% translate 'Notice: If you have bookings on your account, you will not be able to delete it' %}</p>
+                    <p>{% translate 'Contact the administrator' %}</p>
+                    <div class="mb-2"></div>
+                    <p>{% translate 'Are you sure to remove' %} <strong>{{ user }}</strong>?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input class=" btn link-danger modal-link" type="submit" value="{% translate 'Yes, delete my profile' %}">
+                    </form>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+                <div class="lg-m-b"></div>
+            </div>
         </div>
     </div>
 </div>

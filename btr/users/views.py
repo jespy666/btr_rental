@@ -14,12 +14,8 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
     model = SiteUser
     form_class = UserRegistrationForm
     success_url = reverse_lazy('login')
-    template_name = 'auth_form.html'
+    template_name = 'forms/registration.html'
     success_message = _('User created successfully')
-    extra_context = {
-        'header': _('Registration'),
-        'button': _('Sign Up'),
-    }
 
     def form_valid(self, form):
         form.save()
@@ -53,24 +49,20 @@ class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
 
     model = SiteUser
     form_class = UserEditForm
-    template_name = 'users/form.html'
+    template_name = 'forms/user_edit.html'
     success_message = _('Profile successfully updated')
     success_url = reverse_lazy('login')
     login_url = success_url
     permission_denied_message = _('You must to be log in')
     permission_message = _('You can\'t edit another profile!')
     permission_url = reverse_lazy('home')
-    extra_context = {
-        'header': _('Profile Edit'),
-        'button': _('Save'),
-    }
 
 
 class UserDeleteView(UserAuthRequiredMixin, UserPermissionMixin,
                      DeleteProtectionMixin, SuccessMessageMixin, DeleteView):
 
     model = SiteUser
-    template_name = 'users/delete.html'
+    template_name = 'forms/user_delete.html'
     login_url = reverse_lazy('login')
     success_url = reverse_lazy('home')
     success_message = _('User delete successfully')

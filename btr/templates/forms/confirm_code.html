@@ -11,11 +11,11 @@
             <div class="row mt-4 text-center">
                 <div class="col-lg-3 col-0"></div>
                 <div class="col-lg-6 col-0">
-                    <img src="{% static 'images/reset.png' %}" width="170" height="170" alt="Reset">
-                    <h2 class="text-center mt-3">{% translate 'Password Reset' %}</h2>
+                    <img src="{% static 'images/confirm.png' %}" width="170" height="170" alt="Confirm">
+                    <h2 class="text-center mt-3">{% translate 'Verification code confirm' %}</h2>
                     <div class="mb-3"></div>
-                    <p>{% translate 'To restore access to your account, enter your' %}<strong>{% translate 'email' %}</strong></p>
-                    <p><strong>{% translate 'Confirmation code' %}</strong>{% translate 'will be sent to it' %}</p>
+                    <p>{% translate 'Enter the confirmation code that was sent to your email' %}</p>
+                    <p>{% translate 'Notice: case sensitive!' %}</p>
                     <div class="mb-5"></div>
                 </div>
                 <div class="col-lg-3 col-0"></div>
@@ -26,12 +26,7 @@
                     <form method="post">
                         {% csrf_token %}
                         {% bootstrap_form form %}
-                        <div class="d-flex justify-content-between">
-                            <h4 class="modal-link-s">{% translate 'Do not have an account?' %}</h4>
-                            <a class="modal-link-s" href="{% url 'registration' %}">{% translate 'Create account' %}</a>
-                        </div>
-                        <div class="mb-4"></div>
-                        <input class="btn btn-success" type="submit" value="{% translate 'Send Verification Code' %}">
+                        <input class="btn btn-success" type="submit" value="{% translate 'Confirm Verification Code' %}">
                     </form>
                 </div>
                 <div class="col-lg-3 col-0"></div>
