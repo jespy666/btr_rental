@@ -31,7 +31,7 @@
                     <li class="nav-item">
                       {% if not user.is_authenticated %}
                         <a class="nav-link" data-bs-toggle="modal" data-bs-target="#guestModal">
-                          <img src="{% static 'images/lk.png' %}" alt="lk" width="35" height="35">
+                          <img src="{% static 'images/lk.png' %}" alt="lk" width="30" height="30">
                         </a>
                         {% include 'modals/guest.html' %}
                       {% else %}
@@ -39,7 +39,7 @@
                           {% if user.profile_image %}
                             <img src="{{ user.profile_image.url|safe }}" alt="lk" width="35" height="35" style="border-radius: 50%; object-fit: cover;">
                           {% else %}
-                            <img src="{% static 'images/lk.png' %}" alt="lk" width="20" height="20">
+                            <img src="{% static 'images/default_pi.png' %}" alt="lk" width="35" height="35">
                           {% endif %}
                         </a>
                         {% include 'modals/user.html' %}

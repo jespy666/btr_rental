@@ -1,7 +1,11 @@
 {% load django_bootstrap5 %}
 
-<div class="container">
-    <div class="row">
-        {% bootstrap_messages %}
+<div class="flash-c">
+    <div class="row d-flex">
+        <div class="col-lg-2 col-0"></div>
+        <div class="col-lg-8 col-12">
+            {% bootstrap_messages %}
+        </div>
+        <div class="col-lg-2 col-0"></div>
     </div>
 </div>

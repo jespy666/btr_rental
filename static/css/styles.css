@@ -28,6 +28,12 @@
     opacity: 1;
 }
 
+.h-line-body {
+    border: 3px solid rgb(222, 215, 212);
+    border-radius: 10px;
+    opacity: 1;
+}
+
 .dark-text {
     color: rgb(56, 58, 74);
 }
@@ -196,6 +202,29 @@ background: #ec407a;
     filter: drop-shadow(0 0 10px #FF6469);
 }
 
-.modal-contacts {
-    background-color: rgb(22, 29, 32);
+.sm-h {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+    .sm-h {
+        background-color: rgb(222, 215, 212);
+        padding: 0;
+    }
+}
+
+.flash-c {
+    height: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+@keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+}
+
+.fade-out {
+    animation: fadeOut 1s ease-out;
 }
