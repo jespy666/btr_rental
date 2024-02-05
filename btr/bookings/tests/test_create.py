@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.urls import reverse_lazy
 
 from btr.fixtures_loader import load_json
