@@ -1,7 +1,6 @@
 .profile-bg {
     background-color: rgb(28, 29, 37);
-    border: 10px solid rgba(255, 255, 255, 0.5);
-    border-radius: 40px 40px 40px 40px;
+    border: 5px rgb(89, 86, 85) solid;
     padding: 20px;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -16,4 +15,24 @@
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
+}
+
+.table-green {
+    transition: background-color 0.3s, font-weight 0.3s;
+}
+
+.table-green:hover {
+    background-color: green !important;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.table-orange {
+    transition: background-color 0.3s, font-weight 0.3s;
+}
+
+.table-orange:hover {
+    background-color: orange !important;
+    font-weight: bold;
+    cursor: pointer;
 }

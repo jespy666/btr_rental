@@ -228,3 +228,14 @@ background: #ec407a;
 .fade-out {
     animation: fadeOut 1s ease-out;
 }
+
+
+.t-pending {
+    color: rgb(223, 181, 52);
+    font-weight: bolder;
+}
+
+.t-confirmed {
+    color: green;
+    font-weight: bolder;
+}
