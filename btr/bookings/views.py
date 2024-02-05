@@ -2,16 +2,16 @@ from datetime import datetime
 import calendar
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views.generic import (CreateView, UpdateView, DeleteView,
-                                  TemplateView)
+from django.urls import reverse_lazy, reverse
+from django.views.generic import (CreateView, UpdateView, TemplateView,
+                                  DetailView)
 from django.utils.translation import gettext as _
 
-from ..mixins import UserAuthRequiredMixin, UserPermissionMixin
+from ..mixins import UserAuthRequiredMixin, BookingPermissionMixin
 from .models import Booking
-from .forms import BookingForm
+from .forms import BookingForm, BookingEditForm, BookingCancelForm
 from .locale import locale_month_name_plural, locale_month_name
-from ..orm_utils import LoadCalc
+from ..orm_utils import LoadCalc, SlotsFinder
 from ..tasks.book_tasks import send_details
 
 
@@ -57,12 +57,22 @@ class BookingIndexView(TemplateView):
         return context
 
 
+class BookingDetailView(UserAuthRequiredMixin, BookingPermissionMixin,
+                        DetailView):
+    template_name = 'bookings/show.html'
+    model = Booking
+    login_url = reverse_lazy('login')
+    permission_denied_message = _('You must to be login')
+    foreign_book_message = _('You cannot see another user bookings')
+    foreign_book_url = reverse_lazy('home')
+
+
 class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
                         CreateView):
 
     model = Booking
     form_class = BookingForm
-    success_url = reverse_lazy('home')
+    success_url = None
     login_url = reverse_lazy('login')
     template_name = 'forms/booking_create.html'
     success_message = _('Reservation created successfully')
@@ -125,35 +135,62 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
                            start_time, end_time, bike_count)
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})
 
-class BookingEditView(UserAuthRequiredMixin, UserPermissionMixin,
+
+class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
                       SuccessMessageMixin, UpdateView):
 
     model = Booking
-    form_class = BookingForm
-    success_url = reverse_lazy('home')
+    form_class = BookingEditForm
+    success_url = None
     login_url = reverse_lazy('login')
-    template_name = 'bookings/form.html'
+    template_name = 'forms/book_edit.html'
     success_message = _('Reservation change successfully')
     permission_denied_message = _('You must to be login to edit bookings')
-    permission_message = _('You can\'t change another user bookings!')
-    permission_url = success_url
-    extra_context = {
-        'header': _('Edit Reservation'),
-        'button': _('Apply'),
-    }
+    foreign_book_message = _('You can\'t change another user bookings!')
+    foreign_book_url = success_url
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        booking = Booking.objects.get(pk=self.kwargs['pk'])
+        slots = SlotsFinder(
+            datetime.strftime(booking.booking_date, '%Y-%m-%d')
+        )
+        context['slots'] = slots.find_available_slots()
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        booking = Booking.objects.get(pk=self.kwargs['pk'])
+        booking_date = booking.booking_date
+        f_date = datetime.strftime(booking_date, '%Y-%B-%d')
+        slots = SlotsFinder(datetime.strftime(booking_date, '%Y-%m-%d'))
+        kwargs['slots'] = slots.find_available_slots()
+        kwargs['date'] = f_date
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})
 
 
-class BookingDeleteView(UserAuthRequiredMixin, UserPermissionMixin,
-                        SuccessMessageMixin, DeleteView):
-
+class BookingCancelView(UserAuthRequiredMixin, SuccessMessageMixin,
+                        UpdateView):
     model = Booking
-    template_name = 'bookings/user_delete.html'
+    form_class = BookingCancelForm
+    template_name = 'forms/book_cancel.html'
     login_url = reverse_lazy('login')
-    success_url = reverse_lazy('home')
-    success_message = _('Booking delete successfully')
-    permission_message = _(
-        'You do not have permission to delete booking of another user!'
-    )
-    permission_url = success_url
-    permission_denied_message = _('You must to be log in')
+    success_url = None
+    success_message = _('You are canceled the ride')
+    permission_denied_message = _('You must to be Log In')
+
+    def form_valid(self, form):
+        form.save()
+        booking = Booking.objects.get(pk=self.kwargs['pk'])
+        booking.status = _('canceled')
+        booking.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})

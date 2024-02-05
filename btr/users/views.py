@@ -34,10 +34,10 @@ class UserView(UserAuthRequiredMixin, DetailView):
         user = self.request.user
         completed_bookings = Booking.objects.filter(
             rider=user,
-            status__in=['completed', 'canceled'],
+            status__in=[_('completed'), _('canceled')],
         )
         current_bookings = Booking.objects.filter(rider=user).exclude(
-            status__in=['completed', 'canceled'],
+            status__in=[_('completed'), _('canceled')],
         )
         context['completed_bookings'] = completed_bookings
         context['current_bookings'] = current_bookings

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def validate_slots(available_slots: list, desired_slot: tuple) -> bool:
@@ -18,3 +18,14 @@ def validate_start_time(time: datetime.time, date: str) -> bool:
     formatted_date = datetime.strptime(date, '%Y-%B-%d')
     full_date = datetime.combine(formatted_date.date(), time)
     return full_date > now
+
+
+def validate_equal_hour(start: datetime.time, end: datetime.time) -> bool:
+    """Check common time is equal to hour"""
+    start_datetime = datetime.combine(datetime.today(), start)
+    end_datetime = datetime.combine(datetime.today(), end)
+
+    diff = end_datetime - start_datetime
+    one_hour = timedelta(hours=1)
+
+    return diff.total_seconds() % one_hour.total_seconds() == 0
