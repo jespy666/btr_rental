@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="black-bg">{% include 'navbar.html' %}</div>
+<div class="container-fluid sm-h">
+    <div class="container body-bg p-4">
+        {% include 'messages.html' %}
+        <div class="row text-center">
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-12">
+                <img class="" src="{% static 'images/date.png' %}" alt="Date" width="130" height="130">
+                <div class="mb-2"></div>
+                <h2>{% translate 'Booking #' %}{{ booking.id }}</h2>
+                <hr class="h-line-dark">
+                <h3 class="fs-4">{% translate 'Booking status:' %}</h3>
+                {% if booking.status == _('pending') %}
+                    <h5 class="t-pending">{{ booking.status }}</h5>
+                {% elif booking.status == _('confirmed') %}
+                    <h5 class="t-confirmed">{{ booking.status }}</h5>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-0"></div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-12">
+                <table class="table">
+                    <tbody class="text-center" style="border: black;">
+                        <tr>
+                            <td>{% translate 'Planed Date' %}</td>
+                            <td>➡️</td>
+                            <td>{{ booking.booking_date }}</td>
+                        </tr>
+                        <tr>
+                            <td>{% translate 'Planed Time' %}</td>
+                            <td>➡️</td>
+                            <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+                        </tr>
+                        <tr>
+                            <td>{% translate 'Bikes Rented' %}</td>
+                            <td>➡️</td>
+                            <td>{{ booking.bike_count }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4 col-0"></div>
+        </div>
+        <div class="row my-4">
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-12">
+                <div class="d-flex align-items-between justify-content-between">
+                    <a class="modal-link" href="{% url 'book_edit' pk=booking.id %}">{% translate 'Edit booking' %}</a>
+                    <a class="link-danger modal-link" href="{% url 'book_cancel' pk=booking.id %}">{% translate 'Cancel booking' %}</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-0"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

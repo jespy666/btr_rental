@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<div class="card h-100 profile-bg text-white">
+    <div class="card-body">
+        <h3 class="card-title">{% translate 'Personal info' %}</h3>
+        <div class="row mt-4">
+            <div class="col">
+                <h6 class="mb-0">{% translate 'Name' %}</h6>
+            </div>
+            <div class="col text-secondary">{{ user.first_name }}</div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <h6 class="mb-0">{% translate 'Email' %}</h6>
+            </div>
+            <div class="col text-secondary">{{ user.email }}</div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <h6 class="mb-0">{% translate 'Phone' %}</h6>
+            </div>
+            <div class="col text-secondary">{{ user.phone_number }}</div>
+        </div>
+        <hr>
+        <div class="pb-3"></div>
+        <div class="row text-start">
+            <div class="col-lg-4 col-12">
+                <a href="{% url 'user_edit' pk=user.pk %}" class="btn btn-outline-warning">{% translate 'Edit Profile' %}</a>
+            </div>
+            <div class="col-lg-4 col-0"></div>
+            <div class="col-lg-4 col-0"></div>
+        </div>
+    </div>
+</div>

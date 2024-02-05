@@ -1,0 +1,54 @@
+{% load i18n static %}
+
+<div class="modal fade" id="rideHistory" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content modal-bg">
+            <div class="container-fluid text-center py-3 c-body-color">
+                <img class="img-modal" src="{% static 'images/history.png' %}" alt="History">
+                <div class="mb-3"></div>
+                <h4>{% translate 'History' %}</h4>
+            </div>
+            <div class="container">
+                {% if not completed_bookings %}
+                    <div class="my-4 text-center text-white">
+                        <h4>{% translate 'There are not completed bookings yet...' %}</h4>
+                    </div>
+                {% else %}
+                    <div class="table table-responsive">
+                        <table class="table">
+                            <thead class="text-white">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">{% translate 'Date' %}</th>
+                                    <th scope="col">{% translate 'Begin time' %}</th>
+                                    <th scope="col">{% translate 'End time' %}</th>
+                                    <th scope="col">{% translate 'Status' %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in completed_bookings %}
+                                    {% if booking.status == _('completed') %}
+                                        <tr class="table-primary">
+                                    {% else %}
+                                        <tr class="table-danger">
+                                    {% endif %}
+                                    <th scope="row">{{ booking.id }}</th>
+                                        <td>{{ booking.booking_date }}</td>
+                                        <td>{{ booking.start_time }}</td>
+                                        <td>{{ booking.end_time }}</td>
+                                        <td>{{ booking.status }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="container-fluid c-black-color p-3">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                  {% translate 'Close' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

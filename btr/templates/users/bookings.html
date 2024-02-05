@@ -1,0 +1,46 @@
+{% load i18n %}
+
+<div class="card profile-bg">
+    <h3 class="text-white text-center">{% translate 'Current bookings' %}</h3>
+    <hr class="h-line-body">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        {% if not current_bookings %}
+            <div class="card-text text-center text-white">
+                <h4 class="my-5">{% translate 'There are not current bookings yet...' %}</h4>
+            </div>
+        {% else %}
+            <div class="table table-responsive">
+                <table class="table">
+                    <thead class="text-white">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">{% translate 'Date' %}</th>
+                            <th scope="col">{% translate 'Begin time' %}</th>
+                            <th scope="col">{% translate 'End time' %}</th>
+                            <th scope="col">{% translate 'Status' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride in current_bookings %}
+                            {% if ride.status == _('pending') %}
+                                <tr class="table-orange" onclick="window.location='{% url 'book_show' pk=ride.id %}'" style="background-color: rgb(223, 181, 52);">
+                            {% else %}
+                                <tr class="table-green" onclick="window.location='{% url 'book_show' pk=ride.id %}'" style="background-color: rgb(146, 181, 130);">
+                            {% endif %}
+                                <th scope="row">{{ ride.id }}</th>
+                                <td>{{ ride.booking_date }}</td>
+                                <td>{{ ride.start_time }}</td>
+                                <td>{{ ride.end_time }}</td>
+                                <td>{{ ride.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row text-center">
+        {% include 'modals/history.html' %}
+        <a class="link-light modal-link" type="button" data-bs-toggle="modal" data-bs-target="#rideHistory">{% translate 'View history' %}</a>
+    </div>
+</div>

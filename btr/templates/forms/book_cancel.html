@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 i18n static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+<div class="black-bg">{% include 'navbar.html' %}</div>
+<div class="container-fluid sm-h">
+    <div class="container body-bg">
+        <div class="container pt-4">
+            <div class="row mt-4 text-center">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <img src="{% static 'images/cancel.png' %}" width="150" height="150" alt="cancel">
+                    <h2 class="mt-2">{% translate 'Cancel Book' %}</h2>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+            </div>
+            <div class="row mt-4 text-center">
+                <div class="col-lg-4 col-0"></div>
+                <div class="col-lg-4 col-12">
+                    <p>{% translate 'Do you really want to cancel your trip?' %}</p>
+                    <div class="mb-2"></div>
+                    <p>{% translate 'Are you sure to cancel booking #' %}<strong>{{ booking.id }}</strong> ?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input class="btn link-danger modal-link" type="submit" value="{% translate 'Yes, cancel this ride' %}">
+                    </form>
+                </div>
+                <div class="col-lg-4 col-0"></div>
+                <div class="lg-m-b"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
