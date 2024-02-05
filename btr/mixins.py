@@ -27,6 +27,20 @@ class UserPermissionMixin(UserPassesTestMixin):
         return redirect(self.permission_url)
 
 
+class BookingPermissionMixin(UserPassesTestMixin):
+
+    foreign_book_message = None
+    foreign_book_url = None
+
+    def test_func(self):
+        booking = self.get_object()
+        return booking.rider == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.foreign_book_message)
+        return redirect(self.foreign_book_url)
+
+
 class ObjectDoesNotExistMixin:
 
     not_existed_message = None
