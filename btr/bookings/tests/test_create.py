@@ -10,14 +10,14 @@ from ..models import Booking
 class TestBookingCreate(BTRTestCase):
     create_url = reverse_lazy('book_create')
     cases = load_json('bookings/create.json')
-    date = datetime.strftime(datetime.now().date(), '%Y-%B-%d')
 
     def test_success_create(self):
         post_data = self.cases['correct']
         slots = "[('10:00', '22:00')]"
 
         response = self.client.post(
-            f"{self.create_url}?slots={slots}&selected_date={self.date}",
+            f"{self.create_url}?slots={slots}&selected_date="
+            f"{post_data['booking_date']}",
             data=post_data,
             follow=True,
         )
@@ -34,7 +34,7 @@ class TestBookingCreate(BTRTestCase):
         )
         self.assertTemplateUsed(
             response,
-            'index.html'
+            'users/profile.html'
         )
         self.assertEqual(Booking.objects.count(), self.count + 1)
 
@@ -44,7 +44,8 @@ class TestBookingCreate(BTRTestCase):
         slots = "[('10:00', '22:00')]"
 
         response = self.client.post(
-            f"{self.create_url}?slots={slots}&selected_date={self.date}",
+            f"{self.create_url}?slots={slots}&selected_date="
+            f"{post_data['booking_date']}",
             data=post_data,
             follow=True,
         )
@@ -68,7 +69,8 @@ class TestBookingCreate(BTRTestCase):
         post_data = self.cases['busy_time']
         slots = "[('10:00', '11:00')]"
         response = self.client.post(
-            f"{self.create_url}?slots={slots}&selected_date={self.date}",
+            f"{self.create_url}?slots={slots}&selected_date="
+            f"{post_data['booking_date']}",
             data=post_data,
         )
         self.assertEqual(response.status_code, 200)
@@ -89,7 +91,8 @@ class TestBookingCreate(BTRTestCase):
         post_data = self.cases['to_many_bikes']
         slots = "[('10:00', '22:00')]"
         response = self.client.post(
-            f"{self.create_url}?slots={slots}&selected_date={self.date}",
+            f"{self.create_url}?slots={slots}&selected_date="
+            f"{post_data['booking_date']}",
             data=post_data,
         )
         self.assertEqual(response.status_code, 200)

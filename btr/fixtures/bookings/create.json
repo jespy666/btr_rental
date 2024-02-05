@@ -1,7 +1,7 @@
 {
   "correct": {
     "rider": 3,
-    "booking_date": "2024-05-05",
+    "booking_date": "2024-May-05",
     "start_time": "19:00",
     "end_time": "20:00",
     "bike_count": 4,
@@ -9,7 +9,7 @@
   },
   "busy_time": {
     "rider": 3,
-    "booking_date": "2024-05-05",
+    "booking_date": "2024-May-05",
     "start_time": "18:00",
     "end_time": "20:00",
     "bike_count": 2,
@@ -25,7 +25,7 @@
   },
   "to_many_bikes": {
     "rider": 3,
-    "booking_date": "2025-05-05",
+    "booking_date": "2025-May-05",
     "start_time": "18:00",
     "end_time": "20:00",
     "bike_count": 10,
