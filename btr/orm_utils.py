@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union, Tuple, Optional
 
 from django.core.exceptions import (ObjectDoesNotExist,
                                     MultipleObjectsReturned,
@@ -166,6 +167,14 @@ class SlotsFinder:
                     .exclude(status='canceled'))
         return [f'{book.start_time}-{book.end_time}' for book in bookings]
 
+    def get_booked_slots_for_edit(self, excluded_slot: tuple) -> list:
+        """Get busy time ranges exclude current range"""
+        exc_start, exc_end = excluded_slot
+        bookings = (Booking.objects.filter(booking_date=self.date)
+                    .exclude(status='canceled'))
+        return [f'{book.start_time}-{book.end_time}' for book in bookings if
+                (book.start_time >= exc_end or book.end_time <= exc_start)]
+
     @staticmethod
     def get_booked_seconds(booked_slots: list) -> list:
         """Calculate booked ranges to seconds"""
@@ -200,11 +209,19 @@ class SlotsFinder:
         ]
         return available_slots
 
-    def find_available_slots(self) -> list:
+    def find_available_slots(
+            self,
+            excluded_slot: Union[
+                None,
+                Tuple[Optional[datetime.time], Optional[datetime.time]]
+            ] = None) -> list:
         """Get list of available slots for view"""
         if self.date.split('-')[-1] == '0':
             return []
-        booked_slots = self.get_booked_slots()
+        if not excluded_slot:
+            booked_slots = self.get_booked_slots()
+        else:
+            booked_slots = self.get_booked_slots_for_edit(excluded_slot)
         booked_seconds = self.get_booked_seconds(booked_slots)
         available_slots = self.get_available_slots(booked_seconds)
         return available_slots

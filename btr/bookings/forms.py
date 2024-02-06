@@ -1,5 +1,4 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
 
 from .models import Booking
@@ -8,13 +7,6 @@ from .validators import (validate_slots, validate_start_time,
 
 
 class BookingForm(forms.ModelForm):
-
-    bike_count = forms.IntegerField(
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(4),
-        ]
-    )
 
     def __init__(self, *args, **kwargs):
         available_slots = kwargs.pop('available_slots', None)
@@ -30,7 +22,7 @@ class BookingForm(forms.ModelForm):
         widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
-            'bike_count': forms.NumberInput(attrs={'type': 'number'})
+            'bike_count': forms.NumberInput(attrs={'type': 'number'}),
         }
 
     def clean(self):
@@ -68,17 +60,9 @@ class BookingForm(forms.ModelForm):
 
 class BookingEditForm(forms.ModelForm):
 
-    bike_count = forms.IntegerField(
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(4),
-        ]
-    )
-
     def __init__(self, *args, **kwargs):
         slots = kwargs.pop('slots', None)
         date = kwargs.pop('date', None)
-        print(date)
         super(BookingEditForm, self).__init__(*args, **kwargs)
         if slots:
             self.initial['slots'] = slots

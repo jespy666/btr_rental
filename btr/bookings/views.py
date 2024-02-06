@@ -158,7 +158,9 @@ class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
         slots = SlotsFinder(
             datetime.strftime(booking.booking_date, '%Y-%m-%d')
         )
-        context['slots'] = slots.find_available_slots()
+        context['slots'] = slots.find_available_slots(
+            (booking.start_time, booking.end_time)
+        )
         return context
 
     def get_form_kwargs(self):
