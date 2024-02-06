@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 i18n static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+<div class="black-bg">{% include 'navbar.html' %}</div>
+<div class="container-fluid sm-h">
+    <div class="container body-bg">
+        {% include 'messages.html' %}
+        <div class="container pt-4">
+            <div class="row mt-4 text-center">
+                <div class="col-lg-3 col-0"></div>
+                <div class="col-lg-6 col-0">
+                    <img src="{% static 'images/avatar.png' %}" width="130" height="130" alt="avatar">
+                    <h2 class="text-center mt-3">{% translate 'Update Profile Image' %}</h2>
+                    <div class="mb-5"></div>
+                </div>
+                <div class="col-lg-3 col-0"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-0"></div>
+                <div class="col-lg-6 col-12">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input class="btn btn-success" type="submit" value="{% translate 'Update' %}">
+                    </form>
+                    <div class="mb-5"></div>
+                </div>
+                <div class="col-lg-3 col-0"></div>
+            </div>
+            <div class="pb-5"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

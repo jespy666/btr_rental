@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from .views import (UserRegistrationView, UserView,
-                    UserUpdateView, UserDeleteView)
+from .views import (UserRegistrationView, UserView, UserUpdateView,
+                    UserDeleteView, UserUpdateImageView)
 
 urlpatterns = [
     path(
@@ -27,7 +27,13 @@ urlpatterns = [
         '<int:pk>/profile/delete/',
         UserDeleteView.as_view(),
         name='user_delete'
-    )
+    ),
+
+    path(
+        '<int:pk>/profile/change-image/',
+        UserUpdateImageView.as_view(),
+        name='change_image'
+    ),
 ]
 
 if settings.DEBUG:

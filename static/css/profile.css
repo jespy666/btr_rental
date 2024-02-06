@@ -36,3 +36,35 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+.profile-image {
+    transition: transform 0.3s ease-in-out;
+}
+
+.edit-link {
+    opacity: 0;
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease-in-out, bottom 0.3s ease-in-out;
+    padding-top: 9px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-radius: 50%;
+    background-color: black;
+    border: none;
+}
+
+.position-relative:hover .edit-link {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    border: none;
+    bottom: -12%;
+}
+
+.position-relative:hover .profile-image {
+    transform: scale(1.1);
+}

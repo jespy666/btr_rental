@@ -4,9 +4,15 @@
     <div class="card-body">
         <div class="d-flex flex-column align-items-center text-center">
             {% if user.profile_image %}
-                <img src="{{ user.profile_image.url|safe }}" alt="user">
+                <div class="position-relative">
+                    <img src="{{ user.profile_image.url|safe }}" alt="user" class="profile-image">
+                    <a href="{% url 'change_image' pk=user.pk %}" class="btn btn-light edit-link">{% translate 'Change' %}</a>
+                </div>
             {% else %}
-                <img src="{% static 'images/default_pi.png' %}" alt="user">
+                <div class="position-relative">
+                    <img src="{% static 'images/default_pi.png' %}" alt="user" class="profile-image">
+                    <a href="{% url 'change_image' pk=user.pk %}" class="btn btn-light edit-link">{% translate 'Change' %}</a>
+                </div>
             {% endif %}
             <div class="mt-3">
                 <h4 class="text-white">{{ user.username }}</h4>

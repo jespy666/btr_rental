@@ -1,9 +1,11 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import (CreateView, DetailView, UpdateView,
+                                  DeleteView)
 from django.utils.translation import gettext as _
 
-from btr.users.forms import UserRegistrationForm, UserEditForm
+from btr.users.forms import (UserRegistrationForm, UserEditProfileImageForm,
+                             UserEditForm)
 from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin, \
     DeleteProtectionMixin
@@ -44,18 +46,44 @@ class UserView(UserAuthRequiredMixin, DetailView):
         return context
 
 
+class UserUpdateImageView(UserAuthRequiredMixin, UserPermissionMixin,
+                          SuccessMessageMixin, UpdateView):
+    model = SiteUser
+    form_class = UserEditProfileImageForm
+    template_name = 'forms/change_image.html'
+    success_message = _('You are updated your profile image')
+    success_url = None
+    login_url = reverse_lazy('login')
+    permission_denied_message = _('You must to be log in')
+    permission_message = _('You can\'t change other user profile image!')
+    permission_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})
+
+
 class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
                      SuccessMessageMixin, UpdateView):
-
     model = SiteUser
     form_class = UserEditForm
     template_name = 'forms/user_edit.html'
-    success_message = _('Profile successfully updated')
-    success_url = reverse_lazy('login')
-    login_url = success_url
+    success_message = _('Profile updated successfully')
+    success_url = None
+    login_url = reverse_lazy('login')
     permission_denied_message = _('You must to be log in')
-    permission_message = _('You can\'t edit another profile!')
+    permission_message = _('You can\'t edit other user profile!')
     permission_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})
 
 
 class UserDeleteView(UserAuthRequiredMixin, UserPermissionMixin,
