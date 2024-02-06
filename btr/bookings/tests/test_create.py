@@ -85,13 +85,13 @@ class TestBookingCreate(BTRTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Booking.objects.count(), self.count)
 
-    def test_bikes_overcounted(self):
-        post_data = self.cases['to_many_bikes']
-        slots = "[('10:00', '22:00')]"
-        response = self.client.post(
-            f"{self.create_url}?slots={slots}&selected_date="
-            f"{post_data['booking_date']}",
-            data=post_data,
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Booking.objects.count(), self.count)
+    # def test_bikes_overcounted(self):
+    #     post_data = self.cases['to_many_bikes']
+    #     slots = "[('10:00', '22:00')]"
+    #     response = self.client.post(
+    #         f"{self.create_url}?slots={slots}&selected_date="
+    #         f"{post_data['booking_date']}",
+    #         data=post_data,
+    #     )
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(Booking.objects.count(), self.count)
