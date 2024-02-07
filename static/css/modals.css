@@ -48,3 +48,12 @@
     font-weight: bold;
     font-size: 15px;
 }
+
+.modal-backdrop {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.fade.show .modal-backdrop {
+    opacity: 0.8 !important;
+}
