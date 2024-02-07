@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('username', models.CharField(max_length=40, unique=True, verbose_name='Username, Phone or Email')),
                 ('first_name', models.CharField(max_length=40, verbose_name='Name')),
-                ('email', models.EmailField(max_length=50, unique=True, verbose_name='Адрес электронной почты')),
+                ('emails', models.EmailField(max_length=50, unique=True, verbose_name='Адрес электронной почты')),
                 ('phone_number', phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None, unique=True, verbose_name='Phone')),
                 ('profile_image', models.ImageField(blank=True, null=True, upload_to='profile_images/')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

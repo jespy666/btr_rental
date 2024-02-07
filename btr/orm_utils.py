@@ -13,7 +13,7 @@ from btr.users.models import SiteUser
 
 
 def check_user_exist(email: str) -> bool:
-    """Check user exist by email"""
+    """Check user exist by emails"""
     try:
         SiteUser.objects.get(email=email)
         return True
@@ -107,7 +107,7 @@ def create_booking_by_admin(book_data: dict) -> None:
 
 def create_booking_by_bot(user_data: dict) -> str:
     """User create booking yourself via tg bot"""
-    user_email = user_data.get('email')
+    user_email = user_data.get('emails')
     user = SiteUser.objects.get(email=user_email)
 
     date = user_data.get('date')
@@ -130,7 +130,7 @@ def create_booking_by_bot(user_data: dict) -> str:
 
 
 def get_phone_number(user_email: str) -> str:
-    """Find user phone number by email from database"""
+    """Find user phone number by emails from database"""
     try:
         user = SiteUser.objects.get(email=user_email)
         return user.phone_number
@@ -139,7 +139,7 @@ def get_phone_number(user_email: str) -> str:
 
 
 def reset_user_password(user_email: str) -> str:
-    """Set new random password to user by email"""
+    """Set new random password to user by emails"""
     user = SiteUser.objects.get(email=user_email)
     password = SiteUser.objects.make_random_password(length=8)
     user.set_password(password)

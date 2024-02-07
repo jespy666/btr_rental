@@ -27,7 +27,7 @@ class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(
         max_length=50,
         required=True,
-        help_text=_('Required. Enter a valid email address'),
+        help_text=_('Required. Enter a valid emails address'),
         label=_('Email'),
         label_suffix='*',
     )
@@ -86,7 +86,7 @@ class UserEditForm(forms.ModelForm):
     email = forms.EmailField(
         max_length=50,
         required=True,
-        help_text=_('Required. Enter a valid email address'),
+        help_text=_('Required. Enter a valid emails address'),
         label=_('Email'),
         label_suffix='*',
     )

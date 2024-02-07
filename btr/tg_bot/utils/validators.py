@@ -23,7 +23,7 @@ def validate_name(name: str) -> bool:
 
 
 def validate_email(email: str) -> bool:
-    """Validate email format"""
+    """Validate emails format"""
     pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if re.match(pattern, email):
         return True

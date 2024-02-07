@@ -31,7 +31,7 @@ class BookingRide:
         kb = CancelKB().place()
         msg = _(
             '<strong>Make booking</strong>\n\n'
-            '<em>To book a new ride, please type your valid email</em>\n\n'
+            '<em>To book a new ride, please type your valid emails</em>\n\n'
             '⚠️ <strong>Case sensitive</strong> ⤵️'
         )
         await bot.send_message(user_id, msg, reply_markup=kb)
@@ -48,7 +48,7 @@ class BookingRide:
             bikes = ['1', '2', '3', '4']
             msg = _(
                 '🟢🟢🟢\n\n'
-                '<em>User with email <strong>{email}</strong> find '
+                '<em>User with emails <strong>{emails}</strong> find '
                 'successfully!\n\n'
                 'How many bikes should i served?</em>'
             ).format(email=email)
@@ -61,7 +61,7 @@ class BookingRide:
         except InvalidEmailError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>Invalid email format <em>{email}</em></strong>\n\n'
+                '<strong>Invalid emails format <em>{emails}</em></strong>\n\n'
                 '<em>Check your spelling and try again</em> ⤵️'
             ).format(email=email)
             await bot.send_message(user_id, msg, reply_markup=kb)
@@ -222,7 +222,7 @@ class BookingRide:
         bikes = book_data.get('bikes')
         date = book_data.get('date')
         start = book_data.get('start')
-        email = book_data.get('email')
+        email = book_data.get('emails')
         end = get_end_time(start, hours)
         try:
             validate_time(end)
@@ -243,7 +243,7 @@ class BookingRide:
                 'Booking status ↙️\n\n'
                 '🟡 <strong>Pending</strong>\n\n'
                 'All booking info was send to ↙️\n\n'
-                '{email}\n\n'
+                '{emails}\n\n'
                 'You can track your booking status on profile page ↙️\n\n'
                 'broteamracing.ru</em>'
             ).format(

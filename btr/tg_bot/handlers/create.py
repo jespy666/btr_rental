@@ -111,14 +111,14 @@ class CreateAccount:
             except InvalidEmailError:
                 msg = _(
                     '🔴🔴🔴\n\n'
-                    '<strong>Invalid email format <em>{email}</em></strong>\n'
+                    '<strong>Invalid emails format <em>{email}</em></strong>\n'
                     '\n<em>Check your spelling and try again</em> ⤵️'
                 ).format(email=email)
                 await bot.send_message(user_id, msg, reply_markup=kb)
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with email <em>{email}</em> already '
+                '<strong>User with emails <em>{emails}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'
@@ -148,7 +148,7 @@ class CreateAccount:
                     '🎉🎉🎉\n\n'
                     '<strong>Account created successfully!</strong>\n\n'
                     '<em>All sign in info was send to</em> ↙️\n\n'
-                    '✉️ {email}'
+                    '✉️ {emails}'
                 ).format(email=reg_data.get('regemail'))
                 await bot.send_message(user_id, msg)
                 await state.clear()
@@ -162,7 +162,7 @@ class CreateAccount:
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with phone number <em>{email}</em> already '
+                '<strong>User with phone number <em>{emails}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'

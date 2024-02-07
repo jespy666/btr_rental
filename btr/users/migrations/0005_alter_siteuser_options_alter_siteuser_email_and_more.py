@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='siteuser',
-            name='email',
+            name='emails',
             field=models.EmailField(max_length=50, unique=True, verbose_name='Email'),
         ),
         migrations.AlterField(
