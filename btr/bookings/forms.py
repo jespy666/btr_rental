@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import Booking
 from .validators import (validate_slots, validate_start_time,
-                         validate_equal_hour)
+                         validate_equal_hour, validate_bikes)
 
 
 class BookingForm(forms.ModelForm):
@@ -29,6 +29,7 @@ class BookingForm(forms.ModelForm):
         cleaned_data = super().clean()
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
+        bikes = cleaned_data.get('bike_count')
 
         if start_time and end_time:
             start = start_time.strftime('%H:%M')
@@ -54,6 +55,11 @@ class BookingForm(forms.ModelForm):
                 self.add_error(
                     'end_time',
                     _('Common ride time must be equal to hour')
+                )
+            if not validate_bikes(bikes):
+                self.add_error(
+                    'bike_count',
+                    _('Bikes count must be at 1-4')
                 )
         return cleaned_data
 
@@ -81,6 +87,7 @@ class BookingEditForm(forms.ModelForm):
         cleaned_data = super().clean()
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
+        bikes = cleaned_data.get('bike_count')
 
         if start_time and end_time:
             start = start_time.strftime('%H:%M')
@@ -106,6 +113,11 @@ class BookingEditForm(forms.ModelForm):
                 self.add_error(
                     'end_time',
                     _('Common ride time must be equal to hour')
+                )
+            if not validate_bikes(bikes):
+                self.add_error(
+                    'bike_count',
+                    _('Bikes count must be at 1-4')
                 )
         return cleaned_data
 

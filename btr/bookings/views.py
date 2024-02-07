@@ -169,7 +169,9 @@ class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
         booking_date = booking.booking_date
         f_date = datetime.strftime(booking_date, '%Y-%B-%d')
         slots = SlotsFinder(datetime.strftime(booking_date, '%Y-%m-%d'))
-        kwargs['slots'] = slots.find_available_slots()
+        kwargs['slots'] = slots.find_available_slots(
+            (booking.start_time, booking.end_time)
+        )
         kwargs['date'] = f_date
         return kwargs
 
