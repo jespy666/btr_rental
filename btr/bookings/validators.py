@@ -29,3 +29,7 @@ def validate_equal_hour(start: datetime.time, end: datetime.time) -> bool:
     one_hour = timedelta(hours=1)
 
     return diff.total_seconds() % one_hour.total_seconds() == 0
+
+
+def validate_bikes(bikes: str) -> bool:
+    return 1 <= int(bikes) <= 4
