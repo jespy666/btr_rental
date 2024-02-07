@@ -1,3 +1,4 @@
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (CreateView, DetailView, UpdateView,
@@ -5,7 +6,7 @@ from django.views.generic import (CreateView, DetailView, UpdateView,
 from django.utils.translation import gettext as _
 
 from btr.users.forms import (UserRegistrationForm, UserEditProfileImageForm,
-                             UserEditForm)
+                             UserEditForm, ChangePasswordForm)
 from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin, \
     DeleteProtectionMixin
@@ -58,10 +59,6 @@ class UserUpdateImageView(UserAuthRequiredMixin, UserPermissionMixin,
     permission_message = _('You can\'t change other user profile image!')
     permission_url = reverse_lazy('home')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.request.user.id})
 
@@ -78,9 +75,16 @@ class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
     permission_message = _('You can\'t edit other user profile!')
     permission_url = reverse_lazy('home')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse('profile', kwargs={'pk': self.request.user.id})
+
+
+class UserChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+
+    form_class = ChangePasswordForm
+    template_name = 'forms/change_password.html'
+    success_url = None
+    success_message = _('Password changed successfully')
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.request.user.id})

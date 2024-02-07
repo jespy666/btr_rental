@@ -2,7 +2,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from .views import (UserRegistrationView, UserView, UserUpdateView,
-                    UserDeleteView, UserUpdateImageView)
+                    UserDeleteView, UserUpdateImageView,
+                    UserChangePasswordView)
 
 urlpatterns = [
     path(
@@ -33,6 +34,12 @@ urlpatterns = [
         '<int:pk>/profile/change-image/',
         UserUpdateImageView.as_view(),
         name='change_image'
+    ),
+
+    path(
+        '<int:pk>/profile/change-password/',
+        UserChangePasswordView.as_view(),
+        name='change_password'
     ),
 ]
 

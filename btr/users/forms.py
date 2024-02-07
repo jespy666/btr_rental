@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from django.utils.translation import gettext as _
@@ -107,4 +107,28 @@ class UserEditForm(forms.ModelForm):
             'first_name',
             'email',
             'phone_number',
+        )
+
+
+class ChangePasswordForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        self.fields['old_password'].widget = forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your current password')
+            }
+        )
+        self.fields['new_password1'].widget = forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter a new password')
+            }
+        )
+        self.fields['new_password2'].widget = forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter a new password again')
+            }
         )
