@@ -11,6 +11,7 @@ from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin, \
     DeleteProtectionMixin
 from ..bookings.models import Booking
+from ..tasks.reg_tasks import send_hello_email
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
@@ -22,6 +23,11 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.save()
+        email = form.cleaned_data.get('email')
+        name = form.cleaned_data.get('first_name')
+        login = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password2')
+        send_hello_email.delay(email, name, login, password)
         return super().form_valid(form)
 
 
