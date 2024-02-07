@@ -1,12 +1,17 @@
 from ..celery import app
 from ..emails import (send_tg_reg_info, send_verification_code,
-                      send_recover_message)
+                      send_recover_message, send_registration_mail)
+
+
+@app.task
+def send_hello_email(email: str, name: str, login: str, password: str) -> None:
+    send_registration_mail(email, name, login, password)
 
 
 @app.task
 def send_reg_data_from_tg(email: str, name: str, username: str,
                           phone_number: str, password: str) -> None:
-    """Task send sign up details to email"""
+    """Task send sign up details to emails"""
     send_tg_reg_info(email, name, username, phone_number, password)
 
 
@@ -18,7 +23,7 @@ def send_verification_code_from_tg(email: str, code: str) -> None:
 
 @app.task
 def send_recover_message_from_tg(email: str, password: str) -> None:
-    """Task send recovered details to email via tg bot"""
+    """Task send recovered details to emails via tg bot"""
     send_recover_message(email, password)
 
 

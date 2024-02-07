@@ -50,14 +50,14 @@ def send_verification_code(user_email, code):
 def send_recover_message(user_email, password):
     subject = _('Recovered Sign in message')
     html_content = render_to_string(
-        'email/recover.html', {
-            'email': user_email,
+        'emails/recover.html', {
+            'emails': user_email,
             'password': password
         }
     )
     text_content = _(
         'There are recovered data to sign in:\n'
-        'Login: {email}\n'
+        'Login: {emails}\n'
         'Password: {password}\n'
     ).format(email=user_email, password=password)
     msg = EmailMultiAlternatives(
@@ -65,6 +65,30 @@ def send_recover_message(user_email, password):
         text_content,
         'broteamracing@yandex.ru',
         [user_email]
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+
+def send_registration_mail(email, first_name, login, password):
+    subject = _('Hello from BroTeamRacing')
+    html_content = render_to_string(
+        'emails/registration.html', {
+            'first_name': first_name,
+            'login': login,
+            'password': password,
+        }
+    )
+    text_content = _(
+        'Glad to see you in our Rental:\n'
+        'Login: {login}\n'
+        'Password: {password}\n'
+    ).format(login=login, password=password)
+    msg = EmailMultiAlternatives(
+        subject,
+        text_content,
+        'broteamracing@yandex.ru',
+        [email]
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
