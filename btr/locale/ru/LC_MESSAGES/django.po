@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 10:39+0300\n"
+"POT-Creation-Date: 2024-02-07 10:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgid "Write your valid email where the confirmation code will be sent"
 msgstr "Адрес электронной почты"
 
 #: btr/auth/forms.py:14 btr/templates/users/info.html:15 btr/users/forms.py:31
-#: btr/users/forms.py:75 btr/users/models.py:27
+#: btr/users/forms.py:90 btr/users/models.py:27
 msgid "Email"
 msgstr "Адрес электронной почты"
 
@@ -39,7 +39,7 @@ msgstr "Код подтверждения"
 
 #: btr/auth/views.py:19
 msgid "You are log in"
-msgstr "Вход выполнен успешно"
+msgstr "Вы вошли в аккаунт"
 
 #: btr/auth/views.py:24
 msgid "You are logout"
@@ -69,7 +69,7 @@ msgstr "Неверный код подтверждения"
 msgid "Confirm selected bookings"
 msgstr "Подтвердить выбранные записи"
 
-#: btr/bookings/admin.py:11 btr/bookings/models.py:44 btr/bookings/views.py:130
+#: btr/bookings/admin.py:11 btr/bookings/models.py:45 btr/bookings/views.py:130
 #: btr/templates/bookings/show.html:19
 #: btr/tg_bot/handlers/admin/change_status.py:48
 msgid "confirmed"
@@ -79,9 +79,9 @@ msgstr "подтверждено"
 msgid "Cancel selected bookings"
 msgstr "Отменить выбранные записи"
 
-#: btr/bookings/admin.py:16 btr/bookings/forms.py:137 btr/bookings/models.py:46
-#: btr/bookings/views.py:193 btr/tg_bot/handlers/admin/change_status.py:48
-#: btr/users/views.py:37 btr/users/views.py:40
+#: btr/bookings/admin.py:16 btr/bookings/forms.py:134 btr/bookings/models.py:47
+#: btr/bookings/views.py:195 btr/tg_bot/handlers/admin/change_status.py:48
+#: btr/users/views.py:40 btr/users/views.py:43
 msgid "canceled"
 msgstr "отменен"
 
@@ -105,22 +105,26 @@ msgstr "Управление записями"
 msgid "Admin Panel"
 msgstr "Панель Администратора"
 
-#: btr/bookings/apps.py:8 btr/bookings/models.py:62
+#: btr/bookings/apps.py:8 btr/bookings/models.py:63
 msgid "Bookings"
 msgstr "Записи"
 
-#: btr/bookings/forms.py:50 btr/bookings/forms.py:109
+#: btr/bookings/forms.py:43 btr/bookings/forms.py:101
 msgid "Selected start time can't be in past"
 msgstr "Время начала не может быть в прошлом"
 
-#: btr/bookings/forms.py:55 btr/bookings/forms.py:59 btr/bookings/forms.py:114
-#: btr/bookings/forms.py:118
+#: btr/bookings/forms.py:48 btr/bookings/forms.py:52 btr/bookings/forms.py:106
+#: btr/bookings/forms.py:110
 msgid "Selected time is not available for booking"
 msgstr "Выбранное время недоступно для бронирования"
 
-#: btr/bookings/forms.py:64 btr/bookings/forms.py:123
+#: btr/bookings/forms.py:57 btr/bookings/forms.py:115
 msgid "Common ride time must be equal to hour"
 msgstr "Время проката должно быть кратно часу"
+
+#: btr/bookings/forms.py:62 btr/bookings/forms.py:120
+msgid "Bikes count must be at 1-4"
+msgstr "Минимум: 1. Максимум: 4"
 
 #: btr/bookings/locale.py:9
 msgid "Januarys"
@@ -234,38 +238,38 @@ msgstr "Время начала"
 msgid "Time of end"
 msgstr "Время окончания"
 
-#: btr/bookings/models.py:39
+#: btr/bookings/models.py:40
 msgid "bikes in rent"
 msgstr "Байков в прокате"
 
-#: btr/bookings/models.py:43 btr/bookings/views.py:132
+#: btr/bookings/models.py:44 btr/bookings/views.py:132
 #: btr/templates/bookings/show.html:17 btr/templates/users/bookings.html:25
 msgid "pending"
 msgstr "ожидает подтверждения"
 
-#: btr/bookings/models.py:43
+#: btr/bookings/models.py:44
 msgid "wait to confirm"
 msgstr "ожидает подтверждения"
 
-#: btr/bookings/models.py:44
+#: btr/bookings/models.py:45
 msgid "accepted"
 msgstr "принят"
 
-#: btr/bookings/models.py:45 btr/templates/modals/history.html:30
-#: btr/users/views.py:37 btr/users/views.py:40
+#: btr/bookings/models.py:46 btr/templates/modals/history.html:30
+#: btr/users/views.py:40 btr/users/views.py:43
 msgid "completed"
 msgstr "завершен"
 
-#: btr/bookings/models.py:45
+#: btr/bookings/models.py:46
 msgid "finished"
 msgstr "завершен"
 
-#: btr/bookings/models.py:51 btr/templates/modals/history.html:25
+#: btr/bookings/models.py:52 btr/templates/modals/history.html:25
 #: btr/templates/users/bookings.html:20
 msgid "Status"
 msgstr "Статус"
 
-#: btr/bookings/models.py:61
+#: btr/bookings/models.py:62
 msgid "Booking"
 msgstr "Запись"
 
@@ -362,11 +366,11 @@ msgstr "Выполните вход чтобы изменять записи"
 msgid "You can't change another user bookings!"
 msgstr "Вы не можете изменять записи других поьзователей"
 
-#: btr/bookings/views.py:187
+#: btr/bookings/views.py:189
 msgid "You are canceled the ride"
 msgstr "Вы отменили запись"
 
-#: btr/bookings/views.py:188
+#: btr/bookings/views.py:190
 msgid "You must to be Log In"
 msgstr "Необходимо войти в аккаунт"
 
@@ -642,7 +646,7 @@ msgid "2500₽ / hour"
 msgstr "2500₽ / час"
 
 #: btr/templates/cards.html:43 btr/templates/cards.html:68
-#: btr/templates/cards.html:97 btr/templates/users/head.html:17
+#: btr/templates/cards.html:97 btr/templates/users/head.html:23
 msgid "Book Now"
 msgstr "Записаться сейчас"
 
@@ -843,6 +847,23 @@ msgstr "Время окончания"
 msgid "Make booking"
 msgstr "Записаться на прокат"
 
+#: btr/templates/forms/change_image.html:15
+msgid "Update Profile Image"
+msgstr "Обновление Аватара"
+
+#: btr/templates/forms/change_image.html:26
+msgid "Update"
+msgstr "Обновить"
+
+#: btr/templates/forms/change_password.html:15
+msgid "Change Password"
+msgstr "Смена пароля"
+
+#: btr/templates/forms/change_password.html:26 btr/templates/users/head.html:9
+#: btr/templates/users/head.html:14
+msgid "Change"
+msgstr "Сменить"
+
 #: btr/templates/forms/confirm_code.html:15
 msgid "Verification code confirm"
 msgstr "Подтверждение"
@@ -968,14 +989,14 @@ msgid "Go to Time Selection"
 msgstr "Выбрать свободное время"
 
 #: btr/templates/modals/booking.html:103 btr/templates/modals/contacts.html:34
-#: btr/templates/modals/guest.html:35 btr/templates/modals/history.html:49
+#: btr/templates/modals/guest.html:35 btr/templates/modals/history.html:52
 #: btr/templates/modals/user.html:46
 msgid "Close"
 msgstr "Закрыть"
 
 #: btr/templates/modals/contacts.html:9
 msgid "Call Us for a ride"
-msgstr "Позвони нам для записи на прокат"
+msgstr "Позвоните нам для записи на прокат"
 
 #: btr/templates/modals/history.html:9
 msgid "History"
@@ -1015,7 +1036,7 @@ msgstr "Запись"
 
 #: btr/templates/navbar.html:18
 msgid "Gallery"
-msgstr "Галерея"
+msgstr "Блог"
 
 #: btr/templates/reviews/reviews.html:15
 msgid "Did you have fun? Share your impressions, leave a"
@@ -1037,7 +1058,7 @@ msgstr "У вас пока нет предстоящих поездок..."
 msgid "View history"
 msgstr "Посмотреть историю поездок"
 
-#: btr/templates/users/head.html:15
+#: btr/templates/users/head.html:21
 msgid "Manage Site"
 msgstr "Управление сайтом"
 
@@ -1045,12 +1066,12 @@ msgstr "Управление сайтом"
 msgid "Personal info"
 msgstr "Личная информация"
 
-#: btr/templates/users/info.html:8 btr/users/forms.py:23 btr/users/forms.py:68
+#: btr/templates/users/info.html:8 btr/users/forms.py:23 btr/users/forms.py:82
 #: btr/users/models.py:19
 msgid "Name"
 msgstr "Имя"
 
-#: btr/templates/users/info.html:22 btr/users/forms.py:40 btr/users/forms.py:83
+#: btr/templates/users/info.html:22 btr/users/forms.py:40 btr/users/forms.py:99
 #: btr/users/models.py:33
 msgid "Phone"
 msgstr "Телефон"
@@ -1058,6 +1079,10 @@ msgstr "Телефон"
 #: btr/templates/users/info.html:30
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
+
+#: btr/templates/users/info.html:34
+msgid "Change password"
+msgstr "Сменить пароль"
 
 #: btr/templates/users/profile.html:30
 msgid "If you liked the ride, leave a "
@@ -2128,29 +2153,41 @@ msgstr "Управление пользователями"
 msgid "Users"
 msgstr "Пользователи"
 
-#: btr/users/forms.py:14 btr/users/forms.py:60
+#: btr/users/forms.py:14 btr/users/forms.py:73
 msgid "Unique. No more than 40 characters"
 msgstr "Уникально. Не более 40 символов"
 
-#: btr/users/forms.py:15 btr/users/forms.py:61
+#: btr/users/forms.py:15 btr/users/forms.py:74
 msgid "Username"
-msgstr "Юзернейм"
+msgstr "Имя пользователя"
 
-#: btr/users/forms.py:22 btr/users/forms.py:67
+#: btr/users/forms.py:22 btr/users/forms.py:81
 msgid "Required. No more than 40 characters"
 msgstr "Обязательно. Не более 40 символов"
 
-#: btr/users/forms.py:30 btr/users/forms.py:74
+#: btr/users/forms.py:30 btr/users/forms.py:89
 msgid "Required. Enter a valid email address"
 msgstr "Обязательно. Введите действительный Адрес электронной почты"
 
-#: btr/users/forms.py:38 btr/users/forms.py:81
+#: btr/users/forms.py:38 btr/users/forms.py:97
 msgid "Required. Enter a valid phone number"
 msgstr "Обязательно. Введите действующий номер телефона"
 
-#: btr/users/forms.py:88
+#: btr/users/forms.py:60
 msgid "Photo"
 msgstr "Фотография"
+
+#: btr/users/forms.py:120
+msgid "Enter your current password"
+msgstr "Введите текущий пароль"
+
+#: btr/users/forms.py:126
+msgid "Enter a new password"
+msgstr "Введите новый пароль"
+
+#: btr/users/forms.py:132
+msgid "Enter a new password again"
+msgstr "Введите новый пароль еще раз"
 
 #: btr/users/models.py:12
 msgid "Username, Phone or Email"
@@ -2164,31 +2201,43 @@ msgstr "Уровень"
 msgid "newbie"
 msgstr "Новичок"
 
-#: btr/users/views.py:18
+#: btr/users/views.py:21
 msgid "User created successfully"
 msgstr "Пользователь создан успешно"
 
-#: btr/users/views.py:30 btr/users/views.py:56 btr/users/views.py:73
+#: btr/users/views.py:33 btr/users/views.py:58 btr/users/views.py:74
+#: btr/users/views.py:105
 msgid "You must to be log in"
 msgstr "Необходимо выполнить вход"
 
-#: btr/users/views.py:53
-msgid "Profile successfully updated"
-msgstr "Профиль успешно обновлен"
+#: btr/users/views.py:55
+msgid "You are updated your profile image"
+msgstr "Аватар обновлен"
 
-#: btr/users/views.py:57
-msgid "You can't edit another profile!"
-msgstr "Вы не можете изменять профиль другого пользователя"
-
-#: btr/users/views.py:68
-msgid "User delete successfully"
-msgstr "Пользователь успешно удален"
-
-#: btr/users/views.py:69
-msgid "You do not have permission to delete another user"
-msgstr "Невозможно удалить другого пользователя"
+#: btr/users/views.py:59
+msgid "You can't change other user profile image!"
+msgstr "Вы не можете менять аватар других пользователей"
 
 #: btr/users/views.py:71
+msgid "Profile updated successfully"
+msgstr "Профиль успешно изменен"
+
+#: btr/users/views.py:75
+msgid "You can't edit other user profile!"
+msgstr "Вы не можете изменять профиль другого пользователя"
+
+#: btr/users/views.py:87
+msgid "Password changed successfully"
+msgstr "Пароль успешно изменен"
+
+#: btr/users/views.py:100
+msgid "User delete successfully"
+msgstr "Аккаунт удален"
+
+#: btr/users/views.py:101
+msgid "You do not have permission to delete another user"
+msgstr "Невозможно удалить чужой аккаунт"
+
+#: btr/users/views.py:103
 msgid "Can't delete user with existed bookings"
 msgstr "Невозможно удалить пользователя, у которого есть бронирование"
-
