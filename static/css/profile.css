@@ -68,3 +68,8 @@
 .position-relative:hover .profile-image {
     transform: scale(1.1);
 }
+
+.table-responsive {
+    max-height: 200px;
+    overflow-y: auto;
+}
