@@ -3,14 +3,16 @@ from django.utils import timezone
 
 from btr.bookings.models import Booking
 
-from ..emails import send_booking_details
+from ..emails import create_booking_mail
 from ..vk import SendBookingNotification
 from ..celery import app
 
 
 @app.task
-def send_details(user_email, date, start, end, bike_count):
-    send_booking_details(user_email, date, start, end, bike_count)
+def send_booking_details(email: str, name: str, date: str, status: str,
+                         start: str, end: str, bikes: str, pk: str) -> None:
+    """Send mail to user after booking create"""
+    create_booking_mail(email, name, date, status, start, end, bikes, pk)
 
 
 @shared_task

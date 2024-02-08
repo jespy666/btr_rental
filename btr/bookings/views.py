@@ -12,7 +12,7 @@ from .models import Booking
 from .forms import BookingForm, BookingEditForm, BookingCancelForm
 from .locale import locale_month_name_plural, locale_month_name
 from ..orm_utils import LoadCalc, SlotsFinder
-from ..tasks.book_tasks import send_details
+from ..tasks.book_tasks import send_booking_details
 
 
 class BookingIndexView(TemplateView):
@@ -118,21 +118,32 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
         return formatted_date
 
     def form_valid(self, form):
-        selected_date = self.request.GET.get('selected_date')
-        start_time = form.cleaned_data.get('start_time')
-        end_time = form.cleaned_data.get('end_time')
-        bike_count = form.cleaned_data.get('bike_count')
+        date = self.request.GET.get('selected_date')
+        start = form.cleaned_data.get('start_time')
+        end = form.cleaned_data.get('end_time')
+        bikes = form.cleaned_data.get('bike_count')
         user = self.request.user
-        user_email = user.email
-        form.instance.booking_date = self.format_date_for_orm(selected_date)
+        email = user.email
+        name = user.first_name
+        form.instance.booking_date = self.format_date_for_orm(date)
         form.instance.rider = user
         if user.is_superuser:
-            form.instance.status = _('confirmed')
+            status = _('confirmed')
+            form.instance.status = status
         else:
-            form.instance.status = _('pending')
-        form.save()
-        send_details.delay(user_email, selected_date,
-                           start_time, end_time, bike_count)
+            status = _('pending')
+            form.instance.status = status
+
+        instance = form.save()
+        f_date = self.format_date_for_form(
+            date,
+            self.request.GET.get('verbose')
+        )
+        email_date = (f"{f_date.get('day')} {f_date.get('month')}, "
+                      f"{f_date.get('year')}")
+        pk = instance.pk
+        send_booking_details.delay(email, name, email_date, status,
+                                   start, end, bikes, pk)
         return super().form_valid(form)
 
     def get_success_url(self):

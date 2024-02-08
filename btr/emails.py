@@ -70,11 +70,13 @@ def send_recover_message(user_email, password):
     msg.send()
 
 
-def send_registration_mail(email, first_name, login, password):
+def registration_mail(email: str, name: str, login: str,
+                      password: str) -> None:
+    """Mail with hello message"""
     subject = _('Hello from BroTeamRacing')
     html_content = render_to_string(
         'emails/registration.html', {
-            'first_name': first_name,
+            'first_name': name,
             'login': login,
             'password': password,
         }
@@ -94,23 +96,37 @@ def send_registration_mail(email, first_name, login, password):
     msg.send()
 
 
-def send_booking_details(user_email, date, start_time, end_time, bike_count):
-    subject = _('A new booking create')
-    message = _(
-        'Hi, Rider!\n'
-        'We get a info about booking your made nearly!\n'
-        'Here\'s details:\n'
-        'Date: {date}\n'
-        'Time: from {start} to {end}\n'
-        'Number of bikes: {bike_count}\n'
-        'If you are late or cancel your race, please notify us in advance!\n'
-        'Contact number: +7 999 235-00-91\n'
-        'See you soon!'
-    ).format(date=date, start=start_time, end=end_time, bike_count=bike_count)
-    send_mail(
-        subject,
-        message,
-        'broteamracing@yandex.ru',
-        [user_email],
-        fail_silently=False,
+def create_booking_mail(email: str, name: str, date: str, status: str,
+                        start: str, end: str, bikes: str, pk: str) -> None:
+    """Mail with new booking details"""
+    subject = _('New Booking Created')
+    html_content = render_to_string(
+        'emails/create_booking.html', {
+            'name': name,
+            'date': date,
+            'start': start,
+            'end': end,
+            'bikes': bikes,
+            'status': status,
+            'id': pk,
+        }
     )
+    text_content = _(
+        'You made booking nearly!\n'
+        'Details:\n'
+        'Date: {date}\n'
+        'Time: {start}-{end}\n'
+        'Bikes requested: {bikes}\n'
+        'Current status: {status}\n'
+        'We have already seen your entry, we will confirm it soon!\n'
+        'You will also receive information about the change of status'
+        ' by email\nSee you soon  - BTR Team'
+    ).format(date=date, start=start, end=end, bikes=bikes, status=status)
+    msg = EmailMultiAlternatives(
+        subject,
+        text_content,
+        'broteamracing@yandex.ru',
+        [email]
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
