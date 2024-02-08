@@ -1,11 +1,12 @@
 from ..celery import app
 from ..emails import (send_tg_reg_info, send_verification_code,
-                      send_recover_message, send_registration_mail)
+                      send_recover_message, registration_mail)
 
 
 @app.task
 def send_hello_email(email: str, name: str, login: str, password: str) -> None:
-    send_registration_mail(email, name, login, password)
+    """Send hello message after sign up"""
+    registration_mail(email, name, login, password)
 
 
 @app.task
