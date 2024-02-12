@@ -130,3 +130,75 @@ def create_booking_mail(email: str, name: str, date: str, status: str,
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
+def confirm_booking_mail(email: str, pk: str, bikes: str,
+                         date: str, start: str, end: str) -> None:
+    """Mail with confirm booking message"""
+    subject = _('Booking Confirmed')
+    html_content = render_to_string(
+        'emails/confirm_booking.html', {
+            'date': date,
+            'start': start,
+            'end': end,
+            'bikes': bikes,
+            'id': pk,
+        }
+    )
+    text_content = _(
+        'Booking #{pk} confirmed successfully!\n'
+        'We are waiting for you at the appointed time!\n'
+        'If you are unable to attend your rental, please cancel in advance.\n'
+        'See you soon - <em>BroTeamRacing Team</em>'
+    ).format(pk=pk)
+    msg = EmailMultiAlternatives(
+        subject,
+        text_content,
+        'broteamracing@yandex.ru',
+        [email]
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+
+def cancel_booking_mail(email: str, pk: str, date: str,
+                        start: str, end: str, self_cancel=False) -> None:
+    """Mail with canceled booking message"""
+    subject = _('Booking Canceled')
+    if not self_cancel:
+        html_content = render_to_string(
+            'emails/cancel_booking.html', {
+                'date': date,
+                'id': pk,
+                'start': start,
+                'end': end,
+            }
+        )
+        text_content = _(
+            'Booking #{pk} was canceled :(!\n'
+            'Unfortunately, we will not be able'
+            ' to see you at the scheduled time\n'
+            'Please choose another time or contact us by phone.'
+        ).format(pk=pk)
+    else:
+        html_content = render_to_string(
+            'emails/cancel_booking_self.html', {
+                'date': date,
+                'id': pk,
+                'start': start,
+                'end': end,
+            }
+        )
+        text_content = _(
+            'Booking #{pk} was canceled :(!\n'
+            'You are canceled booking!\n'
+            'If you have questions, contact us!'
+        ).format(pk=pk)
+    msg = EmailMultiAlternatives(
+        subject,
+        text_content,
+        'broteamracing@yandex.ru',
+        [email]
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
