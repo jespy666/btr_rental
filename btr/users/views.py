@@ -11,7 +11,7 @@ from btr.users.models import SiteUser
 from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin, \
     DeleteProtectionMixin
 from ..bookings.models import Booking
-from ..tasks.reg_tasks import send_hello_email
+from ..tasks.users import send_hello_email
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
