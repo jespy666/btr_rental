@@ -7,8 +7,8 @@ from django.views.generic import FormView
 
 from btr.auth.forms import AuthPasswordResetForm, AuthConfirmForm
 from ..orm_utils import reset_user_password, check_user_exist
-from ..tasks.reg_tasks import (send_verification_code_from_site,
-                               send_recover_message_from_site)
+from ..tasks.users import (send_verification_code_from_site,
+                           send_recover_message_from_site)
 from btr.tg_bot.utils.handlers import generate_verification_code
 from ..mixins import ObjectDoesNotExistMixin
 
