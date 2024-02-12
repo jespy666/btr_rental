@@ -2,9 +2,8 @@ from celery import shared_task
 from django.utils import timezone
 
 from btr.bookings.models import Booking
-
-from ..emails import create_booking_mail, confirm_booking_mail
-from ..vk import SendBookingNotification
+from ..emails import (create_booking_mail, confirm_booking_mail,
+                      cancel_booking_mail)
 from ..celery import app
 
 
@@ -22,6 +21,20 @@ def send_confirm_message(email: str, pk: str, bikes: str, date: str,
     confirm_booking_mail(email, pk, bikes, date, start, end)
 
 
+@app.task
+def send_cancel_message(email: str, pk: str, date: str,
+                        start: str, end: str) -> None:
+    """Send mail to user when booking canceled by admin"""
+    cancel_booking_mail(email, pk, date, start, end)
+
+
+@app.task
+def send_cancel_self_message(email: str, pk: str, date: str,
+                             start: str, end: str) -> None:
+    """Send mail to user when booking canceled by himself"""
+    cancel_booking_mail(email, pk, date, start, end, self_cancel=True)
+
+
 @shared_task
 def check_booking_status():
     current_time = timezone.now().time()
@@ -32,9 +45,3 @@ def check_booking_status():
     for booking in bookings_to_complete:
         booking.status = 'completed'
         booking.save()
-
-
-@app.task
-def send_booking_notify(group_id, access_token, message):
-    vk = SendBookingNotification(group_id, access_token)
-    vk.send_notify(message)
