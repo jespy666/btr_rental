@@ -67,13 +67,13 @@ class ForeignBook:
             validate_bike_quantity(bikes)
             msg = _(
                 '🟢🟢🟢\n\n'
-                '<em>Ok! I prepared {bikes} Bikes\n\n'
+                '<em>Ok! I prepared {bikes} bike(s)\n\n'
                 'What phone number should I use to book?</em>\n\n'
                 '📝 <strong>Format: +7xxxxxxxxxx</strong>\n\n'
                 '⚠️ <strong>Case sensitive</strong> ⤵️'
             ).format(bikes=html.bold(html.quote(bikes)))
             await bot.send_message(user_id, msg, reply_markup=kb)
-            await state.update_data(outbikes=bikes)
+            await state.update_data(bikes=bikes)
             await state.set_state(ForeignBookingState.outPhone)
         except WrongBikesCountError:
             data = await state.get_data()
@@ -102,12 +102,12 @@ class ForeignBook:
                 '<em>Got it!\n\n'
                 'What <strong>date</strong> should I use to book?</em>\n\n'
                 '<strong>'
-                '📆 Format: YYYY:MM:DD\n\n'
-                '⚠️ Type with \':\' ⤵️'
+                '📆 Format: YYYY-MM-DD\n\n'
+                '⚠️ Type with \'-\' ⤵️'
                 '</strong>'
             )
             await bot.send_message(user_id, msg, reply_markup=kb)
-            await state.update_data(outphone=phone)
+            await state.update_data(phone=phone)
             await state.set_state(ForeignBookingState.outDate)
         except InvalidPhoneError:
             msg = _(
@@ -141,7 +141,7 @@ class ForeignBook:
                 kb_reply = DialogKB(starts).place()
                 await bot.send_message(user_id, msg, reply_markup=kb)
                 await bot.send_message(user_id, msg2, reply_markup=kb_reply)
-                await state.update_data(outdate=date, startsb=starts)
+                await state.update_data(date=date, startsb=starts)
                 await state.set_state(ForeignBookingState.outStart)
             else:
                 msg = _(
@@ -175,7 +175,7 @@ class ForeignBook:
         kb = CancelKB().place()
         book_data = await state.get_data()
         free_starts = book_data.get('startsb')
-        date = book_data.get('outdate')
+        date = book_data.get('date')
         s = SlotsFinder(date)
         free_slots: list = await s.find_available_slots_as()
         slots_view = get_slots_for_bot_view(free_slots)
@@ -193,7 +193,7 @@ class ForeignBook:
             kb_reply = DialogKB(hours).place()
             await bot.send_message(user_id, msg, reply_markup=kb)
             await bot.send_message(user_id, msg2, reply_markup=kb_reply)
-            await state.update_data(outstart=start, hoursb=hours)
+            await state.update_data(start=start, hoursb=hours)
             await state.set_state(ForeignBookingState.outHours)
         except InvalidTimeFormatError:
             msg = _(
@@ -224,8 +224,8 @@ class ForeignBook:
         user_id = message.from_user.id
         kb = CancelKB().place()
         book_data = await state.get_data()
-        date = book_data.get('outdate')
-        start = book_data.get('outstart')
+        date = book_data.get('date')
+        start = book_data.get('start')
         free_hours = book_data.get('hoursb')
         end = get_end_time(start, hours)
         s = SlotsFinder(date)
@@ -235,7 +235,7 @@ class ForeignBook:
             validate_time(end)
             validate_time_range(start, end)
             check_available_hours(start, hours, free_slots)
-            await state.update_data(outend=end)
+            await state.update_data(end=end)
             book_data = await state.get_data()
             await make_foreign_book_as(book_data)
             msg = _(
@@ -248,7 +248,7 @@ class ForeignBook:
                 '🕜 End time: <strong>{end}</strong>\n\n'
                 '⏰ Hours: <strong>{hours}</strong></em>\n\n'
             ).format(
-                phone=book_data.get('outphone'),
+                phone=book_data.get('phone'),
                 date=date,
                 start=start,
                 end=end,

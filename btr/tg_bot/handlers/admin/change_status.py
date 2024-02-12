@@ -6,9 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 
 from btr.orm_utils import check_booking_info_as, change_booking_status_as
-# from btr.tasks.book_tasks import send_booking_notify
-from ...utils.handlers import (check_admin_access, get_emoji_for_status,
-                               remove_seconds)
+from ...utils.handlers import check_admin_access, get_emoji_for_status
 from ...keyboards.kb_cancel import CancelKB
 from ...keyboards.kb_dialog import DialogKB
 from ...states.admin.change_status import ChangeStatusState
@@ -49,8 +47,8 @@ class ChangeStatus:
         try:
             booking_info = await check_booking_info_as(booking_id)
             date = booking_info.get('date')
-            start = remove_seconds(booking_info.get('start'))
-            end = remove_seconds(booking_info.get('end'))
+            start = booking_info.get('start')
+            end = booking_info.get('end')
             status = booking_info.get('status')
             is_admin = booking_info.get('f_phone')
             phone = is_admin if is_admin else booking_info.get('phone')

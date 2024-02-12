@@ -1,6 +1,7 @@
 import secrets
 import string
 from datetime import datetime, timedelta
+from django.utils.translation import gettext as _
 
 from dotenv import load_dotenv
 import os
@@ -78,17 +79,12 @@ def check_available_hours(start_time: str, hours: str, slots: list) -> bool:
 def get_emoji_for_status(status: str) -> str:
     """Get tg emoji equal booking status"""
     statuses = {
-        'pending': '🟡',
-        'confirmed': '🟢',
-        'canceled': '🔴',
-        'completed': '🔵',
+        _('pending'): '🟡',
+        _('confirmed'): '🟢',
+        _('canceled'): '🔴',
+        _('completed'): '🔵',
     }
     return statuses.get(status)
-
-
-def remove_seconds(time: datetime) -> str:
-    """Remove seconds from time"""
-    return time.strftime("%H:%M")
 
 
 def generate_verification_code() -> str:

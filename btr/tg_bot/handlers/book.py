@@ -1,8 +1,8 @@
 from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext as _
 
 from ..keyboards.kb_cancel import CancelKB
@@ -21,6 +21,7 @@ from ..utils.handlers import (get_slots_for_bot_view, extract_start_times,
                               check_available_start_time,
                               extract_hours, get_end_time,
                               check_available_hours)
+from ...tasks.bookings import send_booking_details
 
 
 class BookingRide:
@@ -31,7 +32,7 @@ class BookingRide:
         kb = CancelKB().place()
         msg = _(
             '<strong>Make booking</strong>\n\n'
-            '<em>To book a new ride, please type your valid emails</em>\n\n'
+            '<em>To book a new ride, please type your valid email</em>\n\n'
             '⚠️ <strong>Case sensitive</strong> ⤵️'
         )
         await bot.send_message(user_id, msg, reply_markup=kb)
@@ -48,7 +49,7 @@ class BookingRide:
             bikes = ['1', '2', '3', '4']
             msg = _(
                 '🟢🟢🟢\n\n'
-                '<em>User with emails <strong>{emails}</strong> find '
+                '<em>User with email <strong>{email}</strong> find '
                 'successfully!\n\n'
                 'How many bikes should i served?</em>'
             ).format(email=email)
@@ -61,7 +62,7 @@ class BookingRide:
         except InvalidEmailError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>Invalid emails format <em>{emails}</em></strong>\n\n'
+                '<strong>Invalid email format <em>{email}</em></strong>\n\n'
                 '<em>Check your spelling and try again</em> ⤵️'
             ).format(email=email)
             await bot.send_message(user_id, msg, reply_markup=kb)
@@ -88,8 +89,8 @@ class BookingRide:
                 '<em>Ok, i prepared {bikes} bikes to this ride!\n\n'
                 'What <strong>date</strong> should I use to book?</em>\n\n'
                 '<strong>'
-                '📆 Format: YYYY:MM:DD\n\n'
-                '⚠️ Type with \':\' ⤵️'
+                '📆 Format: YYYY-MM-DD\n\n'
+                '⚠️ Type with \'-\' ⤵️'
                 '</strong>'
             ).format(bikes=bikes)
             await bot.send_message(user_id, msg, reply_markup=kb)
@@ -216,13 +217,14 @@ class BookingRide:
         book_data = await state.get_data()
         hours = message.text
         user_id = message.from_user.id
+        name = message.from_user.full_name
         kb = CancelKB().place()
         slots_list = book_data.get('slots_list')
         slots = book_data.get('slots')
         bikes = book_data.get('bikes')
         date = book_data.get('date')
         start = book_data.get('start')
-        email = book_data.get('emails')
+        email = book_data.get('email')
         end = get_end_time(start, hours)
         try:
             validate_time(end)
@@ -243,7 +245,7 @@ class BookingRide:
                 'Booking status ↙️\n\n'
                 '🟡 <strong>Pending</strong>\n\n'
                 'All booking info was send to ↙️\n\n'
-                '{emails}\n\n'
+                '{email}\n\n'
                 'You can track your booking status on profile page ↙️\n\n'
                 'broteamracing.ru</em>'
             ).format(
@@ -257,6 +259,8 @@ class BookingRide:
             )
             await bot.send_message(user_id, msg)
             await state.clear()
+            send_booking_details.delay(email, name, date, _('pending'),
+                                       start, end, bikes, booking_id)
         except InvalidTimeFormatError:
             msg = _(
                 '🔴🔴🔴\n\n'

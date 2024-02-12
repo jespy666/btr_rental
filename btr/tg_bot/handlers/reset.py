@@ -5,14 +5,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils.translation import gettext as _
 
-from btr.tasks.reg_tasks import (send_verification_code_from_tg,
-                                 send_recover_message_from_tg)
+from btr.tasks.users import (send_verification_code_from_tg,
+                             send_recover_message_from_tg)
 
 from ..keyboards.kb_cancel import CancelKB
 from ..states.reset_password import ResetPasswordState
 from ..utils.validators import validate_email
-from ..utils.handlers import generate_verification_code, \
-    check_verification_code
+from ..utils.handlers import (generate_verification_code,
+                              check_verification_code)
 from ..utils.exceptions import InvalidEmailError, CompareCodesError
 from ...orm_utils import check_user_exist_as, reset_user_password_as
 
@@ -26,7 +26,7 @@ class ResetPassword:
         msg = _(
             '<strong>Password reset</strong>\n\n'
             '<em>To reset your forgotten password, please type your '
-            'valid emails</em>\n\n'
+            'valid email</em>\n\n'
             '⚠️ <strong>Case sensitive</strong> ⤵️'
         )
         await bot.send_message(user_id, msg, reply_markup=kb)
@@ -43,10 +43,10 @@ class ResetPassword:
             verification_code = generate_verification_code()
             msg = _(
                 '🟢🟢🟢\n\n'
-                '<em>User with emails <strong>{emails}</strong> find '
+                '<em>User with email <strong>{email}</strong> find '
                 'successfully!\n\n'
                 'Verification code was sent to your mail!\n\n'
-                'Type the six-digit code from the emails</em> ⤵️'
+                'Type the six-digit code from the email</em> ⤵️'
             ).format(email=email)
             send_verification_code_from_tg.delay(email, verification_code)
             await bot.send_message(user_id, msg, reply_markup=kb)
@@ -55,7 +55,7 @@ class ResetPassword:
         except InvalidEmailError:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>Invalid emails format <em>{emails}</em></strong>\n\n'
+                '<strong>Invalid email format <em>{email}</em></strong>\n\n'
                 '<em>Check your spelling and try again</em> ⤵️'
             ).format(email=email)
             await bot.send_message(user_id, msg, reply_markup=kb)
@@ -74,7 +74,7 @@ class ResetPassword:
         reset_data = await state.get_data()
         user_code = message.text
         code = reset_data.get('code')
-        email = reset_data.get('emails')
+        email = reset_data.get('email')
         user_id = message.from_user.id
         kb = CancelKB().place()
         try:
@@ -85,7 +85,7 @@ class ResetPassword:
                 '🎉🎉🎉\n\n'
                 '<em>Your password has been reset successfully!\n\n'
                 'New password and other details was send to</em> ↙️\n\n'
-                '✉️ <strong>{emails}</strong>'
+                '✉️ <strong>{email}</strong>'
             ).format(email=email)
             await bot.send_message(user_id, msg)
             await state.clear()

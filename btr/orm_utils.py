@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Union, Tuple, Optional
 
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import (ObjectDoesNotExist,
                                     MultipleObjectsReturned,
                                     ValidationError)
@@ -10,10 +11,12 @@ from asgiref.sync import sync_to_async
 from btr.bookings.models import Booking
 from btr.tg_bot.utils.exceptions import SameStatusSelectedError
 from btr.users.models import SiteUser
+from btr.tasks.admin import send_vk_notify
+from btr.tasks.bookings import send_confirm_message, send_cancel_message
 
 
 def check_user_exist(email: str) -> bool:
-    """Check user exist by emails"""
+    """Check user exist by email"""
     try:
         SiteUser.objects.get(email=email)
         return True
@@ -41,8 +44,8 @@ def check_booking_info(booking_id: str) -> dict:
     booking = Booking.objects.get(pk=int(booking_id))
     return {
         'date': booking.booking_date,
-        'start': booking.start_time,
-        'end': booking.end_time,
+        'start': booking.start_time.strftime('%H:%M'),
+        'end': booking.end_time.strftime('%H:%M'),
         'status': booking.status,
         'bikes': booking.bike_count,
         'phone': booking.rider.phone_number,
@@ -52,13 +55,39 @@ def check_booking_info(booking_id: str) -> dict:
 
 
 def change_booking_status(booking_id: str, status: str) -> str:
-    """Change booking status by primary key"""
+    """Change booking status by primary key and notify admin in Vk"""
     booking = Booking.objects.get(pk=int(booking_id))
     old_status = booking.status
     if old_status == status:
         raise SameStatusSelectedError
     booking.status = status
     booking.save()
+    pk = booking.pk
+    email = booking.rider.email
+    client = booking.rider.username
+    f_phone = booking.foreign_number
+    phone = f_phone if f_phone else booking.rider.phone_number
+    bikes = booking.bike_count
+    date = booking.booking_date
+    start = booking.start_time.strftime('%H:%M')
+    end = booking.end_time.strftime('%H:%M')
+    via = _('Telegram Bot')
+    data = {
+        'pk': pk,
+        'client': client,
+        'date': date,
+        'start': start,
+        'end': end,
+        'bikes': bikes,
+        'phone': str(phone),
+        'status': booking.status,
+    }
+    send_vk_notify.delay(via, False, data, is_admin=True)
+    if not client == 'admin':
+        if status == _('confirmed'):
+            send_confirm_message.delay(email, pk, bikes, date, start, end)
+        elif status == _('canceled'):
+            send_cancel_message.delay(email, pk, date, start, end)
     return old_status
 
 
@@ -87,55 +116,69 @@ def create_booking_by_admin(book_data: dict) -> None:
     """Admin create booking by rider phone number via tg bot.
     Booked to admin account"""
     user = SiteUser.objects.get(username='admin')
-    phone = book_data.get('outphone')
-    date = book_data.get('outdate')
-    start_time = book_data.get('outstart')
-    end_time = book_data.get('outend')
-    bike_count = book_data.get('outbikes')
+    phone = book_data.get('phone')
+    date = book_data.get('date')
+    start = datetime.strptime(book_data.get('start'), '%H:%M')
+    end = datetime.strptime(book_data.get('end'), '%H:%M')
+    bikes = book_data.get('bikes')
 
     booking = Booking.objects.create(
         rider=user,
         foreign_number=phone,
         booking_date=date,
-        start_time=start_time,
-        end_time=end_time,
-        bike_count=bike_count,
-        status='confirmed'
+        start_time=start,
+        end_time=end,
+        bike_count=bikes,
+        status=_('confirmed')
     )
     booking.save()
+    data = {
+        'pk': booking.pk,
+        'client': user.username,
+        'date': date,
+        'start': book_data.get('start'),
+        'end': book_data.get('end'),
+        'bikes': bikes,
+        'phone': str(phone),
+        'status': booking.status,
+    }
+    via = _('Telegram Bot')
+    send_vk_notify.delay(via, True, data, is_admin=True)
 
 
 def create_booking_by_bot(user_data: dict) -> str:
     """User create booking yourself via tg bot"""
-    user_email = user_data.get('emails')
+    user_email = user_data.get('email')
     user = SiteUser.objects.get(email=user_email)
 
     date = user_data.get('date')
-    start = user_data.get('start')
-    end = user_data.get('end')
+    start = datetime.strptime(user_data.get('start'), '%H:%M')
+    end = datetime.strptime(user_data.get('end'), '%H:%M')
     bikes = user_data.get('bikes')
-    phone_number = get_phone_number(user_email)
+    phone = user.phone_number
 
     booking = Booking.objects.create(
         rider=user,
-        foreign_number=phone_number,
         booking_date=date,
         start_time=start,
         end_time=end,
         bike_count=bikes,
-        status='pending',
+        status=_('pending'),
     )
     booking.save()
+    data = {
+        'pk': booking.pk,
+        'client': user.username,
+        'date': date,
+        'start': user_data.get('start'),
+        'end': user_data.get('end'),
+        'bikes': bikes,
+        'phone': str(phone),
+        'status': booking.status,
+    }
+    via = _('Telegram Bot')
+    send_vk_notify.delay(via, True, data, is_admin=False)
     return booking.pk
-
-
-def get_phone_number(user_email: str) -> str:
-    """Find user phone number by emails from database"""
-    try:
-        user = SiteUser.objects.get(email=user_email)
-        return user.phone_number
-    except ObjectDoesNotExist:
-        raise ObjectDoesNotExist
 
 
 def reset_user_password(user_email: str) -> str:

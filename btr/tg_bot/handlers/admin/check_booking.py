@@ -9,8 +9,7 @@ from btr.orm_utils import check_booking_info_as
 
 from ...keyboards.kb_cancel import CancelKB
 from ...states.admin.check_booking import CheckBookingState
-from ...utils.handlers import check_admin_access, get_emoji_for_status, \
-    remove_seconds
+from ...utils.handlers import check_admin_access, get_emoji_for_status
 
 
 class CheckBooking:
@@ -48,8 +47,8 @@ class CheckBooking:
             rider = booking_info.get('r_username')
             bikes = booking_info.get('bikes')
             date = booking_info.get('date')
-            start = remove_seconds(booking_info.get('start'))
-            end = remove_seconds(booking_info.get('end'))
+            start = booking_info.get('start')
+            end = booking_info.get('end')
             is_admin = booking_info.get('f_phone')
             phone = is_admin if is_admin else booking_info.get('phone')
             emoji = get_emoji_for_status(status)

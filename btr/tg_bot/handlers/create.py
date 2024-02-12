@@ -6,7 +6,7 @@ from aiogram import html
 from django.utils.translation import gettext as _
 
 from btr.orm_utils import check_available_field_as, create_account_as
-from btr.tasks.reg_tasks import send_reg_data_from_tg
+from btr.tasks.users import send_reg_data_from_tg
 
 from ..states.create_account import CreateAccountState
 from ..utils.exceptions import (NameOverLengthError, InvalidEmailError,
@@ -111,14 +111,14 @@ class CreateAccount:
             except InvalidEmailError:
                 msg = _(
                     '🔴🔴🔴\n\n'
-                    '<strong>Invalid emails format <em>{email}</em></strong>\n'
+                    '<strong>Invalid email format <em>{email}</em></strong>\n'
                     '\n<em>Check your spelling and try again</em> ⤵️'
                 ).format(email=email)
                 await bot.send_message(user_id, msg, reply_markup=kb)
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with emails <em>{emails}</em> already '
+                '<strong>User with email <em>{email}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'
@@ -148,7 +148,7 @@ class CreateAccount:
                     '🎉🎉🎉\n\n'
                     '<strong>Account created successfully!</strong>\n\n'
                     '<em>All sign in info was send to</em> ↙️\n\n'
-                    '✉️ {emails}'
+                    '✉️ {email}'
                 ).format(email=reg_data.get('regemail'))
                 await bot.send_message(user_id, msg)
                 await state.clear()
@@ -162,7 +162,7 @@ class CreateAccount:
         else:
             msg = _(
                 '🔴🔴🔴\n\n'
-                '<strong>User with phone number <em>{emails}</em> already '
+                '<strong>User with phone number <em>{phone}</em> already '
                 'exists!</strong>\n\n'
                 '<em>Forgot password? Type <strong>/reset</strong>'
                 'command\n'
