@@ -4,16 +4,66 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from btr.bookings.models import Booking
+from btr.tasks.admin import send_vk_notify
+from btr.tasks.bookings import send_confirm_message, send_cancel_message
 
 
 @admin.action(description=_('Confirm selected bookings'))
 def make_confirm(modeladmin, request, queryset):
-    queryset.update(status=_('confirmed'))
+    for booking in queryset:
+        booking.status = _('confirmed')
+        booking.save()
+        email = booking.rider.email
+        pk = booking.pk
+        client = booking.rider.username
+        f_phone = booking.foreign_number
+        phone = f_phone if f_phone else booking.rider.phone_number
+        date = booking.booking_date
+        start = booking.start_time.strftime('%H:%M')
+        end = booking.end_time.strftime('%H:%M')
+        bikes = booking.bike_count
+        via = _('Admin panel')
+        data = {
+            'pk': pk,
+            'client': client,
+            'date': date,
+            'start': start,
+            'end': end,
+            'bikes': bikes,
+            'phone': str(phone),
+            'status': booking.status,
+        }
+        send_vk_notify.delay(via, False, data, is_admin=True)
+        send_confirm_message.delay(email, pk, bikes, date, start, end)
 
 
 @admin.action(description=_('Cancel selected bookings'))
 def make_cancel(modeladmin, request, queryset):
-    queryset.update(status=_('canceled'))
+    for booking in queryset:
+        booking.status = _('canceled')
+        booking.save()
+        email = booking.rider.email
+        pk = booking.pk
+        client = booking.rider.username
+        f_phone = booking.foreign_number
+        phone = f_phone if f_phone else booking.rider.phone_number
+        date = booking.booking_date
+        start = booking.start_time.strftime('%H:%M')
+        end = booking.end_time.strftime('%H:%M')
+        bikes = booking.bike_count
+        via = _('Admin panel')
+        data = {
+            'pk': pk,
+            'client': client,
+            'date': date,
+            'start': start,
+            'end': end,
+            'bikes': bikes,
+            'phone': str(phone),
+            'status': booking.status,
+        }
+        send_vk_notify.delay(via, False, data, is_admin=True)
+        send_cancel_message.delay(email, pk, date, start, end)
 
 
 class RiderAdminFilter(admin.SimpleListFilter):
@@ -52,6 +102,51 @@ class BookingAdmin(admin.ModelAdmin):
             '<a href="{}">{}</a>',
             url, obj.rider.username
         )
+
+    def save_model(self, request, obj, form, change):
+        client = obj.rider.username
+        f_phone = obj.foreign_number
+        phone = f_phone if f_phone else obj.rider.phone_number
+        date = obj.booking_date
+        start = obj.start_time.strftime('%H:%M')
+        end = obj.end_time.strftime('%H:%M')
+        bikes = obj.bike_count
+        via = _('Admin panel')
+        if change:
+            changed_fields = form.changed_data
+            if 'status' in changed_fields:
+                status = form.cleaned_data.get('status')
+                email = obj.rider.email
+                data = {
+                    'pk': obj.pk,
+                    'client': client,
+                    'date': date,
+                    'start': start,
+                    'end': end,
+                    'bikes': bikes,
+                    'phone': str(phone),
+                    'status': status,
+                }
+                send_vk_notify.delay(via, False, data, is_admin=True)
+                if status == _('confirmed'):
+                    send_confirm_message.delay(email, obj.pk, bikes,
+                                               date, start, end)
+                elif status == _('canceled'):
+                    send_cancel_message.delay(email, obj.pk, date, start, end)
+        else:
+            last_booking = Booking.objects.latest('created_at')
+            data = {
+                'pk': last_booking.pk + 1,
+                'client': client,
+                'date': date,
+                'start': start,
+                'end': end,
+                'bikes': bikes,
+                'phone': str(phone),
+                'status': _('Confirmed'),
+            }
+            send_vk_notify.delay(via, True, data, is_admin=True)
+        super().save_model(request, obj, form, change)
 
     link_to_user.short_description = _('User')
 
