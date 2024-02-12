@@ -1,17 +1,12 @@
-from django.db.models.signals import post_save
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils.translation import activate
 
 from btr.bookings.models import Booking
 from btr.users.models import SiteUser
-from btr.bookings.signals import booking_confirm_notify, create_booking_notify
 
 
 class BTRTestCase(TestCase):
-
-    post_save.disconnect(booking_confirm_notify, sender=Booking)
-    post_save.disconnect(create_booking_notify, sender=Booking)
 
     fixtures = [
         'btr/fixtures/users/users.json',
