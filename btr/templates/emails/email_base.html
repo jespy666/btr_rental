@@ -118,11 +118,11 @@
 <center style="width: 100%;table-layout:fixed;background-color: #AEBBC1;padding-top: 40px;padding-bottom: 40px;">
     <div style="max-width: 600px;background-color: #fafdfe;box-shadow: 0 0 10px rgba(0, 0, 0, .2);">
 
-        <!-- Preheader (remove comment) -->
+        <!-- Pre-header -->
         <div style="font-size: 0px;color: #fafdfe;line-height: 1px;mso-line-height-rule:exactly;display: none;max-width: 0px;max-height: 0px;opacity: 0;overflow: hidden;mso-hide:all;">
-            {{ pre_header }} #{{ id }}
+            {{ pre_header }}
         </div>
-        <!-- End Preheader (remove comment) -->
+        <!-- End Pre-header -->
 
         <!--[if (gte mso 9)|(IE)]>
         <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" role="presentation" style="color:#1C1E23;"><tr>
@@ -153,7 +153,7 @@
                     <table align="center" border="0" cellspacing="0" cellpadding="0" role="presentation">
                         <tr>
                             <td style="padding: 30px 10px 30px 10px;text-align: center;">
-                                {% if action == 'registration' or action == 'password-reset' or action == 'recover-data' %}
+                                {% if action == 'registration' or action == 'password-reset' or action == 'recover-data' or action == 'create' %}
                                     <h1 style="margin: 0;font-weight: 600;font-size: 32px;line-height: 1;color: #000000;">
                                         {{ header }}
                                     </h1>
@@ -179,15 +179,15 @@
                     <table style="background-color: #FFFFFF;" align="center" border="0" cellspacing="0" cellpadding="0" role="presentation">
                         {% if action == 'registration' %}
                             <tr>
-                                <td style="padding: 40px 20px 10px 20px;text-align: center;">
+                                <td style="padding: 40px 20px 30px 20px;text-align: center;">
                                     <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
                                         {% translate 'Hello' %}, {{ name }},<br>
                                         {% translate 'We are glad to welcome you to our rental!' %}
                                     </h2>
-                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
-                                        {% translate 'In this welcome letter' %},<br>
+                                    <p style="margin: 0;padding: 20px 0 0 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                        {% translate 'In this welcome letter' %},
                                         {% translate 'you can find all the login information for the site.' %}
-                                    </h2>
+                                    </p>
                                     <p style="margin: 0;padding: 20px 0 10px 0;font-weight: 300;font-size: 16px;color: #1C1E23;">
                                         <em>{% translate 'We are waiting for you at our rental' %},<br>
                                             {% translate 'come and recharge yourself with positive emotions' %},<br>
@@ -195,19 +195,34 @@
                                     </p>
                                 </td>
                             </tr>
+                        {% elif action == 'create' %}
+                            <tr>
+                                <td style="padding: 40px 20px 30px 20px;text-align: center;">
+                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                        {% translate 'Hello' %}, {{ name }},<br>
+                                        {% translate 'We saw your rental entry' %} #{{ pk }}!
+                                    </h2>
+                                    <p style="margin: 0;padding: 18px 0 0 0;font-size: 20px;font-style: italic;color: #1C1E23;">
+                                        {% translate 'Your booking status' %}: <strong>{{ status }}</strong>.
+                                    </p>
+                                    <p style="margin: 0;padding: 18px 20px 10px 20px;font-weight: 300;font-size: 16px;color: #1C1E23;">
+                                        <em>{% translate 'We will process your entry shortly and send confirmation to your email.' %}</em>
+                                    </p>
+                                </td>
+                            </tr>
                         {% elif action == 'confirm' %}
                             <tr>
                                 <td style="padding: 40px 20px 10px 20px;text-align: center;">
                                     <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
-                                        {% translate 'Booking' %} #{{ id }} {% translate 'successfully confirmed' %}!
+                                        {% translate 'Booking' %} #{{ pk }} {% translate 'successfully confirmed' %}!
                                     </h2>
-                                    <p style="margin: 0;padding: 20px 10px 20px 10px;font-size: 20px;color: #1C1E23;">
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-size: 18px;color: #1C1E23;">
                                         {% translate 'We already prepared for your ride' %}: <strong>{{ bikes }}</strong> {% translate 'bike(s)' %}.
                                     </p>
-                                    <p style="margin: 0;padding: 20px 0 10px 0;font-weight: 300;font-size: 16px;color: #1C1E23;">
-                                        <em>{% translate 'We are waiting for you at the appointed time' %}.<br>
-                                            {% translate 'If you cannot come to the rental, please cancel it in advance' %}<br>
-                                            {% translate 'or contact us by phone or via social media' %}:</em>
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-weight: 300;font-size: 16px;color: #1C1E23;">
+                                        <em>{% translate 'We are waiting for you at the appointed time' %}.
+                                            {% translate 'If you cannot come to the rental, please cancel it in advance' %}
+                                            {% translate 'or contact us by phone or via social media' %}:
                                     </p>
                                 </td>
                             </tr>
@@ -215,11 +230,13 @@
                             <tr>
                                 <td style="padding: 40px 20px 10px 20px;text-align: center;">
                                     <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
-                                        {% translate 'Booking' %} #{{ id }} {% translate 'was canceled 😔' %}
+                                        {% translate 'Booking' %} #{{ pk }} {% translate 'was canceled 😔' %}
                                     </h2>
-                                    <p style="margin: 0;padding: 20px 10px 20px 10px;font-size: 20px;color: #1C1E23;">
-                                        {% translate 'Unfortunately, we will not be able to accommodate you on your date' %}.<br>
-                                        {% translate 'Please choose another time or contact us by phone or social media' %}:
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-size: 18px;color: #1C1E23;">
+                                        {% translate 'Unfortunately, we will not be able to accommodate you on your date' %}.
+                                    </p>
+                                    <p style="margin: 0;padding: 0 20px 20px 20px;font-size: 18px;color: #1C1E23;">
+                                        <em>{% translate 'Please choose another time or contact us by phone or social media' %}:</em>
                                     </p>
                                 </td>
                             </tr>
@@ -227,7 +244,7 @@
                             <tr>
                                 <td style="padding: 40px 20px 10px 20px;text-align: center;">
                                     <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
-                                        {% translate 'Booking' %} #{{ id }} {% translate 'was canceled 😔' %}
+                                        {% translate 'Booking' %} #{{ pk }} {% translate 'was canceled 😔' %}
                                     </h2>
                                     <p style="margin: 0;padding: 20px 10px 20px 10px;font-size: 20px;color: #1C1E23;">
                                         {% translate 'You have canceled your rental appointment' %}.<br>
@@ -237,14 +254,14 @@
                             </tr>
                         {% elif action == 'password-reset' %}
                             <tr>
-                                <td style="padding: 40px 20px 10px 20px;text-align: center;">
-                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                <td style="padding: 40px 20px 20px 20px;text-align: center;">
+                                    <h2 style="margin: 0;font-size: 24px;font-style: italic;color: #1C1E23;">
                                         {% translate 'You are requested a password reset' %}
                                     </h2>
-                                    <p style="margin: 0;padding: 20px 10px 20px 10px;font-size: 20px;color: #1C1E23;">
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-size: 20px;color: #1C1E23;">
                                         {% translate 'To recover your password, use the confirmation code below' %}
                                     </p>
-                                    <p style="margin: 0;padding: 20px 0 10px 0;font-weight: 300;font-size: 16px;color: #1C1E23;">
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-weight: 300;font-size: 18px;color: #1C1E23;">
                                         <em>{% translate 'If you did not request a password reset, simply ignore the email!' %}</em>
                                     </p>
                                 </td>
@@ -252,10 +269,10 @@
                         {% elif action == 'recover-data' %}
                             <tr>
                                 <td style="padding: 40px 20px 10px 20px;text-align: center;">
-                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                    <h2 style="margin: 0;padding: 0 20px 0 20px;font-size: 24px;font-style: italic;color: #1C1E23;">
                                         {% translate 'This is an email with your new login details to the site.' %}
                                     </h2>
-                                    <p style="margin: 0;padding: 20px 0 10px 0;font-weight: 300;font-size: 16px;color: #1C1E23;">
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-weight: 300;font-size: 18px;color: #1C1E23;">
                                         <em>{% translate 'If you received this email but did not request a password reset' %},<br>
                                             {% translate 'please contact the administrator.' %}</em>
                                     </p>
@@ -296,12 +313,16 @@
                         <tr>
                             <td style="padding: 15px 0 15px 0;text-align: center;">
                                 <h4 style="margin: 0;font-weight: 700;font-size: 24px;font-style: italic;color: #000000;">
-                                    {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' %}
+                                    {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' or action == 'create' %}
                                         {% translate 'Booking details' %}
                                     {% elif action == 'registration' %}
-                                        {% translate '' %}
-                                    </h4>
-
+                                        {% translate 'Login details' %}
+                                    {% elif action == 'password-reset' %}
+                                        {% translate 'Confirmation code' %}
+                                    {% elif action == 'recover-data' %}
+                                        {% translate 'Recover login details' %}
+                                    {% endif %}
+                                </h4>
                                 <hr>
                             </td>
                         </tr>
@@ -310,29 +331,75 @@
             </tr>
             <tr style="background-color: #DED7D4;">
                 <td>
-                    <table align="left" border="0" cellspacing="0" cellpadding="0" role="presentation">
-                        <tr>
-                            <td style="padding: 0 0 20px 40px;text-align: left;">
-                                <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
-                                    Дата проката:  <strong><em>{{ date }}</em></strong>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 0 20px 40px;text-align: left;">
-                                <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
-                                    Время:  <strong><em>{{ start }} - {{ end }}</em></strong>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 0 40px 40px;text-align: left;">
-                                <p style="margin: 0;font-weight: 300;font-size: 20px;color: #00000;">
-                                    Количество байков:  <strong><em>{{ bikes }}</em></strong>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
+                    {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' or action == 'create' %}
+                        <table align="left" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Booking date' %}:  <strong><em>{{ date }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Time' %}:  <strong><em>{{ start }} - {{ end }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 0 40px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #00000;">
+                                        {% translate 'Bikes' %}:  <strong><em>{{ bikes }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    {% elif action == 'registration' %}
+                        <table align="left" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Login' %}:  <strong><em>{{ username }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Password' %}:  <strong><em>{{ password }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    {% elif action == 'password-reset' %}
+                        <table align="center" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                            <tr>
+                                <td style="padding: 0 20px 20px 20px;text-align: center;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 28px;color: #000000;">
+                                        <strong><em>{{ code }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    {% elif action == 'recover-data' %}
+                        <table align="left" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Login' %}:  <strong><em>{{ username }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0 0 20px 40px;text-align: left;">
+                                    <p style="margin: 0;font-weight: 300;font-size: 20px;color: #000000;">
+                                        {% translate 'Password' %}:  <strong><em>{{ password }}</em></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    {% endif %}
                 </td>
             </tr>
             <!-- End Details -->
@@ -344,8 +411,8 @@
                         <tr>
                             <td style="padding: 30px 0 30px 40px;text-align: left;">
                                 <p style="margin: 0;font-weight: 300;font-size: 18px;">
-                                    Отслеживать и изменять записи<br>
-                                    вы сможете в своем профиле
+                                    {% translate 'Track and change bookings' %}<br>
+                                    {% translate 'you can in your profile page' %}
                                 </p>
                             </td>
                             <td style="padding: 0 45px 0 45px;"></td>
