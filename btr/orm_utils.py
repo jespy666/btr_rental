@@ -87,7 +87,7 @@ def change_booking_status(booking_id: str, status: str) -> str:
         if status == _('confirmed'):
             send_confirm_message.delay(email, pk, bikes, date, start, end)
         elif status == _('canceled'):
-            send_cancel_message.delay(email, pk, date, start, end)
+            send_cancel_message.delay(email, pk, bikes, date, start, end)
     return old_status
 
 

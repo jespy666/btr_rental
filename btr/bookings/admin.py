@@ -63,7 +63,7 @@ def make_cancel(modeladmin, request, queryset):
             'status': booking.status,
         }
         send_vk_notify.delay(via, False, data, is_admin=True)
-        send_cancel_message.delay(email, pk, date, start, end)
+        send_cancel_message.delay(email, pk, bikes, date, start, end)
 
 
 class RiderAdminFilter(admin.SimpleListFilter):
@@ -132,7 +132,8 @@ class BookingAdmin(admin.ModelAdmin):
                     send_confirm_message.delay(email, obj.pk, bikes,
                                                date, start, end)
                 elif status == _('canceled'):
-                    send_cancel_message.delay(email, obj.pk, date, start, end)
+                    send_cancel_message.delay(email, obj.pk, bikes,
+                                              date, start, end)
         else:
             last_booking = Booking.objects.latest('created_at')
             data = {

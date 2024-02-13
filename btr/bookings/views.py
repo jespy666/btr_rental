@@ -224,8 +224,9 @@ class BookingCancelView(UserAuthRequiredMixin, SuccessMessageMixin,
         date = booking.booking_date
         start = booking.start_time.strftime('%H:%M')
         end = booking.end_time.strftime('%H:%M')
+        bikes = booking.bike_count
         if not self.request.user.is_superuser:
-            send_cancel_self_message.delay(email, pk, date, start, end)
+            send_cancel_self_message.delay(email, pk, bikes, date, start, end)
             via = _('Web Site')
             client = booking.rider.username
             bikes = booking.bike_count
