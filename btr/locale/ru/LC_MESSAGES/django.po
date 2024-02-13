@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 17:08+0300\n"
+"POT-Creation-Date: 2024-02-13 13:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,9 +61,13 @@ msgstr ""
 "Ваш пароль был успешно сброшен!\n"
 "Новый пароль был отправлен на вашу почту"
 
-#: btr/auth/views.py:69
+#: btr/auth/views.py:72
 msgid "Verification codes not match"
 msgstr "Неверный код подтверждения"
+
+#: btr/auth/views.py:78
+msgid "User with this email does not exist!"
+msgstr "Пользователя с таким адресом электронной почты не существует"
 
 #: btr/bookings/admin.py:11
 msgid "Confirm selected bookings"
@@ -79,7 +83,7 @@ msgstr "подтверждена"
 
 #: btr/bookings/admin.py:25 btr/bookings/admin.py:54 btr/bookings/admin.py:114
 msgid "Admin panel"
-msgstr "Панель Администратора"
+msgstr "Панель aдминистратора"
 
 #: btr/bookings/admin.py:40
 msgid "Cancel selected bookings"
@@ -100,21 +104,21 @@ msgstr "Записал админ"
 msgid "Yes"
 msgstr "Да"
 
-#: btr/bookings/admin.py:146
+#: btr/bookings/admin.py:147
 msgid "Confirmed"
 msgstr "подтверждена"
 
-#: btr/bookings/admin.py:151 btr/users/models.py:66
+#: btr/bookings/admin.py:152 btr/users/models.py:66
 msgid "User"
 msgstr "Пользователь"
 
-#: btr/bookings/admin.py:159
+#: btr/bookings/admin.py:160
 msgid "Booking Management"
 msgstr "Управление записями"
 
-#: btr/bookings/admin.py:160 btr/users/admin.py:24
+#: btr/bookings/admin.py:161 btr/users/admin.py:24
 msgid "Admin Panel"
-msgstr "Панель Администратора"
+msgstr "Панель aдминистратора"
 
 #: btr/bookings/apps.py:8 btr/bookings/models.py:63
 msgid "Bookings"
@@ -281,7 +285,9 @@ msgstr "завершена"
 msgid "Status"
 msgstr "Статус"
 
-#: btr/bookings/models.py:62
+#: btr/bookings/models.py:62 btr/templates/emails/email_base.html:217
+#: btr/templates/emails/email_base.html:233
+#: btr/templates/emails/email_base.html:247
 msgid "Booking"
 msgstr "Запись"
 
@@ -317,7 +323,7 @@ msgstr "Запись на прокат успешно создана"
 msgid "You must to be login to book ride"
 msgstr "Выполните вход для записи на прокат"
 
-#: btr/bookings/views.py:156 btr/bookings/views.py:229
+#: btr/bookings/views.py:156 btr/bookings/views.py:230
 msgid "Web Site"
 msgstr "Сайт"
 
@@ -341,154 +347,61 @@ msgstr "Вы отменили запись на прокат"
 msgid "You must to be Log In"
 msgstr "Необходимо войти в аккаунт"
 
-#: btr/emails.py:7
-msgid "Created an new account on broteamracing.ru"
-msgstr "Создание аккаунта на broteamracing.ru"
+#: btr/emails.py:8 btr/emails.py:13
+msgid "Password reset"
+msgstr "Восстановление пароля"
 
-#: btr/emails.py:9
-#, python-brace-format
-msgid ""
-"Hello, {name}!\n"
-"You are received this mail, because you are signed up with telegram\n"
-"Here are your sign-in details:\n"
-"Email: {user_email}\n"
-"Username: {username}\n"
-"Phone number: {phone_number}\n"
-"*to enter the site you can use any of the three fieldsPassword: {password}"
-msgstr ""
-"Привет, {name}!\n"
-"Ты получил это письмо, потому-что создал аккаунт через тг бота\n"
-"Данные для входа на сайт:\n"
-"Адрес электронной почты: {user_email}\n"
-"Юзернейм: {username}\n"
-"Номер телефона: {phone_number}\n"
-"Пароль: {password}"
-
-#: btr/emails.py:34
+#: btr/emails.py:12
 msgid "Verification code for password reset"
 msgstr "Код подтверждения для сброса пароля"
 
-#: btr/emails.py:36
-#, python-brace-format
-msgid ""
-"Hi! You are received this message, because a password reset was requested "
-"for your account on broteamracing.ru.\n"
-"If it wasn't you, ignore this message.\n"
-"YOUR VERIFICATION CODE: {code}"
-msgstr ""
-"Ты получил это письмо, потому что был запрошен сброс пароля для этого "
-"аккаунта на broteamracing.ru.\n"
-"Если это был не ты, проигнорируй сообщение.\n"
-"КОД ПОДТВЕРЖДЕНИЯ: {code}"
+#: btr/emails.py:29
+msgid "Recovered Sign-In message"
+msgstr "Письмо с восстановленными данными для входа на сайт"
 
-#: btr/emails.py:51
-msgid "Recovered Sign in message"
-msgstr "Письмо с восстановленым паролем"
+#: btr/emails.py:33
+msgid "Mail with recovered sign-in data"
+msgstr "Письмо с восстановленными данными для входа на сайт"
 
-#: btr/emails.py:59
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "There are recovered data to sign in:\n"
-#| "Login: {emails}\n"
-#| "Password: {password}\n"
-msgid ""
-"There are recovered data to sign in:\n"
-"Login: {emails}\n"
-"Password: {password}\n"
-msgstr ""
-"Ваши новые данные для входа:\n"
-"Логин: {email}\n"
-"Пароль: {password}\n"
+#: btr/emails.py:34
+msgid "Recovered Sign-In Info"
+msgstr "Восстановленные данные для входа"
 
-#: btr/emails.py:76
+#: btr/emails.py:52
 msgid "Hello from BroTeamRacing"
 msgstr "Привет от BroTeamRacing"
 
-#: btr/emails.py:85
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "Glad to see you in our Rental:\n"
-#| "Login: {login}\n"
-#| "Password: {password}\n"
-msgid ""
-"Glad to see you in our Rental:\n"
-"Login: {login}\n"
-"Password: {password}\n"
-msgstr ""
-"Рады видеть вас в нашем Прокате:\n"
-"Логин: {email}\n"
-"Пароль: {password}\n"
+#: btr/emails.py:55
+msgid "Welcome"
+msgstr "Добро Пожаловать"
 
-#: btr/emails.py:102
+#: btr/emails.py:75 btr/emails.py:79
 msgid "New Booking Created"
 msgstr "Вы записались на прокат"
 
-#: btr/emails.py:115
-#, python-brace-format
-msgid ""
-"You made booking nearly!\n"
-"Details:\n"
-"Date: {date}\n"
-"Time: {start}-{end}\n"
-"Bikes requested: {bikes}\n"
-"Current status: {status}\n"
-"We have already seen your entry, we will confirm it soon!\n"
-"You will also receive information about the change of status by email\n"
-"See you soon  - BTR Team"
-msgstr ""
-"Вы только что записались на прокат!\n"
-"Детали:\n"
-"Дата: {date}\n"
-"Время: {start} - {end}\n"
-"Байков в прокате: {bikes}\n"
-"Статус записи: {status}\n"
-"Мы уже увидели вашу запись, в скором времени вышлем подтверждение на вашу "
-"почту!\n"
-"Если запись измениться, вы так же получите оповещение\n"
-"Ждем вас! - Команда BTR"
+#: btr/emails.py:78
+msgid "An new booking created nearly"
+msgstr "Создана новая запись на прокат"
 
-#: btr/emails.py:138
+#: btr/emails.py:103 btr/emails.py:107
 msgid "Booking Confirmed"
 msgstr "Запись на прокат подтверждена"
 
-#: btr/emails.py:149
-#, python-brace-format
-msgid ""
-"Booking #{pk} confirmed successfully!\n"
-"We are waiting for you at the appointed time!\n"
-"If you are unable to attend your rental, please cancel in advance.\n"
-"See you soon - <em>BroTeamRacing Team</em>"
-msgstr ""
-"Запись #{pk} успешно подтверждена!\n"
-"Мы ждем вас в назначенное время!\n"
-"Если не успеваете прийти, пожалуйста, сообщите заранее!\n"
-"Ждем вас! - <em>Команда BroTeamRacing</em>"
+#: btr/emails.py:106
+msgid "Booking confirmed successfully"
+msgstr "Запись на прокат успешно подтверждена"
 
-#: btr/emails.py:167
+#: btr/emails.py:129 btr/emails.py:134 btr/emails.py:147
 msgid "Booking Canceled"
 msgstr "Запись Отменена"
 
-#: btr/emails.py:178
-#, python-brace-format
-msgid ""
-"Booking #{pk} was canceled :(!\n"
-"Unfortunately, we will not be able to see you at the scheduled time\n"
-"Please choose another time or contact us by phone."
-msgstr ""
-"Запись #{pk} была отменена :(!\n"
-"К сожалению, мы не сможем вас принять в запланированное время\n"
-"Пожалуйста, попробуйте еще раз или свяжитесь с нами."
+#: btr/emails.py:133
+msgid "Booking was canceled"
+msgstr "Запись на прокат была отменена"
 
-#: btr/emails.py:193
-#, python-brace-format
-msgid ""
-"Booking #{pk} was canceled :(!\n"
-"You are canceled booking!\n"
-"If you have questions, contact us!"
-msgstr ""
-"Запись #{pk} была отменена :(!\n"
-"Вы отменили запись на прокат!\n"
-"По всем вопросам свяжитесь с нами по телефону или в соц. сетях!"
+#: btr/emails.py:146
+msgid "You are canceled booking"
+msgstr "Вы отменили запись на прокат"
 
 #: btr/orm_utils.py:74 btr/orm_utils.py:145 btr/orm_utils.py:179
 msgid "Telegram Bot"
@@ -731,7 +644,7 @@ msgstr "В случае получения травм, мы не несем от
 msgid "BroTeamRacing Team"
 msgstr "Команда BroTeamRacing"
 
-#: btr/templates/cards.html:5
+#: btr/templates/cards.html:5 btr/templates/emails/email_base.html:353
 msgid "Bikes"
 msgstr "Байки"
 
@@ -812,8 +725,7 @@ msgstr ""
 msgid "27 hp"
 msgstr "27 лс"
 
-#: btr/templates/contacts/contacts.html:9
-#: btr/templates/emails/registration.html:475 btr/templates/footer.html:35
+#: btr/templates/contacts/contacts.html:9 btr/templates/footer.html:35
 #: btr/templates/footer.html:44 btr/templates/navbar.html:27
 msgid "Contacts"
 msgstr "Контакты"
@@ -836,83 +748,168 @@ msgstr "Владимир"
 msgid "Aleksandr"
 msgstr "Александр"
 
-#: btr/templates/emails/recover.html:19
-msgid "Recovered Sign-in data"
-msgstr "Письмо с восстановленными данными"
+#: btr/templates/emails/email_base.html:184
+#: btr/templates/emails/email_base.html:202
+msgid "Hello"
+msgstr "Привет"
 
-#: btr/templates/emails/recover.html:26
-msgid "There are your new sign-in details"
-msgstr "Здесь ваши обновленные данные для входа"
+#: btr/templates/emails/email_base.html:185
+msgid "We are glad to welcome you to our rental!"
+msgstr "Мы рады вас приветствовать в нашем прокате!"
 
-#: btr/templates/emails/recover.html:33
-#: btr/templates/emails/registration.html:346
-msgid "Login:"
-msgstr "Логин:"
+#: btr/templates/emails/email_base.html:188
+msgid "In this welcome letter"
+msgstr "В этом приветственном письме"
 
-#: btr/templates/emails/recover.html:34
-#: btr/templates/emails/registration.html:361
-msgid "Password:"
-msgstr "Пароль:"
+#: btr/templates/emails/email_base.html:189
+msgid "you can find all the login information for the site."
+msgstr "вы сможете найти данные для входа на сайт."
 
-#: btr/templates/emails/registration.html:10
-msgid "Hello message"
-msgstr "Приветственное письмо"
+#: btr/templates/emails/email_base.html:192
+msgid "We are waiting for you at our rental"
+msgstr "Ждем вас на нашем прокате"
 
-#: btr/templates/emails/registration.html:299
-msgid "Thank You"
-msgstr "Спасибо"
+#: btr/templates/emails/email_base.html:193
+msgid "come and recharge yourself with positive emotions"
+msgstr "приходите и зарядитесь крутыми эмоциями"
 
-#: btr/templates/emails/registration.html:299
-msgid "for Choosing Us"
-msgstr "что выбрали Нас"
+#: btr/templates/emails/email_base.html:194
+msgid "for a long time!"
+msgstr "на долгое время!"
 
-#: btr/templates/emails/registration.html:306
-msgid "We are waiting for you at the rental!"
-msgstr "Ждем вас на нашем прокате!"
+#: btr/templates/emails/email_base.html:203
+msgid "We saw your rental entry"
+msgstr "Мы увидели вашу запись"
 
-#: btr/templates/emails/registration.html:328
-msgid "Hello,"
-msgstr "Привет,"
+#: btr/templates/emails/email_base.html:206
+msgid "Your booking status"
+msgstr "Статус вашей записи"
 
-#: btr/templates/emails/registration.html:332
-msgid ""
-"We welcome you from our rental. We hope that together with us you will be "
-"charged with positive emotions and leave only pleasant memories."
+#: btr/templates/emails/email_base.html:209
+msgid "We will process your entry shortly and send confirmation to your email."
 msgstr ""
-"Мы приветствуем вас в нашем прокате. Надеемся, что вместе с вами, зарядимся "
-"положительными эмоциями и оставим только приятные воспоминания."
+"В ближайшее время мы обработаем вашу запись и отправим подтверждение на почту"
 
-#: btr/templates/emails/registration.html:335
-msgid ""
-"Below in the letter, you will find information to log into your account, "
-"where you can conveniently manage your trips."
+#: btr/templates/emails/email_base.html:217
+msgid "successfully confirmed"
+msgstr "успешно подтверждена"
+
+#: btr/templates/emails/email_base.html:220
+msgid "We already prepared for your ride"
+msgstr "Мы уже приготовили для вашей поездки"
+
+#: btr/templates/emails/email_base.html:220
+msgid "bike(s)"
+msgstr "байк(а)"
+
+#: btr/templates/emails/email_base.html:223
+msgid "We are waiting for you at the appointed time"
+msgstr "Ждем вас в назначенное время"
+
+#: btr/templates/emails/email_base.html:224
+msgid "If you cannot come to the rental, please cancel it in advance"
+msgstr "Если не получается приехать на прокат, пожалуйста отмените его заранее"
+
+#: btr/templates/emails/email_base.html:225
+msgid "or contact us by phone or via social media"
+msgstr "или свяжитесь с нами по телефоу или в соц. сетях"
+
+#: btr/templates/emails/email_base.html:233
+#: btr/templates/emails/email_base.html:247
+msgid "was canceled 😔"
+msgstr "была отменена 😔"
+
+#: btr/templates/emails/email_base.html:236
+msgid "Unfortunately, we will not be able to accommodate you on your date"
+msgstr "К сожалению, мы не сможем вас принять в назначенную дату и время"
+
+#: btr/templates/emails/email_base.html:239
+msgid "Please choose another time or contact us by phone or social media"
 msgstr ""
-"Ниже в письме, вы найдете данные дял входа в аккаунт, где сможете управлять "
-"вашими записями."
+"Пожалуйста, выберите другое время или свяжитесь с нами по телефону или в "
+"соц. сетях"
 
-#: btr/templates/emails/registration.html:338
-msgid "Best Regards,"
-msgstr "С Наилучшими Пожеланиями,"
+#: btr/templates/emails/email_base.html:250
+msgid "You have canceled your rental appointment"
+msgstr "Вы отменили запись на прокат"
 
-#: btr/templates/emails/registration.html:375
-#: btr/templates/emails/registration.html:480
-#: btr/tg_bot/keyboards/inline_menu.py:10
-msgid "Book a ride"
-msgstr "Записаться на прокат"
+#: btr/templates/emails/email_base.html:251
+msgid ""
+"For re-registration or any other questions, you can contact us by phone or "
+"on social media"
+msgstr ""
+"Для повторной записи или любым другим вопросам, вы можете связаться с нами "
+"по телефону или в соц. сетях"
 
-#: btr/templates/emails/registration.html:426
-msgid "Visit our site"
-msgstr "Посетите наш сайт"
+#: btr/templates/emails/email_base.html:259
+msgid "You are requested a password reset"
+msgstr "Вы запросили сброс пароля"
 
-#: btr/templates/emails/registration.html:485 btr/templates/footer.html:39
-#: btr/templates/navbar.html:24
-msgid "Briefing"
-msgstr "Инструктаж"
+#: btr/templates/emails/email_base.html:262
+msgid "To recover your password, use the confirmation code below"
+msgstr ""
+"Для восстановления доступа к аккаунту, используйте код подтверждения, "
+"который находиться ниже в письме"
 
-#: btr/templates/emails/registration.html:490 btr/templates/footer.html:40
-#: btr/templates/navbar.html:21 btr/templates/reviews/reviews.html:13
-msgid "Reviews"
-msgstr "Отзывы"
+#: btr/templates/emails/email_base.html:265
+msgid "If you did not request a password reset, simply ignore the email!"
+msgstr "Если вы не запрашивали восстановление пароля, проигнорируйте письмо!"
+
+#: btr/templates/emails/email_base.html:273
+msgid "This is an email with your new login details to the site."
+msgstr "Это письмо с восстановленными данными для входа на сайт"
+
+#: btr/templates/emails/email_base.html:276
+msgid "If you received this email but did not request a password reset"
+msgstr "Если вы получили это письмо, но не запрашивали сброс пароля"
+
+#: btr/templates/emails/email_base.html:277
+msgid "please contact the administrator."
+msgstr "пожалуйста, свяжитесь с Администратором"
+
+#: btr/templates/emails/email_base.html:317
+msgid "Booking details"
+msgstr "Детали записи"
+
+#: btr/templates/emails/email_base.html:319
+msgid "Login details"
+msgstr "Данные для входа на сайт"
+
+#: btr/templates/emails/email_base.html:321
+#: btr/templates/emails/email_base.html:380
+#: btr/templates/forms/password_reset.html:18
+msgid "Confirmation code"
+msgstr "Код подтверждения"
+
+#: btr/templates/emails/email_base.html:323
+msgid "Recover login details"
+msgstr "Восстановленные данные для входа"
+
+#: btr/templates/emails/email_base.html:339
+msgid "Booking date"
+msgstr "Дата записи"
+
+#: btr/templates/emails/email_base.html:346
+msgid "Time"
+msgstr "Время"
+
+#: btr/templates/emails/email_base.html:363
+#: btr/templates/emails/email_base.html:390
+msgid "Login"
+msgstr "Логин"
+
+#: btr/templates/emails/email_base.html:370
+#: btr/templates/emails/email_base.html:397
+msgid "Password"
+msgstr "Пароль"
+
+#: btr/templates/emails/email_base.html:414
+msgid "Track and change bookings"
+msgstr "Отслеживать и изменять записи"
+
+#: btr/templates/emails/email_base.html:415
+msgid "you can in your profile page"
+msgstr "вы сможете в своем личном кабинете"
 
 #: btr/templates/footer.html:5
 msgid "Get connected with us on social networks:"
@@ -937,6 +934,15 @@ msgstr "Записаться на прокат"
 #: btr/templates/footer.html:38
 msgid "Useful links"
 msgstr "Полезные ссылки"
+
+#: btr/templates/footer.html:39 btr/templates/navbar.html:24
+msgid "Briefing"
+msgstr "Инструктаж"
+
+#: btr/templates/footer.html:40 btr/templates/navbar.html:21
+#: btr/templates/reviews/reviews.html:13
+msgid "Reviews"
+msgstr "Отзывы"
 
 #: btr/templates/footer.html:41
 msgid "Blog"
@@ -1071,10 +1077,6 @@ msgstr "Для восстановления доступа к аккаунту, 
 #: btr/templates/forms/password_reset.html:17
 msgid "email"
 msgstr "адрес электронной почты"
-
-#: btr/templates/forms/password_reset.html:18
-msgid "Confirmation code"
-msgstr "Код подтверждения"
 
 #: btr/templates/forms/password_reset.html:18
 msgid "will be sent to it"
@@ -1466,6 +1468,7 @@ msgid "<strong>Choose value</strong> ⤵️"
 msgstr "<strong>Выбери значение</strong> ⤵️"
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:69
+#, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
 "\n"
@@ -2057,7 +2060,7 @@ msgstr ""
 "<em>Забыл пароль? Выберите команду <strong>/reset</strong>\n"
 "Или повторите попытку</em> ⤵️"
 
-#: btr/tg_bot/handlers/create.py:148
+#: btr/tg_bot/handlers/create.py:147
 #, python-brace-format
 msgid ""
 "🎉🎉🎉\n"
@@ -2076,7 +2079,7 @@ msgstr ""
 "\n"
 "✉️ {email}"
 
-#: btr/tg_bot/handlers/create.py:157
+#: btr/tg_bot/handlers/create.py:156
 #, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
@@ -2091,7 +2094,7 @@ msgstr ""
 "\n"
 "<em>Проверьте ввод и попробуйте еще раз</em> ⤵️"
 
-#: btr/tg_bot/handlers/create.py:164
+#: btr/tg_bot/handlers/create.py:163
 #, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
@@ -2282,6 +2285,10 @@ msgstr ""
 "🔓 <strong>Восстановить пароль</strong>\n"
 "\n"
 "📱 <strong>Узнать наши контакты</strong>\n"
+
+#: btr/tg_bot/keyboards/inline_menu.py:10
+msgid "Book a ride"
+msgstr "Записаться на прокат"
 
 #: btr/tg_bot/keyboards/inline_menu.py:11
 msgid "See help"
