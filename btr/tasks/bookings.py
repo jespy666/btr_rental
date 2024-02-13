@@ -22,17 +22,17 @@ def send_confirm_message(email: str, pk: str, bikes: str, date: str,
 
 
 @app.task
-def send_cancel_message(email: str, pk: str, date: str,
+def send_cancel_message(email: str, pk: str, bikes: str, date: str,
                         start: str, end: str) -> None:
     """Send mail to user when booking canceled by admin"""
-    cancel_booking_mail(email, pk, date, start, end)
+    cancel_booking_mail(email, pk, bikes, date, start, end)
 
 
 @app.task
-def send_cancel_self_message(email: str, pk: str, date: str,
+def send_cancel_self_message(email: str, pk: str, bikes: str, date: str,
                              start: str, end: str) -> None:
     """Send mail to user when booking canceled by himself"""
-    cancel_booking_mail(email, pk, date, start, end, self_cancel=True)
+    cancel_booking_mail(email, pk, bikes, date, start, end, self_cancel=True)
 
 
 @shared_task

@@ -8,10 +8,10 @@ from django.utils.translation import gettext as _
 from btr.users.forms import (UserRegistrationForm, UserEditProfileImageForm,
                              UserEditForm, ChangePasswordForm)
 from btr.users.models import SiteUser
-from btr.mixins import UserAuthRequiredMixin, UserPermissionMixin, \
-    DeleteProtectionMixin
+from btr.mixins import (UserAuthRequiredMixin, UserPermissionMixin,
+                        DeleteProtectionMixin)
 from ..bookings.models import Booking
-from ..tasks.users import send_hello_email
+from ..tasks.users import send_hello_msg
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
@@ -27,7 +27,7 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
         name = form.cleaned_data.get('first_name')
         login = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password2')
-        send_hello_email.delay(email, name, login, password)
+        send_hello_msg.delay(email, name, login, password)
         return super().form_valid(form)
 
 

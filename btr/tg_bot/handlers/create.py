@@ -6,7 +6,7 @@ from aiogram import html
 from django.utils.translation import gettext as _
 
 from btr.orm_utils import check_available_field_as, create_account_as
-from btr.tasks.users import send_reg_data_from_tg
+from btr.tasks.users import send_hello_email
 
 from ..states.create_account import CreateAccountState
 from ..utils.exceptions import (NameOverLengthError, InvalidEmailError,
@@ -137,11 +137,10 @@ class CreateAccount:
                 await state.update_data(regphone=phone)
                 reg_data = await state.get_data()
                 password = await create_account_as(reg_data)
-                send_reg_data_from_tg.delay(
+                send_hello_email.delay(
                     reg_data.get('regemail'),
                     reg_data.get('regname'),
                     reg_data.get('regusername'),
-                    reg_data.get('regphone'),
                     password,
                 )
                 msg = _(
