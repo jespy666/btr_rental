@@ -6,6 +6,7 @@ from ..models import Booking
 
 
 class TestBookingCreate(BTRTestCase):
+
     create_url = reverse_lazy('book_create')
     cases = load_json('bookings/create.json')
 

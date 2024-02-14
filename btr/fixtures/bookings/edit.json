@@ -1,0 +1,50 @@
+{
+  "correct": {
+    "rider": 1,
+    "booking_date": "9999-May-05",
+    "start_time": "19:00",
+    "end_time": "21:00",
+    "bike_count": 4,
+    "status": "pending"
+  },
+  "busy_time": {
+    "rider": 2,
+    "booking_date": "9999-May-05",
+    "start_time": "18:00",
+    "end_time": "20:00",
+    "bike_count": 2,
+    "status": "pending"
+  },
+  "past_date": {
+    "rider": 3,
+    "booking_date": "0000-May-05",
+    "start_time": "18:00",
+    "end_time": "20:00",
+    "bike_count": 2,
+    "status": "confirmed"
+  },
+  "to_many_bikes": {
+    "rider": 3,
+    "booking_date": "9999-May-05",
+    "start_time": "18:00",
+    "end_time": "20:00",
+    "bike_count": 10,
+    "status": "pending"
+  },
+  "same_time": {
+    "rider": 2,
+    "booking_date": "9999-February-05",
+    "start_time": "18:00",
+    "end_time": "20:00",
+    "bike_count": 3,
+    "status": "pending"
+  },
+  "same_start": {
+    "rider": 2,
+    "booking_date": "9999-February-05",
+    "start_time": "17:00",
+    "end_time": "20:00",
+    "bike_count": 3,
+    "status": "pending"
+  }
+}
