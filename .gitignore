@@ -8,3 +8,4 @@ btr/__pycache__/
 media/profile_images/
 .coverage
 coverage.xml
+venv/

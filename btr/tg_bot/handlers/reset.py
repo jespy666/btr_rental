@@ -5,8 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils.translation import gettext as _
 
-from btr.tasks.users import (send_verification_code_from_tg,
-                             send_recover_message_from_tg)
+from btr.tasks.users import send_verification_code, send_recover_message
 
 from ..keyboards.kb_cancel import CancelKB
 from ..states.reset_password import ResetPasswordState
@@ -48,7 +47,7 @@ class ResetPassword:
                 'Verification code was sent to your mail!\n\n'
                 'Type the six-digit code from the email</em> ⤵️'
             ).format(email=email)
-            send_verification_code_from_tg.delay(email, verification_code)
+            send_verification_code.delay(email, verification_code)
             await bot.send_message(user_id, msg, reply_markup=kb)
             await state.update_data(code=verification_code, email=email)
             await state.set_state(ResetPasswordState.verificationCode)
@@ -79,8 +78,8 @@ class ResetPassword:
         kb = CancelKB().place()
         try:
             check_verification_code(code, user_code)
-            password = await reset_user_password_as(email)
-            send_recover_message_from_tg.delay(email, password)
+            password, username = await reset_user_password_as(email)
+            send_recover_message.delay(email, password, username)
             msg = _(
                 '🎉🎉🎉\n\n'
                 '<em>Your password has been reset successfully!\n\n'

@@ -1,0 +1,6 @@
+.env
+celerybeat-schedule
+db.sqlite3
+coverage.xml
+docker-compose.test.yml
+.coverage

@@ -60,10 +60,8 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
         email = self.request.session.get('user_email')
         user_code = form.cleaned_data.get('code')
         try:
-            user = SiteUser.objects.get(email=email)
-            username = user.username
             if verification_code == user_code:
-                password = reset_user_password(email)
+                password, username = reset_user_password(email)
                 send_recover_message.delay(email, password, username)
                 return super().form_valid(form)
             else:

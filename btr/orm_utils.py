@@ -181,13 +181,14 @@ def create_booking_by_bot(user_data: dict) -> str:
     return booking.pk
 
 
-def reset_user_password(user_email: str) -> str:
+def reset_user_password(user_email: str) -> tuple:
     """Set new random password to user by emails"""
     user = SiteUser.objects.get(email=user_email)
+    username = user.username
     password = SiteUser.objects.make_random_password(length=8)
     user.set_password(password)
     user.save()
-    return password
+    return password, username
 
 
 class SlotsFinder:

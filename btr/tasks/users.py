@@ -11,11 +11,11 @@ def send_hello_msg(email: str, name: str, login: str, password: str) -> None:
 
 @app.task
 def send_verification_code(email: str, code: str) -> None:
-    """Task work out when user request password reset from site"""
+    """Task work out when user request password reset"""
     verification_code_mail(email, code)
 
 
 @app.task
 def send_recover_message(email: str, password: str, username: str) -> None:
-    """Task send new password to user from site"""
+    """Task send new password to user"""
     recover_message_mail(email, password, username)

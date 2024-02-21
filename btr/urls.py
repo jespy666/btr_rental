@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import VKCommentsView
+from .views import VKCommentsView, health
 from .views import IndexView, BriefingView, ContactsView, GalleryView
 
 urlpatterns = [
@@ -16,6 +16,7 @@ urlpatterns = [
     path('contacts/', ContactsView.as_view(), name='contacts'),
     path('gallery/', GalleryView.as_view(), name='gallery'),
     path('admin/', admin.site.urls),
+    path('health-check/', health, name='is_health'),
 ]
 
 if settings.DEBUG:

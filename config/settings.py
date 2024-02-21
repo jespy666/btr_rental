@@ -1,5 +1,4 @@
 from pathlib import Path
-import dj_database_url
 from dotenv import load_dotenv
 import os
 
@@ -12,13 +11,40 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
+DB = os.getenv('DB')
+
 ALLOWED_HOSTS = [
-    'webserver',
-    '127.0.0.1',
-    'localhost',
-    '0.0.0.0',
-    '.ngrok-free.app',
-]
+        'localhost',
+        '0.0.0.0',
+        'webserver',
+        '127.0.0.1',
+    ]
+
+if DB == 'lite':
+
+    ALLOWED_HOSTS.append('.ngrok-free.app')
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+elif DB == 'postgres':
+
+    ALLOWED_HOSTS.append('45.9.43.22')
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': 5432,
+        }
+    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -80,20 +106,6 @@ AUTHENTICATION_BACKENDS = [
 
 CONN_MAX_AGE = 500
 
-if os.getenv('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=CONN_MAX_AGE),
-        }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -129,11 +141,11 @@ LANGUAGES = (
     ('ru', 'Russian'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
 MEDIA_URL = '/media/'
 
@@ -163,10 +175,11 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
 CELERY_BEAT_SCHEDULE = {
     'check-booking-status': {
-        'task': 'btr.tasks.book_tasks.check_booking_status',
-        'schedule': 120.0,
+        'task': 'btr.tasks.bookings.check_booking_status',
+        'schedule': 25.0,
     },
 }
 

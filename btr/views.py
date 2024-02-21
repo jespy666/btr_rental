@@ -1,4 +1,6 @@
 import os
+
+from django.http import JsonResponse
 from dotenv import load_dotenv
 
 from django.shortcuts import render
@@ -50,3 +52,7 @@ class VKCommentsView(View):
         }
 
         return render(request, self.template_name, context)
+
+
+def health(request):
+    return JsonResponse({"status": "ok"})

@@ -1,23 +1,16 @@
-install:
-	poetry install
-
 dev:
-	python3 manage.py runserver
+	python3 manage.py runserver --settings=config.settings
 
 collectstatic:
-	python3 manage.py collectstatic --clear --ignore 'admin'
+	python3 manage.py collectstatic --ignore 'admin'
 
-migrate:
-	poetry run python3 manage.py makemigrations
-	poetry run python3 manage.py migrate
-
-celery-run:
+celery:
 	celery -A btr worker -l info
 
 celery-beat:
 	celery -A btr beat -l info
 
-redis-run:
+redis:
 	docker run -d -p 6379:6379 redis
 
 bot:
@@ -33,10 +26,10 @@ compile:
 	python3 manage.py compilemessages
 
 lint:
-	poetry run flake8 --exclude=static,*migrations,settings.py
+	flake8 --exclude=static,*migrations,venv,config
 
 test:
-	docker-compose -f docker-compose.test.yml up -d && poetry run python3 manage.py test && docker-compose -f docker-compose.test.yml down
+	docker-compose -f docker-compose.test.yml up -d && run python3 manage.py test && docker-compose -f docker-compose.test.yml down
 
 test-coverage:
-	docker-compose -f docker-compose.test.yml up -d && poetry run coverage run manage.py test && poetry run coverage report -m --include=btr/* --omit=btr/settings.py && poetry run coverage xml --include=btr/* --omit=btr/settings.py && docker-compose -f docker-compose.test.yml down
+	docker-compose -f docker-compose.test.yml up -d && run coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py && docker-compose -f docker-compose.test.yml down

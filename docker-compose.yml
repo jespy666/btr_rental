@@ -1,0 +1,129 @@
+version: '3.8'
+x-environment-defaults: &environment-defaults
+  SECRET_KEY: ${SECRET_KEY}
+  DEBUG: "False"
+  DB: "postgres"
+  DB_NAME: ${DB_NAME}
+  DB_USER: ${DB_USER}
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_HOST: "postgres"
+  DB_PORT: 5432
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+  EMAIL_PORT: 465
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+  TG_BOT_TOKEN: ${TG_BOT_TOKEN}
+  TG_ADMIN_PASSWORD: ${TG_ADMIN_PASSWORD}
+  TG_ADMIN_IDS: ${TG_ADMIN_IDS}
+  VK_ADMIN_ID: ${VK_ADMIN_ID}
+  VK_APP_ID: ${VK_APP_ID}
+  VK_APP_SECRET: ${VK_APP_SECRET}
+  VK_ACCESS_TOKEN: ${VK_ACCESS_TOKEN}
+  VK_BTR_KEY: ${VK_BTR_KEY}
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: btr
+      POSTGRES_PASSWORD: btr
+      POSTGRES_DB: btr
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - btr-network
+
+  btr-rental:
+    container_name: broteamracing
+    build:
+      context: ./
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      <<: *environment-defaults
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - btr-network
+    restart: on-failure:5
+    healthcheck:
+      test: curl -f http://localhost:8000/health-check || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - btr-rental
+    networks:
+      - btr-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - btr-network
+
+  celery:
+    container_name: celery
+    build:
+      context: ./
+    command: celery -A btr worker -l info
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      <<: *environment-defaults
+    networks:
+      - btr-network
+
+  celery-beat:
+    container_name: celery-beat
+    build:
+      context: ./
+    command: celery -A btr beat -l info
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      <<: *environment-defaults
+    networks:
+      - btr-network
+
+  tg-bot:
+    container_name: btr-bot
+    build:
+      context: ./
+    command: python manage.py run_bot
+    depends_on:
+      - postgres
+      - redis
+      - celery
+    environment:
+      <<: *environment-defaults
+    networks:
+      - btr-network
+
+volumes:
+  pg_data:
+  static_volume:
+
+networks:
+  btr-network:
+    driver: bridge
