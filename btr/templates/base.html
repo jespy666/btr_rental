@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
-    {% load django_bootstrap5 i18n static %}
+    {% load django_bootstrap5 i18n static contrib_extras %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
       <title>{% block title %}{% endblock %}</title>
@@ -16,6 +16,11 @@
       <link rel="stylesheet" type="text/css" href="{% static 'css/modals.css' %}">
       <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
       <link href="{% static 'dist/css/lightbox.css' %}" rel="stylesheet" />
+      {% if YANDEX_VERIFICATION_ID %}
+        <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_ID }}" />
+      {% endif %}
+      {% get_canonical_url as canonical_url %}
+      <link rel="canonical" href="{{ canonical_url }}">
       <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
   </head>
   <body class="body-bg">
