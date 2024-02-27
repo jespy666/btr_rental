@@ -9,3 +9,4 @@ media/profile_images/
 .coverage
 coverage.xml
 venv/
+config/nginx.conf
