@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'btr.auth',
     'btr.users.apps.UsersConfig',
     'btr.bookings.apps.BookingsConfig',
+    'btr',
     'django_bootstrap5',
 
 ]
@@ -91,6 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'btr.context_processors.common_context',
             ],
         },
     },
@@ -166,8 +168,8 @@ EMAIL_USE_SSL = True
 
 # redis related setup
 
-REDIS_HOST = '0.0.0.0'
-REDIS_PORT = '6379'
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
 
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
@@ -187,3 +189,7 @@ CELERY_BEAT_SCHEDULE = {
 
 TG_BOT_TOKEN = os.getenv('TG_BOT_TOKEN')
 TG_ADMIN_PASSWORD = os.getenv('TG_ADMIN_PASSWORD')
+
+# YANDEX setup
+
+YANDEX_VERIFICATION_ID = os.getenv('YANDEX_VERIFICATION_ID')
