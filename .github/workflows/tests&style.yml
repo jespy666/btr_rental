@@ -19,6 +19,8 @@ jobs:
 
   lint_tests:
     runs-on: ubuntu-latest
+    env:
+      DB: 'lite'
     needs: redis
     strategy:
       matrix:
