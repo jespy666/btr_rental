@@ -46,11 +46,11 @@ jobs:
           pip install -r req/dev.txt
       - name: Apply migrations
         run: |
-          python manage.py migrate
+          . python manage.py migrate
       - name: Run linter
         run: flake8 --exclude=static,*migrations,venv,config
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         with:
-          coverageCommand: coverage run manage.py test
+          coverageCommand: . coverage run manage.py test
           debug: true
