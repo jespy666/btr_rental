@@ -50,5 +50,5 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: coverage run manage.py test && coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
+          coverageCommand: coverage run manage.py test
           debug: true
