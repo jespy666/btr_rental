@@ -29,7 +29,7 @@ lint:
 	flake8 --exclude=static,*migrations,venv,config
 
 test:
-	docker-compose -f docker-compose.test.yml up -d && run python3 manage.py test && docker-compose -f docker-compose.test.yml down
+	run python3 manage.py test
 
 test-coverage:
-	docker-compose -f docker-compose.test.yml up -d && run coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py && docker-compose -f docker-compose.test.yml down
+	run coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
