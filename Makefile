@@ -29,7 +29,7 @@ lint:
 	flake8 --exclude=static,*migrations,venv,config
 
 test:
-	run python3 manage.py test
+	python3 manage.py test
 
 test-coverage:
-	run coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
+	coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
