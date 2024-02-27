@@ -32,4 +32,4 @@ test:
 	python3 manage.py test
 
 test-coverage:
-	coverage run manage.py test && run coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
+	coverage run manage.py test && coverage report -m --include=btr/* --omit=btr/config/settings.py && coverage xml --include=btr/* --omit=btr/config/settings.py
