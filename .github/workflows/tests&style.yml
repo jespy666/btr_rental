@@ -12,7 +12,7 @@ env:
   REDIS_PORT: 6379
 
 jobs:
-  container_job:
+  test_with_redis:
     runs-on: ubuntu-latest
     container:
       image: python:3.11
@@ -43,9 +43,13 @@ jobs:
           pip install -r req/dev.txt
           python manage.py migrate
       - name: Run linter
-        run: flake8 --exclude=static,*migrations,venv,config
+        run: |
+          . venv/bin/activate
+          flake8 --exclude=static,*migrations,venv,config
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         with:
-          coverageCommand: . coverage run manage.py test
+          coverageCommand: |
+            . venv/bin/activate
+            coverage run manage.py test
           debug: true
