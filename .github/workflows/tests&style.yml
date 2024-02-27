@@ -4,27 +4,31 @@ on:
   - push
   - pull_request
 
-jobs:
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+  DB: 'lite'
+  REDIS_HOST: 'localhost'
+  REDIS_PORT: 6379
 
-  redis:
+jobs:
+  container_job:
     runs-on: ubuntu-latest
+    container:
+      image: python:3.11
     services:
       redis:
         image: redis:latest
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
         ports:
           - 6379:6379
-    steps:
-      - name: Wait for Redis to be ready
-        run: sleep 10
-
-  lint_tests:
-    runs-on: ubuntu-latest
-    env:
-      DB: 'lite'
-    needs: redis
     strategy:
       matrix:
-        python-version: [3.11.4]
+        python-version: [3.11]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -46,9 +50,6 @@ jobs:
         run: flake8 --exclude=static,*migrations,venv,config
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: coverage run manage.py test
           debug: true
