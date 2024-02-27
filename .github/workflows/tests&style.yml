@@ -39,14 +39,14 @@ jobs:
           pip install -r req/dev.txt
       - name: Apply migrations
         run: |
-          make migrate
+          python manage.py migrate
       - name: Run linter
-        run: make lint
+        run: flake8 --exclude=static,*migrations,venv,config
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: make test-coverage
+          coverageCommand: coverage run manage.py test && coverage report -m --include=btr/* --omit=btr/settings.py && coverage xml --include=btr/* --omit=btr/settings.py
           debug: true
