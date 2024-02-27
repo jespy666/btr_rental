@@ -1,21 +1,22 @@
 name: lint&tests
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
-  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
   DB: 'lite'
-  REDIS_HOST: 'localhost'
-  REDIS_PORT: 6379
-
+  REDIS_HOST: '0.0.0.0'
+  REDIS_PORT: '6379'
+  
 jobs:
-  test_with_redis:
+  container_job:
     runs-on: ubuntu-latest
     container:
       image: python:3.11
+      options: --workdir /app
     services:
       redis:
         image: redis:latest
@@ -26,30 +27,32 @@ jobs:
           --health-retries 3
         ports:
           - 6379:6379
-    strategy:
-      matrix:
-        python-version: [3.11]
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies and apply migrations
+          python-version: 3.11
+      - name: Create virtual environment
+        run: python -m venv venv
+      - name: Activate virtual environment
+        run: source venv/bin/activate
+      - name: Install dependencies
         run: |
-          python -m venv venv
-          . venv/bin/activate
           pip install --upgrade pip
           pip install -r req/dev.txt
+      - name: Apply migrations
+        run: |
           python manage.py migrate
       - name: Run linter
         run: |
-          . venv/bin/activate
           flake8 --exclude=static,*migrations,venv,config
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: |
-            . venv/bin/activate &&
-            coverage run manage.py test
+          coverageCommand: coverage run manage.py test
           debug: true
