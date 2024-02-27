@@ -12,7 +12,7 @@ env:
   REDIS_PORT: '6379'
   
 jobs:
-  container_job:
+  test-and-linter-with-redis:
     runs-on: ubuntu-latest
     services:
       redis:
