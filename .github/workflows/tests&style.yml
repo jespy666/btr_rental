@@ -1,25 +1,42 @@
 name: lint&tests
 
-on: 
+on:
   - push
   - pull_request
+
 jobs:
-  build:
+
+  redis:
     runs-on: ubuntu-latest
-     
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+    steps:
+      - name: Wait for Redis to be ready
+        run: sleep 10
+
+  lint_tests:
+    runs-on: ubuntu-latest
+    needs: redis
     strategy:
       matrix:
         python-version: [3.11.4]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Create virtual environment
+        run: python -m venv venv
+      - name: Activate virtual environment
+        run: source venv/bin/activate
       - name: Install dependencies
         run: |
-          pip install poetry
-          make install
+          pip install --upgrade pip
+          pip install -r req/dev.txt
       - name: Apply migrations
         run: |
           make migrate
