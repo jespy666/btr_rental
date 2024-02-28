@@ -33,7 +33,8 @@ if DB == 'lite':
 
 elif DB == 'postgres':
 
-    ALLOWED_HOSTS.append('45.9.43.22')
+    hosts = ['45.9.43.22', '.broteamracing.ru']
+    ALLOWED_HOSTS.extend(hosts)
 
     DATABASES = {
         'default': {
@@ -66,6 +67,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1',
     'https://localhost',
     'https://0.0.0.0',
+    'https://*.broteamracing.ru',
 ]
 
 MIDDLEWARE = [
