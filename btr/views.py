@@ -17,6 +17,10 @@ class IndexView(TemplateView):
     template_name = 'index.html'
 
 
+class BlogView(TemplateView):
+    template_name = 'blog/404.html'
+
+
 class BriefingView(TemplateView):
     template_name = 'briefing/briefing.html'
 
