@@ -10,3 +10,4 @@ media/profile_images/
 coverage.xml
 venv/
 config/nginx.conf
+docker-compose.yml
