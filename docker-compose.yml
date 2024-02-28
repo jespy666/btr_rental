@@ -21,6 +21,7 @@ x-environment-defaults: &environment-defaults
   VK_APP_SECRET: ${VK_APP_SECRET}
   VK_ACCESS_TOKEN: ${VK_ACCESS_TOKEN}
   VK_BTR_KEY: ${VK_BTR_KEY}
+  YANDEX_VERIFICATION_ID: ${YANDEX_VERIFICATION_ID}
 
 services:
   postgres:
