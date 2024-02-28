@@ -143,17 +143,13 @@ LANGUAGES = (
     ('ru', 'Russian'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') \
-    if DB == 'postgres' else os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\
-    if DB == 'lite' else []
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
