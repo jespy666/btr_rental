@@ -1,0 +1,22 @@
+.paint-bg {
+    position: relative;
+    background-color: rgb(222, 215, 212);
+    background-image: url('../images/paints.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.paint-bg::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.paint-bg > * {
+    position: relative;
+    z-index: 1;
+}
