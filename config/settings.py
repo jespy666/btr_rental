@@ -144,11 +144,12 @@ LANGUAGES = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') \
-    if os.getenv('DB') == 'postgres' else os.path.join(BASE_DIR, 'staticfiles')
+    if DB == 'postgres' else os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]\
+    if DB == 'lite' else []
 
 MEDIA_URL = '/media/'
 
