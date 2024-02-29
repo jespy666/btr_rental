@@ -11,3 +11,4 @@ coverage.xml
 venv/
 config/nginx.conf
 docker-compose.yml
+Dockerfile
