@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from .views import VKCommentsView, health
-from .views import IndexView, BriefingView, ContactsView, GalleryView, BlogView
+from .views import IndexView, BriefingView, ContactsView, BlogView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='home'),
@@ -15,7 +15,6 @@ urlpatterns = [
     path('reviews/', VKCommentsView.as_view(), name='reviews'),
     path('blog/', BlogView.as_view(), name='blog'),
     path('contacts/', ContactsView.as_view(), name='contacts'),
-    path('gallery/', GalleryView.as_view(), name='gallery'),
     path('admin/', admin.site.urls),
     path('health-check/', health, name='is_health'),
 ]

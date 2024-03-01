@@ -29,10 +29,6 @@ class ContactsView(TemplateView):
     template_name = 'contacts/contacts.html'
 
 
-class GalleryView(TemplateView):
-    template_name = 'gallery.html'
-
-
 class VKCommentsView(View):
     template_name = 'reviews/reviews.html'
     access_token = os.getenv('VK_ACCESS_TOKEN')
