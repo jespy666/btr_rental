@@ -4,7 +4,9 @@
     {% load django_bootstrap5 i18n static contrib_extras %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
-      <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="{% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles.' %}">
+    <meta name="keywords" content="{% translate 'motorcycles rental, bike rental, enduro, enduro spb, pit bike spb' %}">
+      <title>{{ title }}</title>
       {% bootstrap_css %}
       {% bootstrap_javascript %}
       <link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
