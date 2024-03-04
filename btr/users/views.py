@@ -22,11 +22,12 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
     success_message = _('User created successfully')
 
     def form_valid(self, form):
-        form.save()
-        email = form.cleaned_data.get('email')
+        email = form.cleaned_data.get('email').lower()
+        form.cleaned_data['email'] = email
         name = form.cleaned_data.get('first_name')
         login = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password2')
+        form.save()
         send_hello_msg.delay(email, name, login, password)
         return super().form_valid(form)
 
@@ -83,6 +84,11 @@ class UserUpdateView(UserAuthRequiredMixin, UserPermissionMixin,
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.request.user.id})
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email').lower()
+        form.cleaned_data['email'] = email
+        return super().form_valid(form)
 
 
 class UserChangePasswordView(SuccessMessageMixin, PasswordChangeView):

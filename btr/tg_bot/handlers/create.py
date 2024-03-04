@@ -91,7 +91,7 @@ class CreateAccount:
 
     @staticmethod
     async def ask_phone(message: Message, state: FSMContext, bot: Bot):
-        email = message.text
+        email = message.text.lower()
         user_id = message.from_user.id
         kb = CancelKB().place()
         if await check_available_field_as(email):

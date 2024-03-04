@@ -33,7 +33,7 @@ class ResetPassword:
 
     @staticmethod
     async def ask_code(message: Message, state: FSMContext, bot: Bot):
-        email = message.text
+        email = message.text.lower()
         user_id = message.from_user.id
         kb = CancelKB().place()
         try:

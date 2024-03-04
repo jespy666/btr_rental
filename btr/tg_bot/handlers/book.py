@@ -40,7 +40,7 @@ class BookingRide:
 
     @staticmethod
     async def ask_bikes(message: Message, state: FSMContext, bot: Bot):
-        email = message.text
+        email = message.text.lower()
         user_id = message.from_user.id
         kb = CancelKB().place()
         try:

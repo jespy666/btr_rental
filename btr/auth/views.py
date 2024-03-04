@@ -37,7 +37,8 @@ class AuthResetView(SuccessMessageMixin, ObjectDoesNotExistMixin, FormView):
     template_name = 'forms/password_reset.html'
 
     def form_valid(self, form):
-        email = form.cleaned_data.get('email')
+        email = form.cleaned_data.get('email').lower()
+        form.cleaned_data['email'] = email
         check_user_exist(email)
         code = generate_verification_code()
         send_verification_code.delay(email, code)

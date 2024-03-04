@@ -7,10 +7,10 @@ class MultiplyFieldBackend(ModelBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user = SiteUser.objects.get(username=username)
+            user = SiteUser.objects.get(username=username.lower())
         except SiteUser.DoesNotExist:
             try:
-                user = SiteUser.objects.get(email=username)
+                user = SiteUser.objects.get(email=username.lower())
             except SiteUser.DoesNotExist:
                 try:
                     user = SiteUser.objects.get(phone_number=username)
