@@ -145,7 +145,15 @@ LANGUAGES = (
     ('ru', 'Russian'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if DB == 'lite':
+
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+elif DB == 'postgres':
+
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
