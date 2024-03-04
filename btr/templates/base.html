@@ -4,7 +4,7 @@
     {% load django_bootstrap5 i18n static contrib_extras %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
-    <meta name="description" content="{% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles.' %}">
+    <meta name="description" content="{% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles. You can book a ride from our site or via TG bot easily.' %}">
     <meta name="keywords" content="{% translate 'motorcycles rental, bike rental, enduro, enduro spb, pit bike spb' %}">
       <title>{{ title }}</title>
       {% bootstrap_css %}
@@ -16,7 +16,7 @@
       <link rel="stylesheet" type="text/css" href="{% static 'css/video.css' %}">
       <link rel="stylesheet" type="text/css" href="{% static 'css/bikes.css' %}">
       <link rel="stylesheet" type="text/css" href="{% static 'css/modals.css' %}">
-      <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" sizes="32x32">
+      <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
       <link href="{% static 'dist/css/lightbox.css' %}" rel="stylesheet" />
       {% if YANDEX_VERIFICATION_ID %}
         <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_ID }}" />
