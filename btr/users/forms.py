@@ -52,6 +52,15 @@ class UserRegistrationForm(UserCreationForm):
             'password2',
         )
 
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if SiteUser.objects.filter(username__iexact=username).exists():
+            self.add_error(
+                'username',
+                _('This username is already taken. Please choose another one.')
+            )
+        return username
+
 
 class UserEditProfileImageForm(forms.ModelForm):
 
@@ -108,6 +117,19 @@ class UserEditForm(forms.ModelForm):
             'email',
             'phone_number',
         )
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        pk = self.instance.pk
+        if SiteUser.objects.exclude(pk=pk).filter(
+                username__iexact=username
+        ).exists():
+            self.add_error(
+                'username',
+                _('This username is already taken. Please choose another one.')
+            )
+
+        return username
 
 
 class ChangePasswordForm(PasswordChangeForm):
