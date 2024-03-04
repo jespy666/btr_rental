@@ -20,7 +20,7 @@ shell:
 	python3 manage.py shell
 
 messages:
-	python3 manage.py makemessages --ignore="static,venv" -l ru
+	python3 manage.py makemessages -l ru --ignore=static/* --ignore=venv/*
 
 compile:
 	python3 manage.py compilemessages
