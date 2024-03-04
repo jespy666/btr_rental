@@ -1,8 +1,20 @@
 {
-    "username": "user1",
-    "first_name": "John",
-    "email": "user1@example.com",
-    "phone_number": "+79998887766",
-    "password1": "newpassword123",
-    "password2": "newpassword123"
+    "valid": {
+        "username": "user1",
+        "first_name": "John",
+        "email": "user1@example.com",
+        "phone_number": "+79998887766"
+    },
+    "just_case": {
+        "username": "User1",
+        "first_name": "John",
+        "email": "user1@example.com",
+        "phone_number": "+79998887766"
+    },
+    "just_case_but_other_user_has_the_same": {
+        "username": "User2",
+        "first_name": "John",
+        "email": "valid@example.com",
+        "phone_number": "+79090900909"
+    }
 }

@@ -15,6 +15,14 @@
         "password1": "qwertycvbn",
         "password2": "qwertycvbn"
     },
+    "existed_username_with_case": {
+        "username": "User1",
+        "first_name": "ValidName",
+        "email": "valid@mail.com",
+        "phone_number": "+79213868775",
+        "password1": "qwertycvbn",
+        "password2": "qwertycvbn"
+    },
     "existed_email": {
         "username": "Valid",
         "first_name": "ValidName",

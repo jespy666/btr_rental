@@ -50,6 +50,15 @@ class TestUserCreate(BTRTestCase):
         self.assertTemplateUsed(response, 'forms/registration.html')
         self.assertEqual(SiteUser.objects.count(), self.count)
 
+    def test_existed_username_with_case(self):
+        response = self.client.post(
+            self.create_url,
+            data=self.created_cases['existed_username_with_case'],
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'forms/registration.html')
+        self.assertEqual(SiteUser.objects.count(), self.count)
+
     def test_existed_email(self):
         response = self.client.post(
             self.create_url,
