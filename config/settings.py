@@ -155,7 +155,7 @@ elif DB == 'postgres':
 
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'img')]
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'prod_static')]
 
 STATIC_URL = '/static/'
 
