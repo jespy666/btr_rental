@@ -23,7 +23,7 @@ messages:
 	python3 manage.py makemessages -l ru --ignore=static/* --ignore=venv/*
 
 compile:
-	python3 manage.py compilemessages
+	python3 manage.py compilemessages --ignore=venv/*
 
 lint:
 	flake8 --exclude=static,*migrations,venv,config
