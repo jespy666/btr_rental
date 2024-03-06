@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-04 15:59+0300\n"
+"POT-Creation-Date: 2024-03-06 17:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,7 +77,7 @@ msgstr "Подтвердить выбранные записи"
 #: btr/bookings/tests/test_admin_actions.py:20
 #: btr/bookings/tests/test_admin_actions.py:21
 #: btr/bookings/tests/test_admin_tasks.py:15 btr/bookings/views.py:132
-#: btr/orm_utils.py:87 btr/orm_utils.py:132 btr/tasks/admin.py:62
+#: btr/orm_utils.py:89 btr/orm_utils.py:134 btr/tasks/admin.py:62
 #: btr/templates/bookings/show.html:19
 #: btr/tg_bot/handlers/admin/change_status.py:46
 #: btr/tg_bot/utils/handlers.py:83
@@ -97,8 +97,8 @@ msgstr "Отменить выбранные записи"
 #: btr/bookings/tests/test_admin_actions.py:35
 #: btr/bookings/tests/test_admin_tasks.py:41
 #: btr/bookings/tests/test_cancel.py:16 btr/bookings/tests/test_cancel.py:38
-#: btr/bookings/views.py:220 btr/orm_utils.py:89
-#: btr/tg_bot/handlers/admin/change_status.py:46
+#: btr/bookings/views.py:220 btr/orm_utils.py:91 btr/orm_utils.py:213
+#: btr/orm_utils.py:242 btr/tg_bot/handlers/admin/change_status.py:46
 #: btr/tg_bot/utils/handlers.py:84 btr/users/views.py:47 btr/users/views.py:50
 msgid "canceled"
 msgstr "отменена"
@@ -264,7 +264,7 @@ msgstr "Время окончания"
 msgid "bikes in rent"
 msgstr "Байков в прокате"
 
-#: btr/bookings/models.py:44 btr/bookings/views.py:136 btr/orm_utils.py:166
+#: btr/bookings/models.py:44 btr/bookings/views.py:136 btr/orm_utils.py:168
 #: btr/templates/bookings/show.html:17 btr/templates/users/bookings.html:25
 #: btr/tg_bot/handlers/book.py:262 btr/tg_bot/utils/handlers.py:82
 msgid "pending"
@@ -278,8 +278,9 @@ msgstr "ожидает подтверждения"
 msgid "accepted"
 msgstr "принята"
 
-#: btr/bookings/models.py:46 btr/templates/modals/history.html:30
-#: btr/tg_bot/utils/handlers.py:85 btr/users/views.py:47 btr/users/views.py:50
+#: btr/bookings/models.py:46 btr/orm_utils.py:242
+#: btr/templates/modals/history.html:30 btr/tg_bot/utils/handlers.py:85
+#: btr/users/views.py:47 btr/users/views.py:50
 msgid "completed"
 msgstr "завершена"
 
@@ -356,7 +357,9 @@ msgstr "Необходимо войти в аккаунт"
 
 #: btr/context_processors.py:10
 msgid "BroTeamRacing - Enduro and Pit-bikes rental in Saint-Petersburg"
-msgstr "Прокат эндуро и питбайков в Санкт-Петербурге | Молодежное, Приморское шоссе 659 | BroTeamRacing"
+msgstr ""
+"Прокат эндуро и питбайков в Санкт-Петербурге | Молодежное, Приморское шоссе "
+"659 | BroTeamRacing"
 
 #: btr/emails.py:8 btr/emails.py:13
 msgid "Password reset"
@@ -414,14 +417,24 @@ msgstr "Запись на прокат была отменена"
 msgid "You are canceled booking"
 msgstr "Вы отменили запись на прокат"
 
-#: btr/orm_utils.py:74 btr/orm_utils.py:145 btr/orm_utils.py:179
+#: btr/orm_utils.py:76 btr/orm_utils.py:147 btr/orm_utils.py:181
+#: btr/orm_utils.py:225
 msgid "Telegram Bot"
 msgstr "Телеграм Бот"
+
+#: btr/orm_utils.py:247
+#, python-brace-format
+msgid ""
+"<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong> | <strong>{start}"
+"</strong> - <strong>{end}</strong></em>"
+msgstr ""
+"<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong> | <strong>{start}"
+"</strong> - <strong>{end}</strong></em>"
 
 #: btr/tasks/admin.py:19
 #, python-brace-format
 msgid "User with username {client}"
-msgstr "Пользователь с ником {client}"
+msgstr "пользователь с ником {client}"
 
 #: btr/tasks/admin.py:21 btr/tasks/admin.py:23
 #, python-brace-format
@@ -548,9 +561,9 @@ msgid ""
 "techniques on our motorcycles. You can book a ride from our site or via TG "
 "bot easily."
 msgstr ""
-"Прокат эндуро мотоциклов и питбайков в Санкт-Петербурге."
-"В/У на прокате не требуется. Можно без опыта управления мотоциклом."
-"Экипировка включена в стоимость проката. СПБ п.Молодёжное, Приморское ш.659 16+"
+"Прокат эндуро мотоциклов и питбайков в Санкт-Петербурге.В/У на прокате не "
+"требуется. Можно без опыта управления мотоциклом.Экипировка включена в "
+"стоимость проката. СПБ п.Молодёжное, Приморское ш.659 16+"
 
 #: btr/templates/base.html:8
 msgid "motorcycles rental, bike rental, enduro, enduro spb, pit bike spb"
@@ -662,7 +675,8 @@ msgstr "Байков в прокате"
 msgid "Edit booking"
 msgstr "Изменить запись"
 
-#: btr/templates/bookings/show.html:55
+#: btr/templates/bookings/show.html:55 btr/tg_bot/keyboards/inline_menu.py:14
+#: btr/tg_bot/utils/commands.py:35
 msgid "Cancel booking"
 msgstr "Отменить запись"
 
@@ -697,8 +711,7 @@ msgid ""
 "All our motorcycles have undergone meticulous maintenance and tuning, "
 "ensuring high quality and safety"
 msgstr ""
-"Все наши байки обслуживаются после кажого заезда, во избежании "
-"непредвиденных обстоятельств"
+"Все наши байки обслуживаются после каждого заезда"
 
 #: btr/templates/cards.html:30
 msgid ""
@@ -706,7 +719,7 @@ msgid ""
 "after jumps"
 msgstr ""
 "Подвеска довольно жесткая, рассчитана на то, чтобы не повредить ее при "
-"приземлениипосле прыжков"
+"приземлении после прыжков"
 
 #: btr/templates/cards.html:34 btr/templates/cards.html:88
 msgid "Suitable for riders with a height of at least 175cm"
@@ -1053,6 +1066,7 @@ msgid "Available time:"
 msgstr "Свободное время:"
 
 #: btr/templates/forms/book_edit.html:63 btr/templates/forms/user_edit.html:26
+#: btr/tg_bot/handlers/cancel_booking.py:129
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -1825,8 +1839,8 @@ msgstr ""
 msgid "<em>Choose available bikes count</em> ⤵️"
 msgstr "<em>Выберите количество</em> ⤵️"
 
-#: btr/tg_bot/handlers/book.py:64 btr/tg_bot/handlers/create.py:113
-#: btr/tg_bot/handlers/reset.py:56
+#: btr/tg_bot/handlers/book.py:64 btr/tg_bot/handlers/cancel_booking.py:55
+#: btr/tg_bot/handlers/create.py:113 btr/tg_bot/handlers/reset.py:56
 #, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
@@ -1841,7 +1855,8 @@ msgstr ""
 "\n"
 "<em>Проверьте ввод и повторите попытку</em> ⤵️"
 
-#: btr/tg_bot/handlers/book.py:71 btr/tg_bot/handlers/reset.py:63
+#: btr/tg_bot/handlers/book.py:71 btr/tg_bot/handlers/cancel_booking.py:62
+#: btr/tg_bot/handlers/reset.py:63
 #, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
@@ -1976,6 +1991,141 @@ msgstr ""
 "<strong>Диалог был отменен</strong>\n"
 "\n"
 "<em>Попробуйте еще раз или выберите другую команду</em> ↙️"
+
+#: btr/tg_bot/handlers/cancel_booking.py:26
+msgid ""
+"<strong>Cancel booking</strong>\n\n"
+"<em>To cancel booking, type account email</em>"
+msgstr ""
+"<strong>Отмена записи</strong>\n\n"
+"<em>Что-бы отменить запись, напишите ваш\n"
+"Адрес электронной почты от аккаунта ↙️</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:41
+msgid ""
+"🟢🟢🟢\n\n"
+"<em>User with email <strong>{email}</strong> find successfully!</em>\n\n"
+msgstr ""
+"🟢🟢🟢\n\n"
+"<em>Пользователь с email <strong>{email}</strong>\nнайден успешно!\n\n"
+"Сколько байков вы хотите использовать в прокате?</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:46
+msgid "<em>To confirm your identity, please enter your account password</em>"
+msgstr "<em>Для подтверждения личности, пожалуйста, введите пароль от аккаунта</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:85
+#, python-brace-format
+msgid ""
+"➖➖➖\n"
+"\n"
+"<em><strong>Hi, {username}!</strong>\n"
+"\n"
+"There are no bookings on your account!\n"
+"\n"
+"To sign up for a rental, select the /book command!</em>"
+msgstr ""
+"➖➖➖\n"
+"\n"
+"<em><strong>Привет, {username}!</strong>\n"
+"\n"
+"На вашем аккаунте нет записей на прокат!\n"
+"\n"
+"Для записи выберите команду /book !</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:95
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<strong>Hi, {username}!</strong>\n"
+"\n"
+"<em>Your bookings ↙️\n"
+"\n"
+"</em>{bookings}"
+msgstr ""
+"🟢🟢🟢\n"
+"\n"
+"<strong>Привет, {username}!</strong>\n"
+"\n"
+"<em>Ваши записи на прокат ↙️\n"
+"\n"
+"</em>{bookings}"
+
+#: btr/tg_bot/handlers/cancel_booking.py:104
+msgid "<em>Select the booking ID you want to cancel ⤵️</em>"
+msgstr "<em>Выберите ID записи, которую хотите отменить ⤵️</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:112
+msgid ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Wrong password!</strong>\n"
+"\n"
+"<em>If you have lost access to your account,\n"
+"select <strong>/reset</strong> command\n"
+"Or type password again ↙️</em>"
+msgstr ""
+"🔴🔴🔴\n"
+"\n"
+"<strong>Неверный пароль!</strong>\n"
+"\n"
+"<em>Если потеряли доступ к аккаунту,\n"
+"выберите команду <strong>/reset</strong>\n\n"
+"Или повторите ввод пароля ↙️</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:132
+#, python-brace-format
+msgid ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Are you sure, to cancel ride #{pk}?</em>"
+msgstr ""
+"🟢🟢🟢\n"
+"\n"
+"<em>Вы уверены, что хотите отменить запись #{pk}?</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:136
+msgid ""
+"<em>If so, type <strong>Confirm</strong> button below ⤵️\n"
+"Otherwise, just cancel the dialog</em>"
+msgstr ""
+"<em>Если да, нажмите кнопку <strong>Подтвердить</strong> ниже ⤵️\n"
+"Если передумали, просто отмените диалог</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:146
+msgid ""
+"🔴🔴🔴\n\n"
+"<strong>Incorrect ID!</strong>\n"
+msgstr ""
+"🔴🔴🔴\n\n"
+"<strong>Некорректный ID!\n\n"
+"</strong>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:150
+msgid "<em>Please select ID from the options below ⤵️</em>"
+msgstr "<em>Пожалуйста, выберите доступный для отмены ID ниже ⤵️</em>"
+
+#: btr/tg_bot/handlers/cancel_booking.py:163
+#, python-brace-format
+msgid ""
+"🎉🎉🎉\n"
+"\n"
+"<em><strong>Booking #{pk} are canceled!</strong>\n"
+"\n"
+"If you cancel your booking by mistake,\n"
+"You can re-book for the same time\n"
+"\n"
+"Or choose a different one using the <strong>/book</strong> command!</em>"
+msgstr ""
+"🎉🎉🎉\n"
+"\n"
+"<em><strong>Запись #{pk} отменена!</strong>\n"
+"\n"
+"Если вы отменили запись по ошибке,\n"
+"можете перезаписаться повторно\n"
+"\n"
+"Или выбрать другое время командой <strong>/book</strong>!</em>"
 
 #: btr/tg_bot/handlers/create.py:26
 msgid ""
@@ -2337,11 +2487,11 @@ msgstr "Контакты"
 msgid "Reset password"
 msgstr "Восстановить пароль"
 
-#: btr/tg_bot/keyboards/inline_menu.py:17 btr/tg_bot/utils/commands.py:11
+#: btr/tg_bot/keyboards/inline_menu.py:18 btr/tg_bot/utils/commands.py:11
 msgid "Main menu"
 msgstr "Главное меню"
 
-#: btr/tg_bot/keyboards/inline_menu.py:27
+#: btr/tg_bot/keyboards/inline_menu.py:28
 msgid "See prices"
 msgstr "Цены"
 
