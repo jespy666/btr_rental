@@ -11,6 +11,7 @@ class InlineMenuKB:
             _('See help'): 'help',
             _('Create account'): 'create',
             _('Reset password'): 'reset',
+            _('Cancel booking'): 'cancel',
         }
 
     def place(self):

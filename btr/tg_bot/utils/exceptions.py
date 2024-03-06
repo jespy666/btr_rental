@@ -40,3 +40,11 @@ class SameStatusSelectedError(Exception):
 
 class CompareCodesError(Exception):
     pass
+
+
+class WrongPasswordError(Exception):
+    pass
+
+
+class WrongIDError(Exception):
+    pass

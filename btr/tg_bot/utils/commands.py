@@ -30,5 +30,9 @@ async def set_commands(bot: Bot):
             command='reset',
             description=_('Reset your forgotten password'),
         ),
+        BotCommand(
+            command='cancel',
+            description=_('Cancel booking'),
+        ),
     ]
     await bot.set_my_commands(commands, BotCommandScopeDefault())

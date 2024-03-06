@@ -7,6 +7,7 @@ from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
 from .states.reset_password import ResetPasswordState
 from .states.book_ride import BookingState
+from .states.cancel import BookCancelState
 from .states.admin.foreign_book import ForeignBookingState
 from .states.admin.change_status import ChangeStatusState
 from .states.admin.check_booking import CheckBookingState
@@ -18,6 +19,7 @@ from .handlers.create import CreateAccount
 from .handlers.cancel import Cancel
 from .handlers.reset import ResetPassword
 from .handlers.book import BookingRide
+from .handlers.cancel_booking import CancelRide
 from .handlers.admin.foreign_book import ForeignBook
 from .handlers.admin.change_status import ChangeStatus
 from .handlers.admin.check_booking import CheckBooking
@@ -95,6 +97,26 @@ class BookingBot:
             BookingState.bookHours,
         )
         self.dp.message.register(
+            CancelRide.ask_email,
+            Command(commands='cancel'),
+        )
+        self.dp.message.register(
+            CancelRide.ask_password,
+            BookCancelState.email,
+        )
+        self.dp.message.register(
+            CancelRide.choose_booking,
+            BookCancelState.password,
+        )
+        self.dp.message.register(
+            CancelRide.confirm_cancel,
+            BookCancelState.pk,
+        )
+        self.dp.message.register(
+            CancelRide.cancel_booking,
+            BookCancelState.confirm,
+        )
+        self.dp.message.register(
             ForeignBook.ask_bikes,
             Command(commands='adbook'),
         )
@@ -140,7 +162,7 @@ class BookingBot:
         )
         self.dp.callback_query.register(
             Cancel().handle,
-            F.data == 'cancel',
+            F.data == 'cancel-dialog',
         )
         self.dp.callback_query.register(
             Start().callback_handle,
@@ -165,6 +187,10 @@ class BookingBot:
         self.dp.callback_query.register(
             BookingRide.ask_email,
             F.data == 'book',
+        )
+        self.dp.callback_query.register(
+            CancelRide.ask_email,
+            F.data == 'cancel',
         )
 
     async def run(self):

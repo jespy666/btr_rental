@@ -9,10 +9,12 @@ from django.db.models import Q
 from asgiref.sync import sync_to_async
 
 from btr.bookings.models import Booking
-from btr.tg_bot.utils.exceptions import SameStatusSelectedError
+from btr.tg_bot.utils.exceptions import SameStatusSelectedError, \
+    WrongPasswordError
 from btr.users.models import SiteUser
 from btr.tasks.admin import send_vk_notify
-from btr.tasks.bookings import send_confirm_message, send_cancel_message
+from btr.tasks.bookings import send_confirm_message, send_cancel_message, \
+    send_cancel_self_message
 
 
 def check_user_exist(email: str) -> bool:
@@ -191,6 +193,69 @@ def reset_user_password(user_email: str) -> tuple:
     return password, username
 
 
+def check_password(email: str, password: str) -> bool:
+    """Check password is correct"""
+    user = SiteUser.objects.get(email=email)
+    if user.check_password(password):
+        return True
+    raise WrongPasswordError
+
+
+def get_username(email: str) -> str:
+    """Get username by email"""
+    user = SiteUser.objects.get(email=email)
+    return user.username
+
+
+def cancel_booking(pk: str, email: str) -> None:
+    """Cancel booking by user from TG bot"""
+    booking = Booking.objects.get(pk=pk)
+    booking.status = _('canceled')
+    booking.save()
+    data = {
+        'pk': booking.id,
+        'phone': str(booking.rider.phone_number),
+        'date': booking.booking_date,
+        'start': booking.start_time.strftime('%H:%M'),
+        'end': booking.end_time.strftime('%H:%M'),
+        'bikes': booking.bike_count,
+        'status': booking.status,
+        'client': booking.rider.username,
+    }
+    via = _('Telegram Bot')
+    send_vk_notify.delay(via, False, data, False)
+    send_cancel_self_message.delay(
+        email,
+        pk,
+        booking.bike_count,
+        booking.booking_date,
+        booking.start_time.strftime('%H:%M'),
+        booking.end_time.strftime('%H:%M')
+    )
+
+
+def get_user_bookings(email: str) -> dict:
+    """Find and get all bookings for user are request"""
+    user = SiteUser.objects.get(email=email)
+    bookings = Booking.objects.filter(
+        rider=user.id
+    ).exclude(status__in=[_('completed'), _('canceled')])
+    bookings_ids = [str(booking.id) for booking in bookings]
+    bookings_view = []
+    for booking in bookings:
+        book = _(
+            '<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong>'
+            ' | <strong>{start}</strong> - <strong>{end}</strong></em>'
+        ).format(
+            id=booking.id,
+            date=booking.booking_date,
+            start=booking.start_time.strftime('%H:%M'),
+            end=booking.end_time.strftime('%H:%M'),
+        )
+        bookings_view.append(book)
+    return {'bookings_data': bookings_view, 'bookings_id': bookings_ids}
+
+
 class SlotsFinder:
 
     ORDINARY_SLOTS = '16:00:00-22:00:00'
@@ -339,3 +404,7 @@ create_booking_as = sync_to_async(create_booking_by_bot)
 check_booking_info_as = sync_to_async(check_booking_info)
 change_booking_status_as = sync_to_async(change_booking_status)
 reset_user_password_as = sync_to_async(reset_user_password)
+check_password_as = sync_to_async(check_password)
+get_username_as = sync_to_async(get_username)
+get_user_bookings_as = sync_to_async(get_user_bookings)
+cancel_booking_as = sync_to_async(cancel_booking)

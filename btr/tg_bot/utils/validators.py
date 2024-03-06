@@ -5,7 +5,7 @@ from ..utils.exceptions import (NameOverLengthError, InvalidEmailError,
                                 InvalidPhoneError, WrongBikesCountError,
                                 DateInPastError, InvalidDateError,
                                 InvalidTimeFormatError,
-                                EndBiggerThenStartError)
+                                EndBiggerThenStartError, WrongIDError)
 
 
 MAX_NAME_LENGTH = 40
@@ -81,3 +81,10 @@ def validate_time_range(start_time: str, end_time: str) -> bool:
     if start < end:
         return True
     raise EndBiggerThenStartError
+
+
+def validate_pks(pk: str, bookings_id: list) -> bool:
+    """Checking whether an ID is included in the list"""
+    if pk in bookings_id:
+        return True
+    raise WrongIDError

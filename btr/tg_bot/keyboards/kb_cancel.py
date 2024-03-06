@@ -8,7 +8,7 @@ class CancelKB:
         self.kb = InlineKeyboardBuilder()
         self.cancel_button = InlineKeyboardButton(
             text=_('Cancel dialog'),
-            callback_data='cancel',
+            callback_data='cancel-dialog',
         )
 
     def place(self):
