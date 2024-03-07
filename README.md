@@ -1,6 +1,5 @@
 ![Logo](https://i.ibb.co.com/J2nWymn/bro.png)
-## Description  
-***  
+## Description
 ### Repository for developing a web application for the Broteamracing team, specializing in the rental of enduro motorcycles in Saint-Petersburg (Russia)
 [Web Application Link](URL)  
 [Site Monitor](https://stats.uptimerobot.com/OPGkoIHLmO)  
