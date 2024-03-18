@@ -6,20 +6,22 @@ from aiogram.filters import Command
 from .utils.commands import set_commands
 from .states.create_account import CreateAccountState
 from .states.reset_password import ResetPasswordState
-from .states.book_ride import BookingState
-from .states.cancel import BookCancelState
+from .states.create_booking import BookingState
+from .states.cancel_booking import BookCancelState
+from .states.edit_booking import EditBookingState
 from .states.admin.foreign_book import ForeignBookingState
 from .states.admin.change_status import ChangeStatusState
 from .states.admin.check_booking import CheckBookingState
 
-from .handlers.start import Start
-from .handlers.help import Help
-from .handlers.prices import Prices
-from .handlers.create import CreateAccount
-from .handlers.cancel import Cancel
-from .handlers.reset import ResetPassword
-from .handlers.book import BookingRide
+from .handlers.start_message import Start
+from .handlers.help_message import Help
+from .handlers.prices_message import Prices
+from .handlers.create_account import CreateAccount
+from .handlers.cancel_dialog import Cancel
+from .handlers.reset_password import ResetPassword
+from .handlers.create_booking import BookingRide
 from .handlers.cancel_booking import CancelRide
+from .handlers.edit_booking import EditBooking
 from .handlers.admin.foreign_book import ForeignBook
 from .handlers.admin.change_status import ChangeStatus
 from .handlers.admin.check_booking import CheckBooking
@@ -117,6 +119,38 @@ class BookingBot:
             BookCancelState.confirm,
         )
         self.dp.message.register(
+            EditBooking.ask_email,
+            Command(commands='edit'),
+        )
+        self.dp.message.register(
+            EditBooking.ask_password,
+            EditBookingState.email,
+        )
+        self.dp.message.register(
+            EditBooking.choose_booking,
+            EditBookingState.password,
+        )
+        self.dp.message.register(
+            EditBooking.ask_date,
+            EditBookingState.pk,
+        )
+        self.dp.message.register(
+            EditBooking.ask_start,
+            EditBookingState.date,
+        )
+        self.dp.message.register(
+            EditBooking.ask_hours,
+            EditBookingState.start,
+        )
+        self.dp.message.register(
+            EditBooking.ask_bikes,
+            EditBookingState.end,
+        )
+        self.dp.message.register(
+            EditBooking.edit_booking,
+            EditBookingState.bikes,
+        )
+        self.dp.message.register(
             ForeignBook.ask_bikes,
             Command(commands='adbook'),
         )
@@ -191,6 +225,10 @@ class BookingBot:
         self.dp.callback_query.register(
             CancelRide.ask_email,
             F.data == 'cancel',
+        )
+        self.dp.callback_query.register(
+            EditBooking.ask_email,
+            F.data == 'edit',
         )
 
     async def run(self):
