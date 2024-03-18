@@ -9,13 +9,15 @@ from ..keyboards.inline_menu import InlineMenuKB
 
 class Start:
     _msg = _(
-        '<strong>16+❗️</strong>\n\n'
-        '<em>Hi!\nI\'m BroTeamRacing Bot!\n'
+        '<strong>❗️1️⃣6️⃣ +️</strong>\n\n'
+        '<em><strong>Hi! I\'m Broteamracing Bot!</strong>\n\n'
         'With my help, you\'ll be able to:</em>\n\n'
         '👤 <strong>Quick Sign Up</strong>\n\n'
-        '📆 <strong>Make Bookings</strong>\n\n'
+        '📆 <strong>Make & Manage Bookings</strong>\n\n'
+        '💵 <strong>See Prices</strong>\n\n'
         '🔓 <strong>Reset your password</strong>\n\n'
-        '📱 <strong>Get our contacts</strong>\n'
+        '📱 <strong>Get our contacts</strong>\n\n'
+        'broteamracing.ru'
     )
     _kb = InlineMenuKB().place_to_start()
 

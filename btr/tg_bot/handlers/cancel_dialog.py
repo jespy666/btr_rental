@@ -10,8 +10,8 @@ class Cancel:
 
     _msg = _(
         '🚫🚫🚫\n\n'
-        '<strong>Dialog has been canceled</strong>\n\n'
-        '<em>You can try again, or choose another command</em> ↙️'
+        '<em><strong>Dialog has been canceled</strong>\n\n'
+        'You can try again, or choose another command</em> ↙️↙️↘️↘️'
     )
 
     @staticmethod

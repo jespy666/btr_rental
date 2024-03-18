@@ -8,15 +8,15 @@ from ..keyboards.inline_menu import InlineMenuKB
 
 
 class Help:
+
     _msg = _(
-        '<strong>Any issues and questions?</strong>\n'
-        '<em>Contact us:</em>\n'
+        '<em><strong>Any issues and questions?</strong>\n'
+        'Contact us ↙️↙️↙️\n\n'
         'vk.me/broteamracing\n\n'
-        '<strong>All contacts:</strong>\n\n'
-        '📞 <strong>+79992350091</strong> <em>Vladimir</em>\n\n'
-        '📞 <strong>+79817850451</strong> <em>Alexander</em>\n\n'
-        '🌐 broteamracing.ru\n\n'
-        '👥 vk.com/broteamracing\n\n'
+        '📞 <strong>+79992350091</strong> Vladimir\n\n'
+        '📞 <strong>+79817850451</strong> Alexander\n\n'
+        '🌐 <strong>broteamracing.ru/contacts</strong>\n\n'
+        '👥 <strong>vk.com/broteamracing</strong></em>\n\n'
     )
 
     @staticmethod

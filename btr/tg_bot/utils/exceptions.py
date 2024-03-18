@@ -1,50 +1,66 @@
-class NameOverLengthError(Exception):
+class NameOverLength(Exception):
     pass
 
 
-class InvalidEmailError(Exception):
+class InvalidEmailFormat(Exception):
     pass
 
 
-class InvalidPhoneError(Exception):
+class InvalidPhoneFormat(Exception):
     pass
 
 
-class WrongBikesCountError(Exception):
+class WrongBikesCount(Exception):
     pass
 
 
-class DateInPastError(Exception):
+class PastTense(Exception):
     pass
 
 
-class InvalidDateError(Exception):
+class InvalidDate(Exception):
     pass
 
 
-class InvalidTimeFormatError(Exception):
+class InvalidTimeFormat(Exception):
     pass
 
 
-class TimeIsNotAvailableError(Exception):
+class TimeIsNotAvailable(Exception):
     pass
 
 
-class EndBiggerThenStartError(Exception):
+class EndBiggerStart(Exception):
     pass
 
 
-class SameStatusSelectedError(Exception):
+class CodesCompareError(Exception):
     pass
 
 
-class CompareCodesError(Exception):
+class WrongPassword(Exception):
     pass
 
 
-class WrongPasswordError(Exception):
+class NotExistedId(Exception):
     pass
 
 
-class WrongIDError(Exception):
+class UserAlreadyExists(Exception):
+    pass
+
+
+class UserDoesNotExists(Exception):
+    pass
+
+
+class InvalidIDFormat(Exception):
+    pass
+
+
+class WrongHoursFormat(Exception):
+    pass
+
+
+class WrongStatus(Exception):
     pass

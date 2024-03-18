@@ -1,11 +1,9 @@
 import re
 from datetime import datetime, date
 
-from ..utils.exceptions import (NameOverLengthError, InvalidEmailError,
-                                InvalidPhoneError, WrongBikesCountError,
-                                DateInPastError, InvalidDateError,
-                                InvalidTimeFormatError,
-                                EndBiggerThenStartError, WrongIDError)
+from django.utils.translation import gettext as _
+
+from ..utils import exceptions as e
 
 
 MAX_NAME_LENGTH = 40
@@ -19,7 +17,7 @@ def validate_name(name: str) -> bool:
     if len(name) < MAX_NAME_LENGTH:
         return True
     else:
-        raise NameOverLengthError
+        raise e.NameOverLength
 
 
 def validate_email(email: str) -> bool:
@@ -28,7 +26,7 @@ def validate_email(email: str) -> bool:
     if re.match(pattern, email):
         return True
     else:
-        raise InvalidEmailError
+        raise e.InvalidEmailFormat
 
 
 def validate_phone_number(phone_number: str) -> bool:
@@ -37,7 +35,7 @@ def validate_phone_number(phone_number: str) -> bool:
     if re.match(pattern, phone_number):
         return True
     else:
-        raise InvalidPhoneError
+        raise e.InvalidPhoneFormat
 
 
 def validate_bike_quantity(count: str) -> bool:
@@ -45,10 +43,10 @@ def validate_bike_quantity(count: str) -> bool:
     try:
         int(count)
     except ValueError:
-        raise WrongBikesCountError
+        raise e.WrongBikesCount
     if int(count) in set(range(MIN_BIKES_COUNT, MAX_BIKES_COUNT + 1)):
         return True
-    raise WrongBikesCountError
+    raise e.WrongBikesCount
 
 
 def validate_date(date_str: str) -> bool:
@@ -59,9 +57,9 @@ def validate_date(date_str: str) -> bool:
         if input_date >= today:
             return True
         else:
-            raise DateInPastError
+            raise e.PastTense
     except ValueError:
-        raise InvalidDateError
+        raise e.InvalidDate
 
 
 def validate_time(time: str) -> bool:
@@ -70,7 +68,7 @@ def validate_time(time: str) -> bool:
     if re.match(pattern, time):
         return True
     else:
-        raise InvalidTimeFormatError
+        raise e.InvalidTimeFormat
 
 
 def validate_time_range(start_time: str, end_time: str) -> bool:
@@ -80,11 +78,36 @@ def validate_time_range(start_time: str, end_time: str) -> bool:
     end = datetime.strptime(end_time, format_str)
     if start < end:
         return True
-    raise EndBiggerThenStartError
+    raise e.EndBiggerStart
 
 
 def validate_pks(pk: str, bookings_id: list) -> bool:
     """Checking whether an ID is included in the list"""
     if pk in bookings_id:
         return True
-    raise WrongIDError
+    raise e.NotExistedId
+
+
+def validate_id(pk: str) -> bool:
+    """Validate id format"""
+    try:
+        int(pk)
+        return True
+    except ValueError:
+        raise e.InvalidIDFormat
+
+
+def validate_hours(hours: str) -> bool:
+    """Validate hours format"""
+    try:
+        int(hours)
+        return True
+    except ValueError:
+        raise e.WrongHoursFormat
+
+
+def validate_status(status: str) -> bool:
+    """Validate status keyboard input"""
+    if status in (_('pending'), _('confirmed'), _('canceled')):
+        return True
+    raise e.WrongStatus
