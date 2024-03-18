@@ -161,3 +161,42 @@ def cancel_booking_mail(email: str, pk: str, bikes: str, date: str,
     )
     msg.content_subtype = "html"
     msg.send()
+
+
+def edit_booking_mail(email: str, pk: str, bikes: str, date: str, start: str,
+                      end: str, self_edit=False) -> None:
+    subject = _('Booking edited')
+    if not self_edit:
+        html_content = render_to_string(
+            'emails/email_base.html', {
+                'pre_header': _('Booking was edited'),
+                'header': _('Booking Edited'),
+                'action': 'edite',
+                'date': date,
+                'pk': pk,
+                'start': start,
+                'end': end,
+                'bikes': bikes,
+            }
+        )
+    else:
+        html_content = render_to_string(
+            'emails/email_base.html', {
+                'pre_header': _('You are edit the booking'),
+                'header': _('Booking Edited'),
+                'action': 'self-edit',
+                'date': date,
+                'pk': pk,
+                'start': start,
+                'end': end,
+                'bikes': bikes,
+            }
+        )
+    msg = EmailMessage(
+        subject,
+        html_content,
+        'broteamracing@yandex.ru',
+        [email]
+    )
+    msg.content_subtype = "html"
+    msg.send()
