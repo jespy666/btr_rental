@@ -22,6 +22,11 @@ def send_vk_notify(via: str, created: bool, data: dict,
     f_client = _('Foreign client')
     foreign_client = _(' {client}').format(client=f_client) if\
         data.get('client') == 'admin' else f" {data.get('client')}"
+    emoji = {
+        _('pending'): '🟡🟡🟡',
+        _('confirmed'): '🟢🟢🟢',
+        _('canceled'): '🔴🔴🔴'
+    }
     if created:
         msg = _(
             '#{pk} 🆕\n\n'
@@ -59,9 +64,9 @@ def send_vk_notify(via: str, created: bool, data: dict,
             '🏍 {bikes} bike(s)'
         ).format(
             pk=data.get('pk'),
-            emoji='🟢🟢🟢' if status == _('confirmed') else '🔴🔴🔴',
-            action=status,
-            is_admin=_('by Admin') if is_admin else _('by User'),
+            emoji=emoji.get(status),
+            action=status if not status == _('pending') else _('change'),
+            is_admin=_('by admin') if is_admin else _('by user'),
             is_user=client if not is_admin else '',
             via=via,
             client=data.get('client'),

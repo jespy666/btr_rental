@@ -4,9 +4,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils.translation import gettext as _
 from django.views.generic import FormView
+from django.core.exceptions import ObjectDoesNotExist
 
 from btr.auth.forms import AuthPasswordResetForm, AuthConfirmForm
-from ..orm_utils import reset_user_password, check_user_exist
 from ..tasks.users import send_verification_code, send_recover_message
 from btr.tg_bot.utils.handlers import generate_verification_code
 from ..mixins import ObjectDoesNotExistMixin
@@ -39,9 +39,9 @@ class AuthResetView(SuccessMessageMixin, ObjectDoesNotExistMixin, FormView):
     def form_valid(self, form):
         email = form.cleaned_data.get('email').lower()
         form.cleaned_data['email'] = email
-        check_user_exist(email)
+        SiteUser.objects.get(email=email)
         code = generate_verification_code()
-        send_verification_code.delay(email, code)
+        send_verification_code.delay(email=email, code=code)
         self.request.session['verification_code'] = code
         self.request.session['user_email'] = email
         return super().form_valid(form)
@@ -62,8 +62,15 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
         user_code = form.cleaned_data.get('code')
         try:
             if verification_code == user_code:
-                password, username = reset_user_password(email)
-                send_recover_message.delay(email, password, username)
+                password = SiteUser.objects.make_random_password(length=8)
+                user = SiteUser.objects.get(email=email)
+                user.set_password(password)
+                user.save()
+                send_recover_message.delay(
+                    email=email,
+                    password=password,
+                    username=user.username,
+                )
                 return super().form_valid(form)
             else:
                 messages.error(
@@ -71,7 +78,7 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
                     _('Verification codes not match')
                 )
                 return self.form_invalid(form)
-        except SiteUser.DoesNotExist:
+        except ObjectDoesNotExist:
             messages.error(
                 self.request,
                 _('User with this email does not exist!')

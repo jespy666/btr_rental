@@ -11,9 +11,10 @@ from ..mixins import UserAuthRequiredMixin, BookingPermissionMixin
 from .models import Booking
 from .forms import BookingForm, BookingEditForm, BookingCancelForm
 from .locale import locale_month_name_plural, locale_month_name
-from ..orm_utils import LoadCalc, SlotsFinder
+from ..orm_utils import LoadCalc, SlotsFinder, AsyncTools
 from ..tasks.admin import send_vk_notify
-from ..tasks.bookings import send_booking_details, send_cancel_self_message
+from ..tasks.bookings import (send_booking_details, send_cancel_self_message,
+                              send_self_edit_booking_message)
 
 
 class BookingIndexView(TemplateView):
@@ -120,12 +121,7 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
 
     def form_valid(self, form):
         date = self.request.GET.get('selected_date')
-        start = form.cleaned_data.get('start_time').strftime('%H:%M')
-        end = form.cleaned_data.get('end_time').strftime('%H:%M')
-        bikes = form.cleaned_data.get('bike_count')
         user = self.request.user
-        email = user.email
-        name = user.first_name
         form.instance.booking_date = self.format_date_for_orm(date)
         form.instance.rider = user
         if user.is_superuser:
@@ -136,27 +132,21 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
             status = _('pending')
             form.instance.status = status
             instance = form.save()
-            pk = instance.pk
-            f_date = self.format_date_for_form(
-                date,
-                self.request.GET.get('verbose')
-            )
-            email_date = (f"{f_date.get('day')} {f_date.get('month')}, "
-                          f"{f_date.get('year')}")
             data = {
-                'pk': pk,
+                'pk': instance.pk,
                 'client': instance.rider.username,
-                'date': email_date,
-                'start': start,
-                'end': end,
-                'bikes': bikes,
+                'email': user.email,
+                'name': user.first_name,
+                'date': AsyncTools().get_friendly_date(date),
+                'start': form.cleaned_data.get('start_time').strftime('%H:%M'),
+                'end': form.cleaned_data.get('end_time').strftime('%H:%M'),
+                'bikes': form.cleaned_data.get('bike_count'),
                 'phone': str(instance.rider.phone_number),
                 'status': status,
             }
             via = _('Web Site')
             send_vk_notify.delay(via, True, data, is_admin=False)
-            send_booking_details.delay(email, name, email_date, status,
-                                       start, end, bikes, pk)
+            send_booking_details.delay(**data)
 
         return super().form_valid(form)
 
@@ -200,6 +190,28 @@ class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
         kwargs['date'] = f_date
         return kwargs
 
+    def form_valid(self, form):
+        user = self.request.user
+        if not user.is_superuser:
+            date_obj = form.instance.booking_date
+            date = date_obj.strftime('%Y-%B-%d')
+            via = _('Web Site')
+            data = {
+                'pk': form.instance.pk,
+                'client': form.instance.rider.username,
+                'email': user.email,
+                'name': user.first_name,
+                'date': AsyncTools().get_friendly_date(date),
+                'start': form.cleaned_data.get('start_time').strftime('%H:%M'),
+                'end': form.cleaned_data.get('end_time').strftime('%H:%M'),
+                'bikes': form.cleaned_data.get('bike_count'),
+                'phone': str(user.phone_number),
+                'status': _('pending'),
+            }
+            send_vk_notify.delay(via, False, data, False)
+            send_self_edit_booking_message(**data)
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.request.user.id})
 
@@ -219,29 +231,22 @@ class BookingCancelView(UserAuthRequiredMixin, SuccessMessageMixin,
         booking = Booking.objects.get(pk=self.kwargs['pk'])
         booking.status = _('canceled')
         booking.save()
-        email = booking.rider.email
-        pk = booking.pk
-        date = booking.booking_date
-        start = booking.start_time.strftime('%H:%M')
-        end = booking.end_time.strftime('%H:%M')
-        bikes = booking.bike_count
+        date = booking.booking_date.strftime('%Y-%B-%d')
         if not self.request.user.is_superuser:
-            send_cancel_self_message.delay(email, pk, bikes, date, start, end)
             via = _('Web Site')
-            client = booking.rider.username
-            bikes = booking.bike_count
-            phone = booking.rider.phone_number
             data = {
-                'pk': pk,
-                'client': client,
-                'date': date,
-                'start': start,
-                'end': end,
-                'bikes': bikes,
-                'phone': str(phone),
+                'pk': booking.pk,
+                'client': booking.rider.username,
+                'email': booking.rider.email,
+                'date': AsyncTools().get_friendly_date(date),
+                'start': booking.start_time.strftime('%H:%M'),
+                'end': booking.end_time.strftime('%H:%M'),
+                'bikes': booking.bike_count,
+                'phone': str(booking.rider.phone_number),
                 'status': booking.status,
             }
             send_vk_notify.delay(via, False, data, is_admin=False)
+            send_cancel_self_message.delay(**data)
         return super().form_valid(form)
 
     def get_success_url(self):

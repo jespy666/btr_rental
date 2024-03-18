@@ -167,6 +167,10 @@
                                     <h1 style="margin: 0;font-weight: 600;font-size: 32px;line-height: 1;color: #BD0016;">
                                         {{ header }}
                                     </h1>
+                                {% else %}
+                                    <h1 style="margin: 0;font-weight: 600;font-size: 32px;line-height: 1;color: #D19F42;">
+                                        {{ header }}
+                                    </h1>
                                 {% endif %}
                             </td>
                         </tr>
@@ -254,6 +258,32 @@
                                     </p>
                                 </td>
                             </tr>
+                        {% elif action == 'edit' %}
+                            <tr>
+                                <td style="padding: 40px 20px 10px 20px;text-align: center;">
+                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                        {% translate 'Booking' %} #{{ pk }} {% translate 'was edited' %}
+                                    </h2>
+                                    <p style="margin: 0;padding: 20px 20px 20px 20px;font-size: 18px;color: #1C1E23;">
+                                        {% translate 'We have adjusted your rental booking details.' %}.
+                                    </p>
+                                    <p style="margin: 0;padding: 0 20px 20px 20px;font-size: 18px;color: #1C1E23;">
+                                        <em>{% translate 'If you are not satisfied with the new time or date, you can cancel your appointment, or contact us on social networks or by phone' %}:</em>
+                                    </p>
+                                </td>
+                            </tr>
+                        {% elif action == 'self-edit' %}
+                            <tr>
+                                <td style="padding: 40px 20px 10px 20px;text-align: center;">
+                                    <h2 style="margin: 0;font-size: 22px;font-style: italic;color: #1C1E23;">
+                                        {% translate 'Booking' %} #{{ pk }} {% translate 'was edited' %}
+                                    </h2>
+                                    <p style="margin: 0;padding: 20px 10px 20px 10px;font-size: 20px;color: #1C1E23;">
+                                        {% translate 'You have changed your rental appointment' %}.<br>
+                                        {% translate 'We will approve your changes shortly. You will receive a confirmation email soon...' %}
+                                    </p>
+                                </td>
+                            </tr>
                         {% elif action == 'password-reset' %}
                             <tr>
                                 <td style="padding: 40px 20px 20px 20px;text-align: center;">
@@ -281,7 +311,7 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' %}
+                        {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' or action == 'edit' %}
                             <tr>
                                 <td>
                                     <table style="background-color: #FFFFFF;" align="center" border="0" cellspacing="0" cellpadding="0" role="presentation">
@@ -323,6 +353,8 @@
                                         {% translate 'Confirmation code' %}
                                     {% elif action == 'recover-data' %}
                                         {% translate 'Recover login details' %}
+                                    {% elif action == 'edit' or action == 'self-edit' %}
+                                        {% translate 'Updated booking details' %}
                                     {% endif %}
                                 </h4>
                                 <hr>
@@ -333,7 +365,7 @@
             </tr>
             <tr style="background-color: #DED7D4;">
                 <td>
-                    {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' or action == 'create' %}
+                    {% if action == 'confirm' or action == 'cancel' or action == 'self-cancel' or action == 'create' or action == 'edit' or action == 'self-edit' %}
                         <table align="left" border="0" cellspacing="0" cellpadding="0" role="presentation">
                             <tr>
                                 <td style="padding: 0 0 20px 40px;text-align: left;">

@@ -4,18 +4,27 @@ from ..emails import (verification_code_mail, recover_message_mail,
 
 
 @app.task
-def send_hello_msg(email: str, name: str, login: str, password: str) -> None:
+def send_hello_msg(**kwargs) -> None:
     """Send hello message after sign up"""
-    registration_mail(email, name, login, password)
+    registration_mail(
+        kwargs.get('email'),
+        kwargs.get('name'),
+        kwargs.get('login'),
+        kwargs.get('password'),
+    )
 
 
 @app.task
-def send_verification_code(email: str, code: str) -> None:
+def send_verification_code(**kwargs) -> None:
     """Task work out when user request password reset"""
-    verification_code_mail(email, code)
+    verification_code_mail(kwargs.get('email'), kwargs.get('code'))
 
 
 @app.task
-def send_recover_message(email: str, password: str, username: str) -> None:
+def send_recover_message(**kwargs) -> None:
     """Task send new password to user"""
-    recover_message_mail(email, password, username)
+    recover_message_mail(
+        kwargs.get('email'),
+        kwargs.get('password'),
+        kwargs.get('username'),
+    )

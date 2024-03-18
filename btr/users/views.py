@@ -24,11 +24,14 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         email = form.cleaned_data.get('email').lower()
         form.cleaned_data['email'] = email
-        name = form.cleaned_data.get('first_name')
-        login = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password2')
+        data = {
+            'email': email,
+            'name': form.cleaned_data.get('first_name'),
+            'login': form.cleaned_data.get('username'),
+            'password': form.cleaned_data.get('password2'),
+        }
         form.save()
-        send_hello_msg.delay(email, name, login, password)
+        send_hello_msg.delay(**data)
         return super().form_valid(form)
 
 

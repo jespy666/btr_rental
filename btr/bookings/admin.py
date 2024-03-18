@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from btr.bookings.models import Booking
 from btr.tasks.admin import send_vk_notify
 from btr.tasks.bookings import send_confirm_message, send_cancel_message
+from ..orm_utils import AsyncTools
 
 
 @admin.action(description=_('Confirm selected bookings'))
@@ -13,28 +14,23 @@ def make_confirm(modeladmin, request, queryset):
     for booking in queryset:
         booking.status = _('confirmed')
         booking.save()
-        email = booking.rider.email
-        pk = booking.pk
-        client = booking.rider.username
         f_phone = booking.foreign_number
         phone = f_phone if f_phone else booking.rider.phone_number
-        date = booking.booking_date
-        start = booking.start_time.strftime('%H:%M')
-        end = booking.end_time.strftime('%H:%M')
-        bikes = booking.bike_count
+        date = booking.booking_date.strftime('%Y-%B-%d')
         via = _('Admin panel')
         data = {
-            'pk': pk,
-            'client': client,
-            'date': date,
-            'start': start,
-            'end': end,
-            'bikes': bikes,
+            'pk': booking.pk,
+            'client': booking.rider.username,
+            'date': AsyncTools().get_friendly_date(date),
+            'start': booking.start_time.strftime('%H:%M'),
+            'end': booking.end_time.strftime('%H:%M'),
+            'bikes': booking.bike_count,
             'phone': str(phone),
             'status': booking.status,
+            'email': booking.rider.email,
         }
         send_vk_notify.delay(via, False, data, is_admin=True)
-        send_confirm_message.delay(email, pk, bikes, date, start, end)
+        send_confirm_message.delay(**data)
 
 
 @admin.action(description=_('Cancel selected bookings'))
@@ -42,28 +38,22 @@ def make_cancel(modeladmin, request, queryset):
     for booking in queryset:
         booking.status = _('canceled')
         booking.save()
-        email = booking.rider.email
-        pk = booking.pk
-        client = booking.rider.username
         f_phone = booking.foreign_number
-        phone = f_phone if f_phone else booking.rider.phone_number
-        date = booking.booking_date
-        start = booking.start_time.strftime('%H:%M')
-        end = booking.end_time.strftime('%H:%M')
-        bikes = booking.bike_count
+        date = booking.booking_date.strftime('%Y-%B-%d')
         via = _('Admin panel')
         data = {
-            'pk': pk,
-            'client': client,
-            'date': date,
-            'start': start,
-            'end': end,
-            'bikes': bikes,
-            'phone': str(phone),
+            'pk': booking.pk,
+            'client': booking.rider.username,
+            'email': booking.rider.email,
+            'date': AsyncTools().get_friendly_date(date),
+            'start': booking.start_time.strftime('%H:%M'),
+            'end': booking.end_time.strftime('%H:%M'),
+            'bikes': booking.bike_count,
+            'phone': str(f_phone if f_phone else booking.rider.phone_number),
             'status': booking.status,
         }
         send_vk_notify.delay(via, False, data, is_admin=True)
-        send_cancel_message.delay(email, pk, bikes, date, start, end)
+        send_cancel_message.delay(**data)
 
 
 class RiderAdminFilter(admin.SimpleListFilter):
@@ -107,7 +97,8 @@ class BookingAdmin(admin.ModelAdmin):
         client = obj.rider.username
         f_phone = obj.foreign_number
         phone = f_phone if f_phone else obj.rider.phone_number
-        date = obj.booking_date
+        booking_date = obj.booking_date.strftime('%Y-%B-%d')
+        date = AsyncTools().get_friendly_date(booking_date)
         start = obj.start_time.strftime('%H:%M')
         end = obj.end_time.strftime('%H:%M')
         bikes = obj.bike_count
@@ -116,10 +107,10 @@ class BookingAdmin(admin.ModelAdmin):
             changed_fields = form.changed_data
             if 'status' in changed_fields:
                 status = form.cleaned_data.get('status')
-                email = obj.rider.email
                 data = {
                     'pk': obj.pk,
                     'client': client,
+                    'email': obj.rider.email,
                     'date': date,
                     'start': start,
                     'end': end,
@@ -129,11 +120,9 @@ class BookingAdmin(admin.ModelAdmin):
                 }
                 send_vk_notify.delay(via, False, data, is_admin=True)
                 if status == _('confirmed'):
-                    send_confirm_message.delay(email, obj.pk, bikes,
-                                               date, start, end)
+                    send_confirm_message.delay(**data)
                 elif status == _('canceled'):
-                    send_cancel_message.delay(email, obj.pk, bikes,
-                                              date, start, end)
+                    send_cancel_message.delay(**data)
         else:
             last_booking = Booking.objects.latest('created_at')
             data = {
