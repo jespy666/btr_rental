@@ -1,262 +1,435 @@
 from datetime import datetime
-from typing import Union, Tuple, Optional
+from typing import Union, Tuple, Optional, Type, TypeVar
 
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import (ObjectDoesNotExist,
                                     MultipleObjectsReturned,
                                     ValidationError)
 from django.db.models import Q
+from django.db.models import Model
 from asgiref.sync import sync_to_async
 
 from btr.bookings.models import Booking
-from btr.tg_bot.utils.exceptions import SameStatusSelectedError, \
-    WrongPasswordError
+from btr.tg_bot.utils import exceptions as e
 from btr.users.models import SiteUser
-from btr.tasks.admin import send_vk_notify
-from btr.tasks.bookings import send_confirm_message, send_cancel_message, \
-    send_cancel_self_message
 
 
-def check_user_exist(email: str) -> bool:
-    """Check user exist by email"""
-    try:
-        SiteUser.objects.get(email=email)
-        return True
-    except ObjectDoesNotExist:
+T = TypeVar("T", bound=Model)
+
+
+class AsyncTools:
+    """
+    A utility class with methods for connect async and sync context, mostly
+     between Aiogram(async) and Django ORM(sync) for CRUD operation.
+    """
+    @sync_to_async
+    def get_queryset(self, user: SiteUser(), **kwargs) -> list:
+        """
+        Get a QuerySet of Booking objects based on the provided kw arguments.
+
+        Args:
+            user (SiteUser): The user for whom to retrieve bookings.
+            **kwargs: Additional keyword arguments to filter the queryset.
+
+        Returns:
+            list: The filtered Booking queryset.
+        """
+        queryset = Booking.objects.filter(rider=user.id)
+
+        for field, value in kwargs.items():
+            lookup = {field: value}
+            queryset = queryset.filter(**lookup)
+
+        queryset = queryset.exclude(status__in=[_('completed'), _('canceled')])
+        return list(queryset)
+
+    @sync_to_async
+    def get_object(self, model: Type[T], load_prefetch=None, **kwargs) -> T:
+        """
+        Get a Model object based on the provided keyword arguments.
+
+        Args:
+            model (Type[T]): The Model class.
+            load_prefetch (string | None): Load added bounded objects.
+            **kwargs: Keyword arguments to filter the object.
+
+        Returns:
+            T: The retrieved Model object.
+        """
+        if load_prefetch:
+            obj = model.objects.prefetch_related(load_prefetch).get(**kwargs)
+        else:
+            obj = model.objects.get(**kwargs)
+        return obj
+
+    @sync_to_async
+    def modify_booking(self, pk: str, **kwargs) -> None:
+        """
+        Modify booking attributes based on provided keyword arguments.
+
+        Args:
+            pk (str): The primary key of the booking to be modified.
+            **kwargs: Additional keyword arguments representing fields
+             and their new values.
+        """
+        booking = Booking.objects.get(pk=pk)
+        for field, value in kwargs.items():
+            setattr(booking, field, value)
+        booking.save()
+
+    @sync_to_async
+    def check_available_field(self, user_input: str) -> bool:
+        """
+        Check if the provided user input (username, email, or phone number)
+         is available.
+
+        Args:
+            user_input (str): The user input to check.
+
+        Returns:
+            bool: True if the user input is available, False otherwise.
+        """
+        login = user_input.lower()
+        try:
+            SiteUser.objects.get(
+                Q(username=login) |
+                Q(email=login) |
+                Q(phone_number=login)
+            )
+            raise e.UserAlreadyExists
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
+            return True
+
+    @sync_to_async
+    def create_user(self, **kwargs) -> str:
+        """
+        Create a new user with the provided keyword arguments.
+
+        Args:
+            **kwargs: Keyword arguments for creating the user
+             (e.g., username, email, etc.).
+
+        Returns:
+            str: The randomly generated password for the new user.
+        """
+        password = SiteUser.objects.make_random_password(length=8)
+        user = SiteUser.objects.create(**kwargs)
+        user.set_password(password)
+        user.save()
+        return password
+
+    @sync_to_async
+    def reset_password(self, **kwargs) -> str:
+        """
+        Reset the user's password and return the new randomly
+         generated password.
+
+        Args:
+            **kwargs: Keyword arguments to identify the user
+             (e.g., username, email, etc.).
+
+        Returns:
+            str: The newly generated password.
+        """
+        user = SiteUser.objects.get(**kwargs)
+        password = SiteUser.objects.make_random_password(length=8)
+        user.set_password(password)
+        user.save()
+        return password
+
+    @sync_to_async
+    def create_booking(self, **kwargs) -> str:
+        """
+        Create a new booking with the provided attributes.
+
+        Args:
+            **kwargs: Keyword arguments for creating the booking
+             (e.g., rider, date, etc.).
+
+        Returns:
+            str: The ID of the newly created booking.
+        """
+        user = SiteUser.objects.get(pk=kwargs.get('rider'))
+        kwargs['rider'] = user
+        booking = Booking.objects.create(**kwargs)
+        booking.save()
+        return str(booking.id)
+
+    async def edit_booking(self, **kwargs) -> None:
+        """
+        Edit an existing booking with the provided attributes.
+
+        Args:
+            **kwargs: Keyword arguments for editing the booking
+             (e.g., pk, date, start, end, bikes, etc.).
+
+        Returns:
+            None
+        """
+        pk = kwargs.get('pk')
+        edited_data = {
+            'booking_data': kwargs.get('date'),
+            'start_time': kwargs.get('start'),
+            'end_time': kwargs.get('end'),
+            'bike_count': kwargs.get('bikes'),
+            'status': _('pending')
+        }
+        await self.modify_booking(pk, **edited_data)
+
+    async def get_user_info(self, **kwargs) -> dict:
+        """
+        Get all user info.
+
+        Args:
+            **kwargs: Additional keyword arguments for querying the user.
+
+        Returns:
+            dict: A dictionary containing user information with keys:
+                - 'pk': User ID
+                - 'name': First name
+                - 'username': Username
+                - 'email': Email address
+                - 'phone': Phone number (as a string)
+
+        Raises:
+            UserDoesNotExists: If the user does not exist.
+        """
+        try:
+            user = await self.get_object(SiteUser, **kwargs)
+            return {
+                'pk': user.id,
+                'name': user.first_name,
+                'username': user.username,
+                'email': user.email,
+                'phone': str(user.phone_number),
+            }
+        except ObjectDoesNotExist:
+            raise e.UserDoesNotExists
+
+    async def check_password(self, password: str, **kwargs) -> None:
+        """
+        Check if the provided password is correct for the user.
+
+        Args:
+            password (str): The password to check.
+            **kwargs: Additional keyword arguments for querying the user.
+
+        Raises:
+            WrongPassword: If the password is incorrect.
+            UserDoesNotExists: If the user does not exist.
+        """
+        try:
+            user = await self.get_object(SiteUser, **kwargs)
+            if user.check_password(password):
+                return None
+            raise e.WrongPassword
+        except ObjectDoesNotExist:
+            raise e.UserDoesNotExists
+
+    async def get_user_bookings(self, **kwargs) -> dict:
+        """
+        Find and get all bookings for the user.
+
+        Args:
+            **kwargs: Additional keyword arguments for querying the user.
+
+        Returns:
+            dict: A dictionary containing booking data with keys:
+                - 'bookings_data': List of formatted booking information
+                - 'bookings_id': List of booking IDs (as strings)
+        """
+        user = await self.get_object(SiteUser, **kwargs)
+        bookings = await self.get_queryset(user, rider=user.id)
+        bookings_ids = [str(booking.id) for booking in bookings]
+        bookings_view = []
+        for booking in bookings:
+            book = _(
+                '<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong>'
+                ' | <strong>{start}</strong> - <strong>{end}</strong></em>'
+            ).format(
+                id=booking.id,
+                date=booking.booking_date,
+                start=booking.start_time.strftime('%H:%M'),
+                end=booking.end_time.strftime('%H:%M'),
+            )
+            bookings_view.append(book)
+        return {'bookings_data': bookings_view, 'bookings_id': bookings_ids}
+
+    async def create_account(self, data: dict) -> str:
+        """
+        Create a new user account with the provided user information.
+
+        Args:
+            data (dict): A dictionary containing user information
+             (e.g., name, username, phone, email, status).
+
+        Returns:
+            str: The randomly generated password for the new user account.
+        """
+        user_info = {
+            'first_name': data.get('name'),
+            'username': data.get('username'),
+            'phone_number': data.get('phone'),
+            'email': data.get('email'),
+            'status': data.get('status'),
+        }
+        password = await self.create_user(**user_info)
+        return password
+
+    async def make_booking(self, data: dict, is_admin=False) -> str:
+        """
+        Create a new booking with the provided data.
+
+        Args:
+            data (dict): A dictionary containing booking information
+             (e.g., pk, date, start, end, bikes, etc.).
+            is_admin (bool, optional): Indicates whether the booking
+             is confirmed by an admin. Defaults to False.
+
+        Returns:
+            str: The ID of the newly created booking.
+        """
+        booking = {
+            'rider': data.get('pk'),
+            'booking_date': data.get('date'),
+            'start_time': data.get('start'),
+            'end_time': data.get('end'),
+            'bike_count': data.get('bikes'),
+            'status': _('confirmed') if is_admin else _('pending'),
+        }
+        booking_id = await self.create_booking(**booking)
+        return booking_id
+
+    async def get_booking_info(self, load_prefetch=None, **kwargs) -> dict:
+        """
+        Check and return booking information based on the primary key.
+
+        Args:
+            load_prefetch (string | None): Load bounded object.
+            **kwargs: Additional keyword arguments for querying the booking.
+
+        Returns:
+            dict: A dictionary containing booking information with keys:
+                - 'date': Booking date in the format "YYYY Month DD"
+                - 'start': Start time of the booking (formatted as HH:MM)
+                - 'end': End time of the booking (formatted as HH:MM)
+                - 'status': Booking status
+                - 'bikes': Number of bikes booked
+                - 'phone': Phone number of the rider (as a string)
+                - 'f_phone': Foreign phone number (as a string)
+                - 'rider_id': Bounded user (as a string) or None.
+
+        Raises:
+            NotExistedId: If the booking with the given primary key
+             does not exist.
+        """
+        try:
+            booking = await self.get_object(
+                Booking, load_prefetch=load_prefetch, **kwargs)
+            booking_info = {
+                'date': booking.booking_date.strftime('%Y-%B-%d'),
+                'clean_date': booking.booking_date.strftime('%Y-%m-%d'),
+                'start': booking.start_time.strftime('%H:%M'),
+                'end': booking.end_time.strftime('%H:%M'),
+                'status': booking.status,
+                'bikes': booking.bike_count,
+                'f_phone': str(booking.foreign_number),
+                'rider_id': booking.rider.id if load_prefetch else None,
+            }
+            translated_month = self.get_friendly_date(booking_info.get('date'))
+            booking_info['friendly_date'] = translated_month
+            return booking_info
+        except ObjectDoesNotExist:
+            raise e.NotExistedId
+
+    @staticmethod
+    def get_friendly_date(date: str) -> str:
+        """
+        Translate the month name in the given date to the desired language.
+
+        Args:
+            date (str): Date in the format "YYYY Month DD"
+
+        Returns:
+            str: Translated month name (e.g., "March" in English)
+        """
+        parts = date.split('-')
+        year, month, day = parts
+        plural_month = f'{month}s'
+        return f'{day} {_(plural_month)}, {year}'
+
+    async def get_excluded_slot(self, email: str, date: str) -> tuple:
+        """
+        Checks and retrieves all available times
+         (if the user already has a reservation for that date).
+
+        Args:
+            email (str): The email address of the user.
+            date (str): The date for which to retrieve the booking.
+
+        Returns:
+            tuple: A tuple containing the start time and end time of the
+             existed booking (None if there are no bookings for this date).
+        """
+        user = await self.get_object(SiteUser, email=email)
+        queryset = await self.get_queryset(user, rider=user.id,
+                                           booking_date=date)
+        booking = queryset[-1]
+        if booking:
+            return booking.start_time, booking.end_time
+
+    async def get_available_status(self, **kwargs) -> str:
+        """
+        Determine the available status transition for a booking based
+         on its current status.
+
+        Args:
+            **kwargs: Keyword arguments to identify the booking
+             (e.g., pk, date, etc.).
+
+        Returns:
+            str: The updated status (either 'confirmed' or 'canceled').
+
+        Raises:
+            ObjectDoesNotExist: If the booking does not exist.
+        """
+        booking = await self.get_object(Booking, **kwargs)
+        status = booking.status
+        if status == _('confirmed'):
+            return _('canceled')
+        elif status == _('pending') or status == _('canceled'):
+            return _('confirmed')
         raise ObjectDoesNotExist
 
+    async def change_booking_status(self, status: str, pk: str) -> None:
+        """
+        Change the status of a booking identified by its primary key.
 
-def check_available_field(user_input: str) -> bool:
-    """Checks availability of field"""
-    try:
-        SiteUser.objects.get(
-            Q(username=user_input) |
-            Q(email=user_input) |
-            Q(phone_number=user_input)
-        )
-        return False
-    except ObjectDoesNotExist:
-        return True
-    except MultipleObjectsReturned:
-        return False
+        Args:
+            status (str): The new status to set for the booking
+             (e.g., 'confirmed', 'canceled', etc.).
+            pk (str): The primary key of the booking.
 
-
-def check_booking_info(booking_id: str) -> dict:
-    """Checking and return booking info by primary key"""
-    booking = Booking.objects.get(pk=int(booking_id))
-    return {
-        'date': booking.booking_date,
-        'start': booking.start_time.strftime('%H:%M'),
-        'end': booking.end_time.strftime('%H:%M'),
-        'status': booking.status,
-        'bikes': booking.bike_count,
-        'phone': booking.rider.phone_number,
-        'f_phone': booking.foreign_number,
-        'r_username': booking.rider.username,
-    }
-
-
-def change_booking_status(booking_id: str, status: str) -> str:
-    """Change booking status by primary key and notify admin in Vk"""
-    booking = Booking.objects.get(pk=int(booking_id))
-    old_status = booking.status
-    if old_status == status:
-        raise SameStatusSelectedError
-    booking.status = status
-    booking.save()
-    pk = booking.pk
-    email = booking.rider.email
-    client = booking.rider.username
-    f_phone = booking.foreign_number
-    phone = f_phone if f_phone else booking.rider.phone_number
-    bikes = booking.bike_count
-    date = booking.booking_date
-    start = booking.start_time.strftime('%H:%M')
-    end = booking.end_time.strftime('%H:%M')
-    via = _('Telegram Bot')
-    data = {
-        'pk': pk,
-        'client': client,
-        'date': date,
-        'start': start,
-        'end': end,
-        'bikes': bikes,
-        'phone': str(phone),
-        'status': booking.status,
-    }
-    send_vk_notify.delay(via, False, data, is_admin=True)
-    if not client == 'admin':
-        if status == _('confirmed'):
-            send_confirm_message.delay(email, pk, bikes, date, start, end)
-        elif status == _('canceled'):
-            send_cancel_message.delay(email, pk, bikes, date, start, end)
-    return old_status
-
-
-def create_user_by_bot(reg_data: dict) -> str:
-    """User create an account via tg bot"""
-    username = reg_data.get('regusername')
-    first_name = reg_data.get('regname')
-    email = reg_data.get('regemail')
-    phone_number = reg_data.get('regphone')
-    password = SiteUser.objects.make_random_password(length=8)
-
-    user = SiteUser.objects.create(
-        username=username,
-        email=email,
-        phone_number=phone_number,
-        first_name=first_name,
-        status='Newbie',
-    )
-
-    user.set_password(password)
-    user.save()
-    return password
-
-
-def create_booking_by_admin(book_data: dict) -> None:
-    """Admin create booking by rider phone number via tg bot.
-    Booked to admin account"""
-    user = SiteUser.objects.get(username='admin')
-    phone = book_data.get('phone')
-    date = book_data.get('date')
-    start = datetime.strptime(book_data.get('start'), '%H:%M')
-    end = datetime.strptime(book_data.get('end'), '%H:%M')
-    bikes = book_data.get('bikes')
-
-    booking = Booking.objects.create(
-        rider=user,
-        foreign_number=phone,
-        booking_date=date,
-        start_time=start,
-        end_time=end,
-        bike_count=bikes,
-        status=_('confirmed')
-    )
-    booking.save()
-    data = {
-        'pk': booking.pk,
-        'client': user.username,
-        'date': date,
-        'start': book_data.get('start'),
-        'end': book_data.get('end'),
-        'bikes': bikes,
-        'phone': str(phone),
-        'status': booking.status,
-    }
-    via = _('Telegram Bot')
-    send_vk_notify.delay(via, True, data, is_admin=True)
-
-
-def create_booking_by_bot(user_data: dict) -> str:
-    """User create booking yourself via tg bot"""
-    user_email = user_data.get('email')
-    user = SiteUser.objects.get(email=user_email)
-
-    date = user_data.get('date')
-    start = datetime.strptime(user_data.get('start'), '%H:%M')
-    end = datetime.strptime(user_data.get('end'), '%H:%M')
-    bikes = user_data.get('bikes')
-    phone = user.phone_number
-
-    booking = Booking.objects.create(
-        rider=user,
-        booking_date=date,
-        start_time=start,
-        end_time=end,
-        bike_count=bikes,
-        status=_('pending'),
-    )
-    booking.save()
-    data = {
-        'pk': booking.pk,
-        'client': user.username,
-        'date': date,
-        'start': user_data.get('start'),
-        'end': user_data.get('end'),
-        'bikes': bikes,
-        'phone': str(phone),
-        'status': booking.status,
-    }
-    via = _('Telegram Bot')
-    send_vk_notify.delay(via, True, data, is_admin=False)
-    return booking.pk
-
-
-def reset_user_password(user_email: str) -> tuple:
-    """Set new random password to user by emails"""
-    user = SiteUser.objects.get(email=user_email)
-    username = user.username
-    password = SiteUser.objects.make_random_password(length=8)
-    user.set_password(password)
-    user.save()
-    return password, username
-
-
-def check_password(email: str, password: str) -> bool:
-    """Check password is correct"""
-    user = SiteUser.objects.get(email=email)
-    if user.check_password(password):
-        return True
-    raise WrongPasswordError
-
-
-def get_username(email: str) -> str:
-    """Get username by email"""
-    user = SiteUser.objects.get(email=email)
-    return user.username
-
-
-def cancel_booking(pk: str, email: str) -> None:
-    """Cancel booking by user from TG bot"""
-    booking = Booking.objects.get(pk=pk)
-    booking.status = _('canceled')
-    booking.save()
-    data = {
-        'pk': booking.id,
-        'phone': str(booking.rider.phone_number),
-        'date': booking.booking_date,
-        'start': booking.start_time.strftime('%H:%M'),
-        'end': booking.end_time.strftime('%H:%M'),
-        'bikes': booking.bike_count,
-        'status': booking.status,
-        'client': booking.rider.username,
-    }
-    via = _('Telegram Bot')
-    send_vk_notify.delay(via, False, data, False)
-    send_cancel_self_message.delay(
-        email,
-        pk,
-        booking.bike_count,
-        booking.booking_date,
-        booking.start_time.strftime('%H:%M'),
-        booking.end_time.strftime('%H:%M')
-    )
-
-
-def get_user_bookings(email: str) -> dict:
-    """Find and get all bookings for user are request"""
-    user = SiteUser.objects.get(email=email)
-    bookings = Booking.objects.filter(
-        rider=user.id
-    ).exclude(status__in=[_('completed'), _('canceled')])
-    bookings_ids = [str(booking.id) for booking in bookings]
-    bookings_view = []
-    for booking in bookings:
-        book = _(
-            '<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong>'
-            ' | <strong>{start}</strong> - <strong>{end}</strong></em>'
-        ).format(
-            id=booking.id,
-            date=booking.booking_date,
-            start=booking.start_time.strftime('%H:%M'),
-            end=booking.end_time.strftime('%H:%M'),
-        )
-        bookings_view.append(book)
-    return {'bookings_data': bookings_view, 'bookings_id': bookings_ids}
+        Returns:
+            None
+        """
+        booking = await self.get_object(Booking, pk=pk)
+        booking.status = status
+        await sync_to_async(booking.save)()
 
 
 class SlotsFinder:
+    """
+    A utility class for finding available time slots.
+
+    Attributes:
+        ORDINARY_SLOTS (str): The default time range for ordinary slots.
+        WEEKEND_SLOTS (str): The time range for weekend slots.
+        FRIDAY (int): The day of the week corresponding to Friday (5).
+
+    Args:
+        date (str): The date for which slots need to be found.
+    """
 
     ORDINARY_SLOTS = '16:00:00-22:00:00'
     WEEKEND_SLOTS = '10:00:00-18:00:00'
@@ -266,18 +439,40 @@ class SlotsFinder:
         self.date = date
 
     def is_weekend(self) -> bool:
-        """Check if day is a weekend"""
+        """
+        Check if the given date falls on a weekend.
+
+        Returns:
+            bool: True if the date is a weekend (Saturday or Sunday),
+             False otherwise.
+        """
         f_date = datetime.strptime(self.date, "%Y-%m-%d")
         return f_date.weekday() >= self.FRIDAY
 
     def get_booked_slots(self) -> list:
-        """Get busy time ranges from db"""
+        """
+        Retrieve busy time ranges from the database.
+
+        Returns:
+            list: A list of strings representing booked time slots
+             in the format "start_time-end_time".
+        """
         bookings = (Booking.objects.filter(booking_date=self.date)
                     .exclude(status='canceled'))
         return [f'{book.start_time}-{book.end_time}' for book in bookings]
 
     def get_booked_slots_for_edit(self, excluded_slot: tuple) -> list:
-        """Get busy time ranges exclude current range"""
+        """
+        Retrieve busy time ranges excluding the current range.
+
+        Args:
+            excluded_slot (tuple): A tuple representing the current time range
+             (start_time, end_time).
+
+        Returns:
+            list: A list of strings representing booked time slots
+             that do not overlap with the excluded range.
+        """
         exc_start, exc_end = excluded_slot
         bookings = (Booking.objects.filter(booking_date=self.date)
                     .exclude(status='canceled'))
@@ -286,7 +481,17 @@ class SlotsFinder:
 
     @staticmethod
     def get_booked_seconds(booked_slots: list) -> list:
-        """Calculate booked ranges to seconds"""
+        """
+        Convert booked time slots to seconds.
+
+        Args:
+            booked_slots (list): A list of strings representing
+             booked time slots in the format "start_time-end_time".
+
+        Returns:
+            list: A list of tuples, where each tuple contains the
+             start and end times in seconds.
+        """
         booked_seconds = []
         for slot in booked_slots:
             start, end = map(lambda x: int(x.replace(':', '')),
@@ -295,6 +500,17 @@ class SlotsFinder:
         return sorted(booked_seconds)
 
     def get_available_slots(self, booked_seconds: list):
+        """
+        Calculate available time slots based on booked seconds.
+
+        Args:
+            booked_seconds (list): A list of tuples representing
+             booked time slots in seconds.
+
+        Returns:
+            list: A list of tuples representing available time slots
+             in the format (start_time, end_time).
+        """
         if self.is_weekend():
             total_start, total_end = map(lambda x: int(x.replace(':', '')),
                                          self.WEEKEND_SLOTS.split('-'))
@@ -324,7 +540,17 @@ class SlotsFinder:
                 None,
                 Tuple[Optional[datetime.time], Optional[datetime.time]]
             ] = None) -> list:
-        """Get list of available slots for view"""
+        """
+        Get a list of available time slots (for django view).
+
+        Args:
+            excluded_slot (tuple, optional): A tuple representing
+             the current time range (start_time, end_time). Defaults to None.
+
+        Returns:
+            list: A list of tuples representing available time slots
+             in the format (start_time, end_time).
+        """
         if self.date.split('-')[-1] == '0':
             return []
         if not excluded_slot:
@@ -335,11 +561,25 @@ class SlotsFinder:
         available_slots = self.get_available_slots(booked_seconds)
         return available_slots
 
-    async def find_available_slots_as(self) -> list:
-        """Get list of available slots for bot"""
+    async def find_available_slots_as(self, excluded_slot=None) -> list:
+        """
+        Get a list of available time slots (for bot).
+
+        Args:
+            excluded_slot (tuple, optional): A tuple representing
+             the current time range (start_time, end_time). Defaults to None.
+
+        Returns:
+            list: A list of tuples representing available time slots
+             in the format (start_time, end_time).
+        """
         get_booking_slots_as = sync_to_async(self.get_booked_slots)
-        booked_slots = await get_booking_slots_as()
+        get_slots_for_edit = sync_to_async(self.get_booked_slots_for_edit)
         try:
+            if not excluded_slot:
+                booked_slots = await get_booking_slots_as()
+            else:
+                booked_slots = await get_slots_for_edit(excluded_slot)
             booked_seconds = self.get_booked_seconds(booked_slots)
             available_slots = self.get_available_slots(booked_seconds)
             return available_slots
@@ -348,7 +588,20 @@ class SlotsFinder:
 
 
 class LoadCalc:
+    """
+    A utility class for calculating load-related information.
 
+    Attributes:
+        FRIDAY (int): The day of the week corresponding to Friday (5).
+        ORDINARY_DAY_HOURS (int): The number of hours in an ordinary
+         workday (6).
+        WEEKEND_DAY_HOURS (int): The number of hours in a weekend workday (8).
+
+    Args:
+        calendar (list): A list representing the calendar data.
+        year (int): The year for which load calculations are performed.
+        month (int): The month for which load calculations are performed.
+    """
     FRIDAY = 5
     ORDINARY_DAY_HOURS = 6
     WEEKEND_DAY_HOURS = 8
@@ -359,7 +612,16 @@ class LoadCalc:
         self.month = month
 
     def get_day_load(self, date: str) -> int:
-        """Get the workload of given date as a percentage"""
+        """
+        Calculate the workload of a given date as a percentage.
+
+        Args:
+            date (str): The date for which workload needs to be calculated.
+
+        Returns:
+            int: Workload percentage (rounded down).
+                -1 if the date is invalid (e.g., last day of the month).
+        """
         if date.split('-')[-1] == '0':
             return -1
         bookings = (Booking.objects.filter(booking_date=date)
@@ -377,7 +639,16 @@ class LoadCalc:
         return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
 
     def get_week_load(self, week: list) -> list:
-        """Distribute load on week"""
+        """
+        Distribute workload across the week.
+
+        Args:
+            week (list): A list of day numbers representing the week.
+
+        Returns:
+            list: A list of tuples containing day information, workload
+             percentage, and available slots.
+        """
         week_load = []
         for day in week:
             date = f'{self.year}-{self.month}-{day}'
@@ -387,24 +658,24 @@ class LoadCalc:
         return week_load
 
     def is_weekend(self, date: str) -> bool:
-        """Check if day is a weekend"""
+        """
+        Check if the given date falls on a weekend.
+
+        Args:
+            date (str): The date for which to check.
+
+        Returns:
+            bool: True if the date is a weekend (Saturday or Sunday),
+             False otherwise.
+        """
         f_date = datetime.strptime(date, "%Y-%m-%d")
         return f_date.weekday() >= self.FRIDAY
 
     def get_month_load(self):
-        """Calculate full month load"""
+        """
+        Calculate the full month's workload distribution.
+
+        Returns:
+            list: A list of weekly workload information.
+        """
         return [self.get_week_load(week) for week in self.calendar]
-
-
-check_available_field_as = sync_to_async(check_available_field)
-check_user_exist_as = sync_to_async(check_user_exist)
-create_account_as = sync_to_async(create_user_by_bot)
-make_foreign_book_as = sync_to_async(create_booking_by_admin)
-create_booking_as = sync_to_async(create_booking_by_bot)
-check_booking_info_as = sync_to_async(check_booking_info)
-change_booking_status_as = sync_to_async(change_booking_status)
-reset_user_password_as = sync_to_async(reset_user_password)
-check_password_as = sync_to_async(check_password)
-get_username_as = sync_to_async(get_username)
-get_user_bookings_as = sync_to_async(get_user_bookings)
-cancel_booking_as = sync_to_async(cancel_booking)
