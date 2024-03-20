@@ -1,6 +1,8 @@
 import os
 import secrets
 import string
+from typing import List, Tuple
+
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from aiogram.types import ReplyKeyboardMarkup
@@ -20,7 +22,7 @@ def check_admin_access(user_id: int) -> bool:
     return user_id in eval(admin_ids)
 
 
-def extract_start_times(intervals: list) -> list:
+def extract_start_times(intervals: List[Tuple]) -> list:
     """Get all available start times to bot buttons"""
     start_times = []
     for start, end in intervals:

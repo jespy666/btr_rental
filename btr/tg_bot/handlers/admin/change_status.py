@@ -50,7 +50,7 @@ class ChangeStatus:
         booking_info = await AsyncTools().get_booking_info(
             load_prefetch='rider', pk=pk)
         changeable_status = await AsyncTools().get_available_status(pk=pk)
-        kb_reply = DialogKB([str(changeable_status),]).place()
+        kb_reply = DialogKB(changeable_status).place()
         status = booking_info.get('status')
         is_admin = booking_info.get('f_phone')
         rider_id = booking_info.get('rider_id')
