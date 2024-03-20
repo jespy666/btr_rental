@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 17:29+0300\n"
+"POT-Creation-Date: 2024-03-20 17:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,10 +77,11 @@ msgstr "Подтвердить выбранные записи"
 #: btr/bookings/tests/test_admin_actions.py:20
 #: btr/bookings/tests/test_admin_actions.py:21
 #: btr/bookings/tests/test_admin_tasks.py:15 btr/bookings/views.py:128
-#: btr/orm_utils.py:223 btr/orm_utils.py:298 btr/orm_utils.py:301
-#: btr/tasks/admin.py:27 btr/templates/bookings/show.html:19
+#: btr/orm_utils.py:298 btr/orm_utils.py:398 btr/orm_utils.py:401
+#: btr/orm_utils.py:403 btr/tasks/admin.py:27
+#: btr/templates/bookings/show.html:19
 #: btr/tg_bot/handlers/admin/change_status.py:104
-#: btr/tg_bot/utils/handlers.py:102 btr/tg_bot/utils/validators.py:111
+#: btr/tg_bot/utils/handlers.py:104 btr/tg_bot/utils/validators.py:111
 msgid "confirmed"
 msgstr "подтверждена"
 
@@ -97,9 +98,9 @@ msgstr "Отменить выбранные записи"
 #: btr/bookings/tests/test_admin_actions.py:35
 #: btr/bookings/tests/test_admin_tasks.py:41
 #: btr/bookings/tests/test_cancel.py:16 btr/bookings/tests/test_cancel.py:38
-#: btr/bookings/views.py:232 btr/orm_utils.py:40 btr/orm_utils.py:299
-#: btr/orm_utils.py:300 btr/tasks/admin.py:28
-#: btr/tg_bot/handlers/cancel_booking.py:17 btr/tg_bot/utils/handlers.py:103
+#: btr/bookings/views.py:234 btr/orm_utils.py:43 btr/orm_utils.py:399
+#: btr/orm_utils.py:400 btr/orm_utils.py:403 btr/tasks/admin.py:28
+#: btr/tg_bot/handlers/cancel_booking.py:17 btr/tg_bot/utils/handlers.py:105
 #: btr/tg_bot/utils/validators.py:111 btr/users/views.py:50
 #: btr/users/views.py:53
 msgid "canceled"
@@ -267,11 +268,12 @@ msgid "bikes in rent"
 msgstr "Байков в прокате"
 
 #: btr/bookings/models.py:44 btr/bookings/views.py:132
-#: btr/bookings/views.py:209 btr/orm_utils.py:122 btr/orm_utils.py:223
-#: btr/orm_utils.py:300 btr/tasks/admin.py:26 btr/tasks/admin.py:68
-#: btr/templates/bookings/show.html:17 btr/templates/users/bookings.html:25
+#: btr/bookings/views.py:209 btr/bookings/views.py:213 btr/orm_utils.py:175
+#: btr/orm_utils.py:298 btr/orm_utils.py:402 btr/tasks/admin.py:26
+#: btr/tasks/admin.py:68 btr/templates/bookings/show.html:17
+#: btr/templates/users/bookings.html:25
 #: btr/tg_bot/handlers/create_booking.py:161
-#: btr/tg_bot/handlers/edit_booking.py:286 btr/tg_bot/utils/handlers.py:101
+#: btr/tg_bot/handlers/edit_booking.py:238 btr/tg_bot/utils/handlers.py:103
 #: btr/tg_bot/utils/validators.py:111
 msgid "pending"
 msgstr "ожидает подтверждения"
@@ -284,8 +286,8 @@ msgstr "ожидает подтверждения"
 msgid "accepted"
 msgstr "принята"
 
-#: btr/bookings/models.py:46 btr/orm_utils.py:40
-#: btr/templates/modals/history.html:30 btr/tg_bot/utils/handlers.py:104
+#: btr/bookings/models.py:46 btr/orm_utils.py:43
+#: btr/templates/modals/history.html:30 btr/tg_bot/utils/handlers.py:106
 #: btr/users/views.py:50 btr/users/views.py:53
 msgid "completed"
 msgstr "завершена"
@@ -341,7 +343,7 @@ msgid "You must to be login to book ride"
 msgstr "Выполните вход для записи на прокат"
 
 #: btr/bookings/views.py:147 btr/bookings/views.py:198
-#: btr/bookings/views.py:236
+#: btr/bookings/views.py:238
 msgid "Web Site"
 msgstr "Сайт"
 
@@ -357,11 +359,11 @@ msgstr "Войдите в аккаунт чтобы изменять запис�
 msgid "You can't change another user bookings!"
 msgstr "Вы не можете изменять записи других поьзователей"
 
-#: btr/bookings/views.py:226
+#: btr/bookings/views.py:228
 msgid "You are canceled the ride"
 msgstr "Вы отменили запись на прокат"
 
-#: btr/bookings/views.py:227
+#: btr/bookings/views.py:229
 msgid "You must to be Log In"
 msgstr "Необходимо войти в аккаунт"
 
@@ -443,7 +445,7 @@ msgstr "Запись изменена"
 msgid "You are edit the booking"
 msgstr "Вы изменили запись на прокат"
 
-#: btr/orm_utils.py:194
+#: btr/orm_utils.py:247
 #, python-brace-format
 msgid ""
 "<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong> | <strong>{start}"
@@ -933,8 +935,8 @@ msgid ""
 "If you are not satisfied with the new time or date, you can cancel your "
 "appointment, or contact us on social networks or by phone"
 msgstr ""
-"Если вас не устраивает новая дата или время проката, вы можете отменить запись "
-"или связаться с нами в соц. сетях или по телефонам:"
+"Если вас не устраивает новая дата или время проката, вы можете отменить "
+"запись или связаться с нами в соц. сетях или по телефонам:"
 
 #: btr/templates/emails/email_base.html:282
 msgid "You have changed your rental appointment"
@@ -945,7 +947,8 @@ msgid ""
 "We will approve your changes shortly. You will receive a confirmation email "
 "soon..."
 msgstr ""
-"В ближайшее время мы обработаем ваши изменения к записи и отправим подтверждение на почту"
+"В ближайшее время мы обработаем ваши изменения к записи и отправим "
+"подтверждение на почту"
 
 #: btr/templates/emails/email_base.html:291
 msgid "You are requested a password reset"
@@ -1600,7 +1603,7 @@ msgstr ""
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:108
 #: btr/tg_bot/handlers/create_booking.py:93
-#: btr/tg_bot/handlers/edit_booking.py:172
+#: btr/tg_bot/handlers/edit_booking.py:123
 #, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
@@ -1621,13 +1624,13 @@ msgstr ""
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:114
 #: btr/tg_bot/handlers/create_booking.py:99
-#: btr/tg_bot/handlers/edit_booking.py:178
+#: btr/tg_bot/handlers/edit_booking.py:129
 msgid "<em>Choose available start time from options ⤵️</em>"
 msgstr "<em>Выберите время начала из вариантов ⤵️</em>"
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:127
 #: btr/tg_bot/handlers/create_booking.py:114
-#: btr/tg_bot/handlers/edit_booking.py:194
+#: btr/tg_bot/handlers/edit_booking.py:146
 #, python-brace-format
 msgid ""
 "🔴🔴🔴\n"
@@ -1644,7 +1647,7 @@ msgstr ""
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:147
 #: btr/tg_bot/handlers/create_booking.py:132
-#: btr/tg_bot/handlers/edit_booking.py:218
+#: btr/tg_bot/handlers/edit_booking.py:170
 #, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
@@ -1664,7 +1667,7 @@ msgstr ""
 "Начало ➡️  🕒 <strong>{start}</strong></em>"
 
 #: btr/tg_bot/handlers/admin/foreign_book.py:152
-#: btr/tg_bot/handlers/edit_booking.py:223 btr/tg_bot/utils/decorators.py:130
+#: btr/tg_bot/handlers/edit_booking.py:175 btr/tg_bot/utils/decorators.py:130
 #: btr/tg_bot/utils/decorators.py:175
 msgid "<em>Choose hours from options ⤵️</em>"
 msgstr "<em>Выберите количество часов из вариантов ⤵️</em>"
@@ -1715,7 +1718,7 @@ msgstr ""
 "Для отмены записи, напишите email от аккаунта</em>"
 
 #: btr/tg_bot/handlers/cancel_booking.py:39
-#: btr/tg_bot/handlers/edit_booking.py:47
+#: btr/tg_bot/handlers/edit_booking.py:44
 #, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
@@ -1731,7 +1734,7 @@ msgstr ""
 "\n"
 
 #: btr/tg_bot/handlers/cancel_booking.py:44
-#: btr/tg_bot/handlers/edit_booking.py:52
+#: btr/tg_bot/handlers/edit_booking.py:49
 msgid ""
 "<em>To confirm your identity,\n"
 "please enter your account password</em>"
@@ -1740,7 +1743,7 @@ msgstr ""
 "введите пароль от аккаунта</em>"
 
 #: btr/tg_bot/handlers/cancel_booking.py:68
-#: btr/tg_bot/handlers/edit_booking.py:76
+#: btr/tg_bot/handlers/edit_booking.py:73
 #, python-brace-format
 msgid ""
 "➖➖➖\n"
@@ -1762,7 +1765,7 @@ msgstr ""
 "выберите команду /book !</em>"
 
 #: btr/tg_bot/handlers/cancel_booking.py:78
-#: btr/tg_bot/handlers/edit_booking.py:86
+#: btr/tg_bot/handlers/edit_booking.py:83
 #, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
@@ -2063,17 +2066,15 @@ msgstr ""
 "\n"
 "👤 <strong>broteamracing.ru/auth/login</strong></em>"
 
-#: btr/tg_bot/handlers/edit_booking.py:25
-#: btr/tg_bot/handlers/edit_booking.py:153
-#: btr/tg_bot/handlers/edit_booking.py:189
-#: btr/tg_bot/handlers/edit_booking.py:207
-#: btr/tg_bot/handlers/edit_booking.py:240
-#: btr/tg_bot/handlers/edit_booking.py:247
-#: btr/tg_bot/handlers/edit_booking.py:277
+#: btr/tg_bot/handlers/edit_booking.py:22
+#: btr/tg_bot/handlers/edit_booking.py:159
+#: btr/tg_bot/handlers/edit_booking.py:192
+#: btr/tg_bot/handlers/edit_booking.py:199
+#: btr/tg_bot/handlers/edit_booking.py:229
 msgid "Unchanged"
 msgstr "Не менять"
 
-#: btr/tg_bot/handlers/edit_booking.py:32
+#: btr/tg_bot/handlers/edit_booking.py:29
 msgid ""
 "<em><strong>Edit booking</strong>\n"
 "\n"
@@ -2083,56 +2084,11 @@ msgstr ""
 "\n"
 "Что-бы изменить запись, напишите Email от аккаунта</em>"
 
-#: btr/tg_bot/handlers/edit_booking.py:95
+#: btr/tg_bot/handlers/edit_booking.py:92
 msgid "<em>Select the booking ID you want to edit ⤵️</em>"
 msgstr "<em>Выберите ID записи, которую хотите изменить ⤵️</em>"
 
-#: btr/tg_bot/handlers/edit_booking.py:116
-#, python-brace-format
-msgid ""
-"🟢🟢🟢\n"
-"\n"
-"<em>Ride data ↙️\n"
-"\n"
-"ID: <strong>#{pk}</strong>\n"
-"Status: {emoji} <strong>{status}</strong>\n"
-"Date: <strong>{date}</strong>\n"
-"Time: <strong>{start} - {end}</strong>\n"
-"Bikes: <strong>{bikes}</strong> bike(s)</em>"
-msgstr ""
-"🟢🟢🟢\n"
-"\n"
-"<em>Детали записи ↙️\n"
-"\n"
-"ID: <strong>#{pk}</strong>\n"
-"Статус: {emoji} <strong>{status}</strong>\n"
-"Дата: <strong>{date}</strong>\n"
-"Время: <strong>{start} - {end}</strong>\n"
-"Байки: <strong>{bikes}</strong> байк(а)</em>"
-
-#: btr/tg_bot/handlers/edit_booking.py:133
-msgid ""
-"<em>If you want to change booking date,\n"
-"type it below\n"
-"\n"
-"📆 <strong>Format: YYYY-MM-DD</strong>\n"
-"\n"
-"⚠️ <strong>Type with '-'</strong> ⤵️\n"
-"\n"
-"If you want to leave the date unchanged,\n"
-"Press <strong>Unchanged</strong> button ⤵️</em>"
-msgstr ""
-"<em>Если хотите изменить дату записи,\n"
-"напечатайте ее на клавиатуре\n"
-"\n"
-"📆 <strong>Формат ввода: ГГГГ-ММ-ДД</strong>\n"
-"\n"
-"⚠️ <strong>Печатайте с символом '-'</strong> ⤵️\n"
-"\n"
-"Если хотите оставить дату без изменений,\n"
-"Нажмите кнопку <strong>Не менять</strong> ⤵️</em>"
-
-#: btr/tg_bot/handlers/edit_booking.py:253
+#: btr/tg_bot/handlers/edit_booking.py:205
 #, python-brace-format
 msgid ""
 "🟢🟢🟢\n"
@@ -2149,7 +2105,7 @@ msgstr ""
 "\n"
 "🏍 Вы выбрали: <strong>{bikes}</strong> байк(а)</em>"
 
-#: btr/tg_bot/handlers/edit_booking.py:259
+#: btr/tg_bot/handlers/edit_booking.py:211
 msgid ""
 "<em>Choose bike count if yes, otherwise,\n"
 "press <strong>Unchanged</strong> button ⤵️</em>"
@@ -2157,7 +2113,7 @@ msgstr ""
 "<em>Если да, выберите количество из вариантов,\n"
 "Или нажмите кнопку <strong>Не менять</strong> ⤵️</em>"
 
-#: btr/tg_bot/handlers/edit_booking.py:290
+#: btr/tg_bot/handlers/edit_booking.py:242
 #, python-brace-format
 msgid ""
 "🎉🎉🎉\n"
@@ -2741,7 +2697,7 @@ msgstr ""
 "\n"
 "Или введите пароль снова ↙️</em>"
 
-#: btr/tg_bot/utils/handlers.py:145
+#: btr/tg_bot/utils/handlers.py:147
 msgid "Telegram Bot"
 msgstr "Телеграм Бот"
 
@@ -2845,3 +2801,43 @@ msgstr "Невозможно удалить чужой аккаунт"
 #: btr/users/views.py:118
 msgid "Can't delete user with existed bookings"
 msgstr "Невозможно удалить пользователя, у которого есть бронирование"
+
+#: btr/workhours/admin.py:15
+msgid "Only two records are allowed here!"
+msgstr "Максимальное количество записей: 2"
+
+#: btr/workhours/admin.py:22
+msgid "Opening hours operation"
+msgstr "Установка режима работы"
+
+#: btr/workhours/apps.py:8
+msgid "Working hours"
+msgstr "Режим работы"
+
+#: btr/workhours/models.py:9
+msgid "Working day"
+msgstr "Будние дни"
+
+#: btr/workhours/models.py:10
+msgid "Weekend day"
+msgstr "Выходные дни"
+
+#: btr/workhours/models.py:16
+msgid "Weekday"
+msgstr "День недели"
+
+#: btr/workhours/models.py:18
+msgid "Open hours"
+msgstr "Открытие"
+
+#: btr/workhours/models.py:19
+msgid "Close hours"
+msgstr "Закрытие"
+
+#: btr/workhours/models.py:25
+msgid "Work hour"
+msgstr "Часы работы"
+
+#: btr/workhours/models.py:26
+msgid "Work hours"
+msgstr "Режим работы"
