@@ -210,6 +210,8 @@ class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
             }
             send_vk_notify.delay(via, False, data, False)
             send_self_edit_booking_message(**data)
+            form.instance.status = _('pending')
+            form.save()
         return super().form_valid(form)
 
     def get_success_url(self):
