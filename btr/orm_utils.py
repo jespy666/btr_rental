@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Union, Tuple, Optional, Type, TypeVar
+from datetime import datetime, timedelta
+from typing import Tuple, Type, TypeVar, List
 
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import (ObjectDoesNotExist,
@@ -12,7 +12,7 @@ from asgiref.sync import sync_to_async
 from btr.bookings.models import Booking
 from btr.tg_bot.utils import exceptions as e
 from btr.users.models import SiteUser
-
+from btr.workhours.models import WorkHours
 
 T = TypeVar("T", bound=Model)
 
@@ -378,7 +378,7 @@ class AsyncTools:
         if booking:
             return booking.start_time, booking.end_time
 
-    async def get_available_status(self, **kwargs) -> str:
+    async def get_available_status(self, **kwargs) -> List:
         """
         Determine the available status transition for a booking based
          on its current status.
@@ -396,9 +396,11 @@ class AsyncTools:
         booking = await self.get_object(Booking, **kwargs)
         status = booking.status
         if status == _('confirmed'):
-            return _('canceled')
-        elif status == _('pending') or status == _('canceled'):
-            return _('confirmed')
+            return [str(_('canceled')),]
+        elif status == _('canceled'):
+            return [str(_('confirmed')),]
+        elif status == _('pending'):
+            return [str(_('confirmed')), str(_('canceled'))]
         raise ObjectDoesNotExist
 
     async def change_booking_status(self, status: str, pk: str) -> None:
@@ -423,20 +425,47 @@ class SlotsFinder:
     A utility class for finding available time slots.
 
     Attributes:
-        ORDINARY_SLOTS (str): The default time range for ordinary slots.
-        WEEKEND_SLOTS (str): The time range for weekend slots.
         FRIDAY (int): The day of the week corresponding to Friday (5).
 
     Args:
         date (str): The date for which slots need to be found.
     """
 
-    ORDINARY_SLOTS = '16:00:00-22:00:00'
-    WEEKEND_SLOTS = '10:00:00-18:00:00'
     FRIDAY = 5
 
     def __init__(self, date: str):
         self.date = date
+
+    @staticmethod
+    def get_workhours() -> dict:
+        """
+        Get work time ranges from database.
+
+        Returns:
+            dict: dictionary with default open time slots.
+        """
+        ordinary_slots = WorkHours.objects.get(day='Workday')
+        weekend_slots = WorkHours.objects.get(day='Weekend')
+        return {
+            'ordinary_slots': (ordinary_slots.open, ordinary_slots.close),
+            'weekend_slots': (weekend_slots.open, weekend_slots.close),
+        }
+
+    @staticmethod
+    @sync_to_async
+    def get_workhours_as() -> dict:
+        """
+        Get work time ranges from database asynchronous(for bot usage).
+
+        Returns:
+            dict: dictionary with default open time slots.
+        """
+        ordinary_slots = WorkHours.objects.get(day='Workday')
+        weekend_slots = WorkHours.objects.get(day='Weekend')
+        return {
+            'ordinary_slots': (ordinary_slots.open, ordinary_slots.close),
+            'weekend_slots': (weekend_slots.open, weekend_slots.close),
+        }
 
     def is_weekend(self) -> bool:
         """
@@ -449,7 +478,7 @@ class SlotsFinder:
         f_date = datetime.strptime(self.date, "%Y-%m-%d")
         return f_date.weekday() >= self.FRIDAY
 
-    def get_booked_slots(self) -> list:
+    def get_booked_slots(self) -> List[Tuple]:
         """
         Retrieve busy time ranges from the database.
 
@@ -457,11 +486,12 @@ class SlotsFinder:
             list: A list of strings representing booked time slots
              in the format "start_time-end_time".
         """
-        bookings = (Booking.objects.filter(booking_date=self.date)
-                    .exclude(status='canceled'))
-        return [f'{book.start_time}-{book.end_time}' for book in bookings]
+        bookings = (Booking.objects.filter(booking_date=self.date).exclude(
+            status='canceled')
+        )
+        return [(book.start_time, book.end_time) for book in bookings]
 
-    def get_booked_slots_for_edit(self, excluded_slot: tuple) -> list:
+    def get_booked_slots_for_edit(self, excluded_slot: tuple) -> List[Tuple]:
         """
         Retrieve busy time ranges excluding the current range.
 
@@ -474,72 +504,63 @@ class SlotsFinder:
              that do not overlap with the excluded range.
         """
         exc_start, exc_end = excluded_slot
-        bookings = (Booking.objects.filter(booking_date=self.date)
-                    .exclude(status='canceled'))
-        return [f'{book.start_time}-{book.end_time}' for book in bookings if
+        bookings = (Booking.objects.filter(booking_date=self.date).exclude(
+            status='canceled')
+        )
+        return [(book.start_time, book.end_time) for book in bookings if
                 (book.start_time >= exc_end or book.end_time <= exc_start)]
 
     @staticmethod
-    def get_booked_seconds(booked_slots: list) -> list:
-        """
-        Convert booked time slots to seconds.
-
-        Args:
-            booked_slots (list): A list of strings representing
-             booked time slots in the format "start_time-end_time".
-
-        Returns:
-            list: A list of tuples, where each tuple contains the
-             start and end times in seconds.
-        """
-        booked_seconds = []
-        for slot in booked_slots:
-            start, end = map(lambda x: int(x.replace(':', '')),
-                             slot.split('-'))
-            booked_seconds.append((start, end))
-        return sorted(booked_seconds)
-
-    def get_available_slots(self, booked_seconds: list):
+    def get_free_intervals(working_hours: Tuple,
+                           booked_slots: List[Tuple]) -> List[Tuple]:
         """
         Calculate available time slots based on booked seconds.
 
         Args:
-            booked_seconds (list): A list of tuples representing
+            working_hours (tuple): A tuple of working time (open-close)
+            booked_slots (list): A list of tuples representing
              booked time slots in seconds.
 
         Returns:
             list: A list of tuples representing available time slots
              in the format (start_time, end_time).
         """
-        if self.is_weekend():
-            total_start, total_end = map(lambda x: int(x.replace(':', '')),
-                                         self.WEEKEND_SLOTS.split('-'))
-        else:
-            total_start, total_end = map(lambda x: int(x.replace(':', '')),
-                                         self.ORDINARY_SLOTS.split('-'))
-        free_slots = []
-        last_end = total_start
-        for start, end in booked_seconds:
-            if start > last_end:
-                free_slots.append((last_end, start))
-            last_end = max(last_end, end)
-        if last_end < total_end:
-            free_slots.append((last_end, total_end))
-        available_slots = [
-            (
-                f'{str(start)[:2]}:{str(start)[2:4]}',
-                f'{str(end)[:2]}:{str(end)[2:4]}',
-            )
-            for start, end in free_slots if start != end
-        ]
-        return available_slots
+        if not booked_slots:
+            return [tuple(map(lambda x: x.strftime('%H:%M'), working_hours))]
 
-    def find_available_slots(
-            self,
-            excluded_slot: Union[
-                None,
-                Tuple[Optional[datetime.time], Optional[datetime.time]]
-            ] = None) -> list:
+        # combine time with date for further operations
+        combined_bookings = [(datetime.combine(datetime.today(), start),
+                              datetime.combine(datetime.today(), end)) for
+                             start, end in booked_slots]
+
+        # set service intervals around bookings by 1 hour
+        booked_intervals = [((start - timedelta(hours=1)).time(),
+                             (end + timedelta(hours=1)).time()) for start, end
+                            in combined_bookings]
+
+        free_intervals = []
+
+        # sort booked slots by start time before open time
+        booked_intervals.sort(key=lambda x: x[0])
+
+        # add initial free slot
+        if working_hours[0] < booked_intervals[0][0]:
+            free_intervals.append((working_hours[0], booked_intervals[0][0]))
+
+        # find free intervals between booked slots
+        for i in range(len(booked_intervals) - 1):
+            if booked_intervals[i][1] < booked_intervals[i + 1][0]:
+                free_intervals.append(
+                    (booked_intervals[i][1], booked_intervals[i + 1][0]))
+
+        # add final free interval after close time
+        if booked_intervals[-1][1] < working_hours[1]:
+            free_intervals.append((booked_intervals[-1][1], working_hours[1]))
+
+        return [(start.strftime('%H:%M'), end.strftime('%H:%M')) for start, end
+                in free_intervals]
+
+    def find_available_slots(self, excluded_slot: Tuple = None) -> List[Tuple]:
         """
         Get a list of available time slots (for django view).
 
@@ -553,12 +574,16 @@ class SlotsFinder:
         """
         if self.date.split('-')[-1] == '0':
             return []
+        slots = self.get_workhours()
+        if self.is_weekend():
+            working_hours = slots.get('weekend_slots')
+        else:
+            working_hours = slots.get('ordinary_slots')
         if not excluded_slot:
             booked_slots = self.get_booked_slots()
         else:
             booked_slots = self.get_booked_slots_for_edit(excluded_slot)
-        booked_seconds = self.get_booked_seconds(booked_slots)
-        available_slots = self.get_available_slots(booked_seconds)
+        available_slots = self.get_free_intervals(working_hours, booked_slots)
         return available_slots
 
     async def find_available_slots_as(self, excluded_slot=None) -> list:
@@ -575,13 +600,18 @@ class SlotsFinder:
         """
         get_booking_slots_as = sync_to_async(self.get_booked_slots)
         get_slots_for_edit = sync_to_async(self.get_booked_slots_for_edit)
+        slots = await self.get_workhours_as()
+        if self.is_weekend():
+            working_hours = slots.get('weekend_slots')
+        else:
+            working_hours = slots.get('ordinary_slots')
         try:
             if not excluded_slot:
                 booked_slots = await get_booking_slots_as()
             else:
                 booked_slots = await get_slots_for_edit(excluded_slot)
-            booked_seconds = self.get_booked_seconds(booked_slots)
-            available_slots = self.get_available_slots(booked_seconds)
+            available_slots = self.get_free_intervals(working_hours,
+                                                      booked_slots)
             return available_slots
         except ValidationError:
             return []
