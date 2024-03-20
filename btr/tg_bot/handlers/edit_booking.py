@@ -7,16 +7,13 @@ from django.utils.translation import gettext as _
 from ..keyboards.kb_cancel import CancelKB
 from ..keyboards.kb_dialog import DialogKB
 from ..states.edit_booking import EditBookingState
-from ..utils.handlers import (get_emoji_for_status, extract_start_times,
-                              get_slots_for_bot_view, extract_hours,
-                              check_available_start_time, get_end_time,
-                              check_available_hours, get_hours,
-                              friendly_formatted_date, json_filter, vk_notify,
-                              mail_notify)
-from ..utils.validators import (validate_email, validate_pks, validate_date,
-                                validate_time, validate_bike_quantity,
-                                validate_time_range, validate_id,
-                                validate_hours)
+from ..utils.handlers import (extract_start_times, get_slots_for_bot_view,
+                              extract_hours, check_available_start_time,
+                              get_end_time, check_available_hours, get_hours,
+                              json_filter, vk_notify, mail_notify)
+from ..utils.validators import (validate_email, validate_pks, validate_time,
+                                validate_bike_quantity, validate_time_range,
+                                validate_id, validate_hours)
 from ...orm_utils import SlotsFinder, AsyncTools
 from ..utils.decorators import validators
 
@@ -101,62 +98,17 @@ class EditBooking:
 
     @staticmethod
     @validators
-    async def ask_date(message: Message, state: FSMContext, bot: Bot):
+    async def ask_start(message: Message, state: FSMContext, bot: Bot):
         data = await state.get_data()
         pk = message.text
         validate_id(pk)
-        user_id = message.from_user.id
-        kb = CancelKB().place()
         bookings_id = data.get('pks')
         validate_pks(pk, bookings_id)
         booking_info = await AsyncTools().get_booking_info(pk=pk)
-        status = booking_info.get('status')
-        kb_reply = DialogKB(EditBooking.unchanged_btn).place()
-        msg = _(
-            '🟢🟢🟢\n\n'
-            '<em>Ride data ↙️\n\n'
-            'ID: <strong>#{pk}</strong>\n'
-            'Status: {emoji} <strong>{status}</strong>\n'
-            'Date: <strong>{date}</strong>\n'
-            'Time: <strong>{start} - {end}</strong>\n'
-            'Bikes: <strong>{bikes}</strong> bike(s)</em>'
-        ).format(
-            pk=pk,
-            emoji=get_emoji_for_status(status),
-            status=status,
-            date=booking_info.get('friendly_date'),
-            start=booking_info.get('start'),
-            end=booking_info.get('end'),
-            bikes=booking_info.get('bikes'),
-        )
-        msg2 = _(
-            '<em>If you want to change booking date,\n'
-            'type it below\n\n'
-            '📆 <strong>Format: YYYY-MM-DD</strong>\n\n'
-            '⚠️ <strong>Type with \'-\'</strong> ⤵️\n\n'
-            'If you want to leave the date unchanged,\n'
-            'Press <strong>Unchanged</strong> button ⤵️</em>'
-        )
-        await bot.send_message(user_id, msg, reply_markup=kb)
-        await bot.send_message(user_id, msg2, reply_markup=kb_reply)
-        await state.update_data(ok_kb=kb_reply, booking_info=booking_info,
-                                pk=pk)
-        await state.set_state(EditBookingState.date)
-
-    @staticmethod
-    @validators
-    async def ask_start(message: Message, state: FSMContext, bot: Bot):
-        data = await state.get_data()
-        booking_info = data.get('booking_info')
-        date_in = message.text
-        canonical_date = booking_info.get('clean_date')
-        date = date_in if not date_in == _('Unchanged') else canonical_date
-        friendly_date = AsyncTools().get_friendly_date(
-            friendly_formatted_date(date)
-        )
+        date = booking_info.get('clean_date')
+        friendly_date = booking_info.get('friendly_date')
         user_id = message.from_user.id
         kb = CancelKB().place()
-        validate_date(date)
         s = SlotsFinder(date)
         email = data.get('email')
         excluded: tuple = await AsyncTools().get_excluded_slot(email, date)
@@ -165,8 +117,7 @@ class EditBooking:
         )
         if free_slots:
             starts = extract_start_times(free_slots)
-            if date == canonical_date:
-                starts.append(EditBooking.unchanged_btn[-1])
+            starts.append(EditBooking.unchanged_btn[-1])
             slots_view = get_slots_for_bot_view(free_slots)
             msg = _(
                 '🟢🟢🟢\n\n'
@@ -186,7 +137,8 @@ class EditBooking:
                 starts_kb=kb_reply,
                 slots=slots_view,
                 slots_list=free_slots,
-                canonical_date=True if date_in == _('Unchanged') else False,
+                booking_info=booking_info,
+                pk=pk,
             )
             await state.set_state(EditBookingState.start)
         else:

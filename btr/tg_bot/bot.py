@@ -131,12 +131,8 @@ class BookingBot:
             EditBookingState.password,
         )
         self.dp.message.register(
-            EditBooking.ask_date,
-            EditBookingState.pk,
-        )
-        self.dp.message.register(
             EditBooking.ask_start,
-            EditBookingState.date,
+            EditBookingState.pk,
         )
         self.dp.message.register(
             EditBooking.ask_hours,
