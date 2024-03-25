@@ -12,7 +12,7 @@ from asgiref.sync import sync_to_async
 from btr.bookings.models import Booking
 from btr.tg_bot.utils import exceptions as e
 from btr.users.models import SiteUser
-from btr.workhours.models import WorkHours
+from btr.workhours.models import WorkHours, DayControl
 
 T = TypeVar("T", bound=Model)
 
@@ -467,6 +467,33 @@ class SlotsFinder:
             'weekend_slots': (weekend_slots.open, weekend_slots.close),
         }
 
+    def get_custom_open_hours(self) -> tuple | None:
+        """
+        Get custom open hours for current day if exists. Sync uses only.
+
+        Returns:
+            tuple: tuple of open and close hours. None if not exists.
+        """
+        try:
+            day = DayControl.objects.get(date=self.date)
+            return day.open, day.close
+        except ObjectDoesNotExist:
+            return None
+
+    @sync_to_async
+    def get_custom_open_hours_as(self) -> tuple | None:
+        """
+        Get custom open hours for current day if exists. Async uses only.
+
+        Returns:
+            tuple: tuple of open and close hours. None if not exists.
+        """
+        try:
+            day = DayControl.objects.get(date=self.date)
+            return day.open, day.close
+        except ObjectDoesNotExist:
+            return None
+
     def is_weekend(self) -> bool:
         """
         Check if the given date falls on a weekend.
@@ -525,6 +552,11 @@ class SlotsFinder:
             list: A list of tuples representing available time slots
              in the format (start_time, end_time).
         """
+        # check if day closed
+        if all(hour is None for hour in working_hours):
+            return []
+
+        # check if there are no bookings
         if not booked_slots:
             return [tuple(map(lambda x: x.strftime('%H:%M'), working_hours))]
 
@@ -574,11 +606,15 @@ class SlotsFinder:
         """
         if self.date.split('-')[-1] == '0':
             return []
+
         slots = self.get_workhours()
+        custom_hours = self.get_custom_open_hours()
         if self.is_weekend():
             working_hours = slots.get('weekend_slots')
         else:
             working_hours = slots.get('ordinary_slots')
+        if custom_hours:
+            working_hours = custom_hours
         if not excluded_slot:
             booked_slots = self.get_booked_slots()
         else:
@@ -601,10 +637,13 @@ class SlotsFinder:
         get_booking_slots_as = sync_to_async(self.get_booked_slots)
         get_slots_for_edit = sync_to_async(self.get_booked_slots_for_edit)
         slots = await self.get_workhours_as()
+        custom_hours = await self.get_custom_open_hours_as()
         if self.is_weekend():
             working_hours = slots.get('weekend_slots')
         else:
             working_hours = slots.get('ordinary_slots')
+        if custom_hours:
+            working_hours = custom_hours
         try:
             if not excluded_slot:
                 booked_slots = await get_booking_slots_as()
@@ -621,27 +660,19 @@ class LoadCalc:
     """
     A utility class for calculating load-related information.
 
-    Attributes:
-        FRIDAY (int): The day of the week corresponding to Friday (5).
-        ORDINARY_DAY_HOURS (int): The number of hours in an ordinary
-         workday (6).
-        WEEKEND_DAY_HOURS (int): The number of hours in a weekend workday (8).
-
     Args:
         calendar (list): A list representing the calendar data.
         year (int): The year for which load calculations are performed.
         month (int): The month for which load calculations are performed.
     """
-    FRIDAY = 5
-    ORDINARY_DAY_HOURS = 6
-    WEEKEND_DAY_HOURS = 8
 
     def __init__(self, calendar: list, year: int, month: int):
         self.calendar = calendar
         self.year = year
         self.month = month
 
-    def get_day_load(self, date: str) -> int:
+    @staticmethod
+    def get_day_load(date: str) -> int:
         """
         Calculate the workload of a given date as a percentage.
 
@@ -656,6 +687,28 @@ class LoadCalc:
             return -1
         bookings = (Booking.objects.filter(booking_date=date)
                     .exclude(status='canceled'))
+        s = SlotsFinder(date)
+        custom_h = s.get_custom_open_hours()
+        workhours = s.get_workhours()
+
+        # check if this day has custom workhours
+        if custom_h:
+            # return 100% load when day is closed
+            if all(hour is None for hour in custom_h):
+                return 100
+
+            open_h = datetime.combine(datetime.today().date(), custom_h[0])
+            close_h = datetime.combine(datetime.today().date(), custom_h[-1])
+        elif s.is_weekend():
+            weekend = workhours.get('weekend_slots')
+            open_h = datetime.combine(datetime.today().date(), weekend[0])
+            close_h = datetime.combine(datetime.today().date(), weekend[-1])
+        else:
+            ordinary = workhours.get('ordinary_slots')
+            open_h = datetime.combine(datetime.today().date(), ordinary[0])
+            close_h = datetime.combine(datetime.today().date(), ordinary[-1])
+        diff = close_h - open_h
+        open_hours_count = diff.total_seconds() // 3600
         book_time = 0
         for booking in bookings:
             start_time = booking.start_time
@@ -664,9 +717,7 @@ class LoadCalc:
             end = datetime.combine(datetime.today(), end_time)
             duration = (end - start).seconds // 3600
             book_time += duration
-        if self.is_weekend(date):
-            return int((book_time / self.WEEKEND_DAY_HOURS) * 100)
-        return int((book_time / self.ORDINARY_DAY_HOURS) * 100)
+        return int((book_time / open_hours_count) * 100)
 
     def get_week_load(self, week: list) -> list:
         """
@@ -686,20 +737,6 @@ class LoadCalc:
             day_load = (day, self.get_day_load(date), slots)
             week_load.append(day_load)
         return week_load
-
-    def is_weekend(self, date: str) -> bool:
-        """
-        Check if the given date falls on a weekend.
-
-        Args:
-            date (str): The date for which to check.
-
-        Returns:
-            bool: True if the date is a weekend (Saturday or Sunday),
-             False otherwise.
-        """
-        f_date = datetime.strptime(date, "%Y-%m-%d")
-        return f_date.weekday() >= self.FRIDAY
 
     def get_month_load(self):
         """

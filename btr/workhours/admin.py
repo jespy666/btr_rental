@@ -1,7 +1,9 @@
 from django.contrib import admin, messages
+from django.contrib.admin import SimpleListFilter
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .models import WorkHours
+from .models import WorkHours, DayControl
 
 
 class WorkHoursAdmin(admin.ModelAdmin):
@@ -18,5 +20,26 @@ class WorkHoursAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class PastDateFilter(SimpleListFilter):
+    title = _('Outdated entries')
+    parameter_name = 'date'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('past', _('Yes')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'past':
+            return queryset.filter(date__lte=timezone.now().date())
+
+
+class DayControlAdmin(admin.ModelAdmin):
+
+    list_display = ('date', 'open', 'close', 'is_closed')
+    list_filter = ('is_closed', PastDateFilter)
+
+
 admin.site.register(WorkHours, WorkHoursAdmin)
+admin.site.register(DayControl, DayControlAdmin)
 admin.site.site_title = _('Opening hours operation')
