@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-20 17:25+0300\n"
+"POT-Creation-Date: 2024-03-25 15:33+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,7 +110,7 @@ msgstr "отменена"
 msgid "Outer booking"
 msgstr "Записал админ"
 
-#: btr/bookings/admin.py:65
+#: btr/bookings/admin.py:65 btr/workhours/admin.py:29
 msgid "Yes"
 msgstr "Да"
 
@@ -1111,12 +1111,12 @@ msgid "Your rental time:"
 msgstr "Ваше выбранное время проката:"
 
 #: btr/templates/forms/book_edit.html:23 btr/templates/forms/book_edit.html:40
-#: btr/templates/modals/booking.html:27 btr/templates/modals/booking.html:80
+#: btr/templates/modals/booking.html:27 btr/templates/modals/booking.html:84
 msgid "From"
 msgstr "Время начала"
 
 #: btr/templates/forms/book_edit.html:24 btr/templates/forms/book_edit.html:41
-#: btr/templates/modals/booking.html:28 btr/templates/modals/booking.html:81
+#: btr/templates/modals/booking.html:28 btr/templates/modals/booking.html:85
 msgid "To"
 msgstr "Время окончания"
 
@@ -1271,21 +1271,25 @@ msgstr "Приморское ш. 659"
 msgid "Book a ride now"
 msgstr "Запишитесь прямо сейчас"
 
-#: btr/templates/modals/booking.html:17 btr/templates/modals/booking.html:70
+#: btr/templates/modals/booking.html:17 btr/templates/modals/booking.html:74
 msgid "Available booking slots:"
 msgstr "Свободное время:"
 
-#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:74
-msgid "No available slots :( Check another day!"
-msgstr "Мест нет :( Проверь соседние дни!"
+#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:78
+msgid "No available slots 😢"
+msgstr "Свободных мест нет 😢"
 
-#: btr/templates/modals/booking.html:46 btr/templates/modals/booking.html:99
+#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:78
+msgid "Choose another day!"
+msgstr "Выберите другой день!"
+
+#: btr/templates/modals/booking.html:46 btr/templates/modals/booking.html:103
 msgid "Go to Time Selection"
 msgstr "Выбрать свободное время"
 
-#: btr/templates/modals/booking.html:103 btr/templates/modals/contacts.html:34
-#: btr/templates/modals/guest.html:35 btr/templates/modals/history.html:52
-#: btr/templates/modals/user.html:46
+#: btr/templates/modals/booking.html:50 btr/templates/modals/booking.html:107
+#: btr/templates/modals/contacts.html:34 btr/templates/modals/guest.html:35
+#: btr/templates/modals/history.html:52 btr/templates/modals/user.html:46
 msgid "Close"
 msgstr "Закрыть"
 
@@ -1302,6 +1306,7 @@ msgid "There are not completed bookings yet..."
 msgstr "У вас пока нет завершенных поездок..."
 
 #: btr/templates/modals/history.html:22 btr/templates/users/bookings.html:17
+#: btr/workhours/models.py:31
 msgid "Date"
 msgstr "Дата"
 
@@ -2802,11 +2807,15 @@ msgstr "Невозможно удалить чужой аккаунт"
 msgid "Can't delete user with existed bookings"
 msgstr "Невозможно удалить пользователя, у которого есть бронирование"
 
-#: btr/workhours/admin.py:15
+#: btr/workhours/admin.py:17
 msgid "Only two records are allowed here!"
 msgstr "Максимальное количество записей: 2"
 
-#: btr/workhours/admin.py:22
+#: btr/workhours/admin.py:24
+msgid "Outdated entries"
+msgstr "Устаревшие записи"
+
+#: btr/workhours/admin.py:45
 msgid "Opening hours operation"
 msgstr "Установка режима работы"
 
@@ -2814,30 +2823,42 @@ msgstr "Установка режима работы"
 msgid "Working hours"
 msgstr "Режим работы"
 
-#: btr/workhours/models.py:9
+#: btr/workhours/models.py:8
 msgid "Working day"
 msgstr "Будние дни"
 
-#: btr/workhours/models.py:10
+#: btr/workhours/models.py:9
 msgid "Weekend day"
 msgstr "Выходные дни"
 
-#: btr/workhours/models.py:16
+#: btr/workhours/models.py:15
 msgid "Weekday"
 msgstr "День недели"
 
-#: btr/workhours/models.py:18
+#: btr/workhours/models.py:17 btr/workhours/models.py:37
 msgid "Open hours"
 msgstr "Открытие"
 
-#: btr/workhours/models.py:19
+#: btr/workhours/models.py:18 btr/workhours/models.py:42
 msgid "Close hours"
 msgstr "Закрытие"
 
-#: btr/workhours/models.py:25
+#: btr/workhours/models.py:24
 msgid "Work hour"
 msgstr "Часы работы"
 
-#: btr/workhours/models.py:26
+#: btr/workhours/models.py:25
 msgid "Work hours"
 msgstr "Режим работы"
+
+#: btr/workhours/models.py:45
+msgid "All day closed"
+msgstr "День закрыт для проката"
+
+#: btr/workhours/models.py:53
+msgid "Day"
+msgstr "День"
+
+#: btr/workhours/models.py:54
+msgid "Days settings"
+msgstr "Настройки дней"
