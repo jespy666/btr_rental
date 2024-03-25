@@ -171,7 +171,7 @@ def edit_booking_mail(email: str, pk: str, bikes: str, date: str, start: str,
             'emails/email_base.html', {
                 'pre_header': _('Booking was edited'),
                 'header': _('Booking Edited'),
-                'action': 'edite',
+                'action': 'edit',
                 'date': date,
                 'pk': pk,
                 'start': start,
