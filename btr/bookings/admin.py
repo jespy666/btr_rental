@@ -5,7 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 from btr.bookings.models import Booking
 from btr.tasks.admin import send_vk_notify
-from btr.tasks.bookings import send_confirm_message, send_cancel_message
+from btr.tasks.bookings import (send_confirm_message, send_cancel_message,
+                                send_edit_booking_message)
 from ..orm_utils import AsyncTools
 
 
@@ -105,24 +106,28 @@ class BookingAdmin(admin.ModelAdmin):
         via = _('Admin panel')
         if change:
             changed_fields = form.changed_data
-            if 'status' in changed_fields:
+            data = {
+                'pk': obj.pk,
+                'client': client,
+                'email': obj.rider.email,
+                'date': date,
+                'start': start,
+                'end': end,
+                'bikes': bikes,
+                'phone': str(phone),
+            }
+            if len(changed_fields) == 1 and 'status' in changed_fields:
                 status = form.cleaned_data.get('status')
-                data = {
-                    'pk': obj.pk,
-                    'client': client,
-                    'email': obj.rider.email,
-                    'date': date,
-                    'start': start,
-                    'end': end,
-                    'bikes': bikes,
-                    'phone': str(phone),
-                    'status': status,
-                }
+                data['status'] = status
                 send_vk_notify.delay(via, False, data, is_admin=True)
                 if status == _('confirmed'):
                     send_confirm_message.delay(**data)
                 elif status == _('canceled'):
                     send_cancel_message.delay(**data)
+            else:
+                data['status'] = _('pending')
+                send_vk_notify.delay(via, False, data, is_admin=True)
+                send_edit_booking_message.delay(**data)
         else:
             last_booking = Booking.objects.latest('created_at')
             data = {
@@ -140,7 +145,7 @@ class BookingAdmin(admin.ModelAdmin):
 
     link_to_user.short_description = _('User')
 
-    search_fields = ('id', 'status', 'booking_date')
+    search_fields = ('id', 'booking_date', 'rider__username')
     list_filter = (RiderAdminFilter, 'status')
     actions = [make_confirm, make_cancel]
 
