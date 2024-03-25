@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-25 15:33+0300\n"
+"POT-Creation-Date: 2024-03-25 17:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,11 +69,11 @@ msgstr ""
 msgid "User with this email does not exist!"
 msgstr "Пользователя с таким адресом электронной почты не существует"
 
-#: btr/bookings/admin.py:12
+#: btr/bookings/admin.py:13
 msgid "Confirm selected bookings"
 msgstr "Подтвердить выбранные записи"
 
-#: btr/bookings/admin.py:15 btr/bookings/admin.py:122 btr/bookings/models.py:45
+#: btr/bookings/admin.py:16 btr/bookings/admin.py:123 btr/bookings/models.py:45
 #: btr/bookings/tests/test_admin_actions.py:20
 #: btr/bookings/tests/test_admin_actions.py:21
 #: btr/bookings/tests/test_admin_tasks.py:15 btr/bookings/views.py:128
@@ -85,15 +85,15 @@ msgstr "Подтвердить выбранные записи"
 msgid "confirmed"
 msgstr "подтверждена"
 
-#: btr/bookings/admin.py:20 btr/bookings/admin.py:43 btr/bookings/admin.py:105
+#: btr/bookings/admin.py:21 btr/bookings/admin.py:44 btr/bookings/admin.py:106
 msgid "Admin panel"
 msgstr "Панель aдминистратора"
 
-#: btr/bookings/admin.py:36
+#: btr/bookings/admin.py:37
 msgid "Cancel selected bookings"
 msgstr "Отменить выбранные записи"
 
-#: btr/bookings/admin.py:39 btr/bookings/admin.py:124 btr/bookings/forms.py:134
+#: btr/bookings/admin.py:40 btr/bookings/admin.py:125 btr/bookings/forms.py:134
 #: btr/bookings/models.py:47 btr/bookings/tests/test_admin_actions.py:34
 #: btr/bookings/tests/test_admin_actions.py:35
 #: btr/bookings/tests/test_admin_tasks.py:41
@@ -106,27 +106,38 @@ msgstr "Отменить выбранные записи"
 msgid "canceled"
 msgstr "отменена"
 
-#: btr/bookings/admin.py:60
+#: btr/bookings/admin.py:61
 msgid "Outer booking"
 msgstr "Записал админ"
 
-#: btr/bookings/admin.py:65 btr/workhours/admin.py:29
+#: btr/bookings/admin.py:66 btr/workhours/admin.py:29
 msgid "Yes"
 msgstr "Да"
 
-#: btr/bookings/admin.py:136
+#: btr/bookings/admin.py:128 btr/bookings/models.py:44
+#: btr/bookings/views.py:132 btr/bookings/views.py:209
+#: btr/bookings/views.py:213 btr/orm_utils.py:175 btr/orm_utils.py:298
+#: btr/orm_utils.py:402 btr/tasks/admin.py:26 btr/tasks/admin.py:68
+#: btr/templates/bookings/show.html:17 btr/templates/users/bookings.html:25
+#: btr/tg_bot/handlers/create_booking.py:161
+#: btr/tg_bot/handlers/edit_booking.py:238 btr/tg_bot/utils/handlers.py:103
+#: btr/tg_bot/utils/validators.py:111
+msgid "pending"
+msgstr "ожидает подтверждения"
+
+#: btr/bookings/admin.py:141
 msgid "Confirmed"
 msgstr "подтверждена"
 
-#: btr/bookings/admin.py:141 btr/users/models.py:66
+#: btr/bookings/admin.py:146 btr/users/models.py:66
 msgid "User"
 msgstr "Пользователь"
 
-#: btr/bookings/admin.py:149
+#: btr/bookings/admin.py:154
 msgid "Booking Management"
 msgstr "Управление записями"
 
-#: btr/bookings/admin.py:150 btr/users/admin.py:24
+#: btr/bookings/admin.py:155 btr/users/admin.py:24
 msgid "Admin Panel"
 msgstr "Панель aдминистратора"
 
@@ -267,17 +278,6 @@ msgstr "Время окончания"
 msgid "bikes in rent"
 msgstr "Байков в прокате"
 
-#: btr/bookings/models.py:44 btr/bookings/views.py:132
-#: btr/bookings/views.py:209 btr/bookings/views.py:213 btr/orm_utils.py:175
-#: btr/orm_utils.py:298 btr/orm_utils.py:402 btr/tasks/admin.py:26
-#: btr/tasks/admin.py:68 btr/templates/bookings/show.html:17
-#: btr/templates/users/bookings.html:25
-#: btr/tg_bot/handlers/create_booking.py:161
-#: btr/tg_bot/handlers/edit_booking.py:238 btr/tg_bot/utils/handlers.py:103
-#: btr/tg_bot/utils/validators.py:111
-msgid "pending"
-msgstr "ожидает подтверждения"
-
 #: btr/bookings/models.py:44
 msgid "wait to confirm"
 msgstr "ожидает подтверждения"
@@ -309,20 +309,20 @@ msgstr "Статус"
 msgid "Booking"
 msgstr "Запись"
 
-#: btr/bookings/signals.py:16 btr/tg_bot/handlers/create_account.py:92
+#: btr/bookings/signals.py:17 btr/tg_bot/handlers/create_account.py:92
 #: btr/users/models.py:48
 msgid "Newbie"
 msgstr "Новичок"
 
-#: btr/bookings/signals.py:18 btr/users/models.py:49
+#: btr/bookings/signals.py:19 btr/users/models.py:49
 msgid "Amateur"
 msgstr "Любитель"
 
-#: btr/bookings/signals.py:20 btr/users/models.py:50
+#: btr/bookings/signals.py:21 btr/users/models.py:50
 msgid "Professional"
 msgstr "Профессионал"
 
-#: btr/bookings/signals.py:22 btr/users/models.py:51
+#: btr/bookings/signals.py:23 btr/users/models.py:51
 msgid "Master"
 msgstr "Мастер"
 
@@ -585,12 +585,10 @@ msgstr ""
 #: btr/templates/base.html:7
 msgid ""
 "We are a team of professional enduro riders, we rent and teach proper riding "
-"techniques on our motorcycles. You can book a ride from our site or via TG "
-"bot easily."
+"techniques on our motorcycles"
 msgstr ""
-"Прокат эндуро мотоциклов и питбайков в Санкт-Петербурге.В/У на прокате не "
-"требуется. Можно без опыта управления мотоциклом.Экипировка включена в "
-"стоимость проката. СПБ п.Молодёжное, Приморское ш.659 16+"
+"Мы команда профессиональных Эндуро райдеров, мы сдаем в прокат и обучаем "
+"правильной технике езды на Пит-байках и Эндуро мотоциклах в Санкт-Петербурге"
 
 #: btr/templates/base.html:8
 msgid "motorcycles rental, bike rental, enduro, enduro spb, pit bike spb"
@@ -598,6 +596,18 @@ msgstr ""
 "прокат мотоциклов, прокат мотоциклов спб, эндуро, эндуро спб, прокат эндуро "
 "спб, прокат питбайков спб, прокат эндуро мотоциклов, прокат права не нужны, "
 "прокат 16+, прокат эндуро с инструктором спб"
+
+#: btr/templates/base.html:22
+msgid "Enduro bikes rental in Saint-Petersburg"
+msgstr "Прокат Эндуро мотоциклов в Санкт-Петербурге"
+
+#: btr/templates/base.html:25
+msgid ""
+"We teach and rent Enduro bycycles in Saint-Petersburg. All safety equipment "
+"included in rental price. No driver license needed, Welcome!"
+msgstr ""
+"Мы сдаем в прокат, и обучаем правильной езде на Эндуро мотоциклах. Весь комплект защитной экипировки "
+"включен в стоимость проката. Права на прокате не нужны, Ждем Вас!"
 
 #: btr/templates/blog/404.html:18
 msgid "Section is under development"
