@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="container">
                                     {% if not slots %}
-                                        <h2>{% translate 'No available slots :( Check another day!' %}</h2>
+                                        <h1 class="fs-4 text-white my-4">{% translate 'No available slots 😢' %}<br>{% translate 'Choose another day!' %}</h1>
                                     {% else %}
                                         <table class="table">
                                             <thead>
@@ -45,6 +45,10 @@
                                         <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_month }}" class="btn btn-lg btn-outline-success">
                                             {% translate 'Go to Time Selection' %}
                                         </a>
+                                    {% else %}
+                                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                                          {% translate 'Close' %}
+                                        </button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -71,7 +75,7 @@
                                 </div>
                                 <div class="container">
                                     {% if not slots %}
-                                        <h1 class="fs-4 text-white my-4">{% translate 'No available slots :( Check another day!' %}</h1>
+                                        <h1 class="fs-4 text-white my-4">{% translate 'No available slots 😢' %}<br>{% translate 'Choose another day!' %}</h1>
                                     {% else %}
                                         <table class="table">
                                             <thead>
