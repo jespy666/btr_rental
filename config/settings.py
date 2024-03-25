@@ -129,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 if os.getenv('LANGUAGE'):
     LANGUAGE_CODE = os.getenv('LANGUAGE')
 else:
-    LANGUAGE_CODE = 'ru'
+    LANGUAGE_CODE = 'ru-ru'
 
 LOCALE_PATHS = [
     BASE_DIR / "btr" / "locale"
