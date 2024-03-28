@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-25 17:41+0300\n"
+"POT-Creation-Date: 2024-03-28 13:56+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,9 +76,9 @@ msgstr "Подтвердить выбранные записи"
 #: btr/bookings/admin.py:16 btr/bookings/admin.py:123 btr/bookings/models.py:45
 #: btr/bookings/tests/test_admin_actions.py:20
 #: btr/bookings/tests/test_admin_actions.py:21
-#: btr/bookings/tests/test_admin_tasks.py:15 btr/bookings/views.py:128
-#: btr/orm_utils.py:298 btr/orm_utils.py:398 btr/orm_utils.py:401
-#: btr/orm_utils.py:403 btr/tasks/admin.py:27
+#: btr/bookings/tests/test_admin_tasks.py:15 btr/bookings/views.py:97
+#: btr/orm_utils.py:301 btr/orm_utils.py:401 btr/orm_utils.py:404
+#: btr/orm_utils.py:406 btr/tasks/admin.py:27
 #: btr/templates/bookings/show.html:19
 #: btr/tg_bot/handlers/admin/change_status.py:104
 #: btr/tg_bot/utils/handlers.py:104 btr/tg_bot/utils/validators.py:111
@@ -98,8 +98,8 @@ msgstr "Отменить выбранные записи"
 #: btr/bookings/tests/test_admin_actions.py:35
 #: btr/bookings/tests/test_admin_tasks.py:41
 #: btr/bookings/tests/test_cancel.py:16 btr/bookings/tests/test_cancel.py:38
-#: btr/bookings/views.py:234 btr/orm_utils.py:43 btr/orm_utils.py:399
-#: btr/orm_utils.py:400 btr/orm_utils.py:403 btr/tasks/admin.py:28
+#: btr/bookings/views.py:197 btr/orm_utils.py:46 btr/orm_utils.py:402
+#: btr/orm_utils.py:403 btr/orm_utils.py:406 btr/tasks/admin.py:28
 #: btr/tg_bot/handlers/cancel_booking.py:17 btr/tg_bot/utils/handlers.py:105
 #: btr/tg_bot/utils/validators.py:111 btr/users/views.py:50
 #: btr/users/views.py:53
@@ -115,9 +115,9 @@ msgid "Yes"
 msgstr "Да"
 
 #: btr/bookings/admin.py:128 btr/bookings/models.py:44
-#: btr/bookings/views.py:132 btr/bookings/views.py:209
-#: btr/bookings/views.py:213 btr/orm_utils.py:175 btr/orm_utils.py:298
-#: btr/orm_utils.py:402 btr/tasks/admin.py:26 btr/tasks/admin.py:68
+#: btr/bookings/views.py:101 btr/bookings/views.py:172
+#: btr/bookings/views.py:176 btr/orm_utils.py:178 btr/orm_utils.py:301
+#: btr/orm_utils.py:405 btr/tasks/admin.py:26 btr/tasks/admin.py:68
 #: btr/templates/bookings/show.html:17 btr/templates/users/bookings.html:25
 #: btr/tg_bot/handlers/create_booking.py:161
 #: btr/tg_bot/handlers/edit_booking.py:238 btr/tg_bot/utils/handlers.py:103
@@ -162,102 +162,6 @@ msgstr "Время проката должно быть кратно часу (6
 msgid "Bikes count must be at 1-4"
 msgstr "Минимум: 1. Максимум: 4"
 
-#: btr/bookings/locale.py:9
-msgid "Januarys"
-msgstr "Января"
-
-#: btr/bookings/locale.py:10
-msgid "Februarys"
-msgstr "Февраля"
-
-#: btr/bookings/locale.py:11
-msgid "Marchs"
-msgstr "Марта"
-
-#: btr/bookings/locale.py:12
-msgid "Aprils"
-msgstr "Апреля"
-
-#: btr/bookings/locale.py:13
-msgid "Mays"
-msgstr "Мая"
-
-#: btr/bookings/locale.py:14
-msgid "Junes"
-msgstr "Июня"
-
-#: btr/bookings/locale.py:15
-msgid "Julys"
-msgstr "Июля"
-
-#: btr/bookings/locale.py:16
-msgid "Augusts"
-msgstr "Августа"
-
-#: btr/bookings/locale.py:17
-msgid "Septembers"
-msgstr "Сентября"
-
-#: btr/bookings/locale.py:18
-msgid "Octobers"
-msgstr "Октября"
-
-#: btr/bookings/locale.py:19
-msgid "Novembers"
-msgstr "Ноября"
-
-#: btr/bookings/locale.py:20
-msgid "Decembers"
-msgstr "Декабря"
-
-#: btr/bookings/locale.py:30
-msgid "January"
-msgstr "Январь"
-
-#: btr/bookings/locale.py:31
-msgid "February"
-msgstr "Февраль"
-
-#: btr/bookings/locale.py:32
-msgid "March"
-msgstr "Март"
-
-#: btr/bookings/locale.py:33
-msgid "April"
-msgstr "Апрель"
-
-#: btr/bookings/locale.py:34
-msgid "May"
-msgstr "Май"
-
-#: btr/bookings/locale.py:35
-msgid "June"
-msgstr "Июнь"
-
-#: btr/bookings/locale.py:36
-msgid "July"
-msgstr "Июль"
-
-#: btr/bookings/locale.py:37
-msgid "August"
-msgstr "Август"
-
-#: btr/bookings/locale.py:38
-msgid "September"
-msgstr "Сентябрь"
-
-#: btr/bookings/locale.py:39
-msgid "October"
-msgstr "Октябрь"
-
-#: btr/bookings/locale.py:40
-msgid "November"
-msgstr "Ноябрь"
-
-#: btr/bookings/locale.py:41
-msgid "December"
-msgstr "Декабрь"
-
 #: btr/bookings/models.py:19
 msgid "Client's phone"
 msgstr "Телефон клиента"
@@ -286,7 +190,7 @@ msgstr "ожидает подтверждения"
 msgid "accepted"
 msgstr "принята"
 
-#: btr/bookings/models.py:46 btr/orm_utils.py:43
+#: btr/bookings/models.py:46 btr/orm_utils.py:46
 #: btr/templates/modals/history.html:30 btr/tg_bot/utils/handlers.py:106
 #: btr/users/views.py:50 btr/users/views.py:53
 msgid "completed"
@@ -326,52 +230,46 @@ msgstr "Профессионал"
 msgid "Master"
 msgstr "Мастер"
 
-#: btr/bookings/views.py:67
+#: btr/bookings/views.py:56
 msgid "You must to be login"
 msgstr "Необходимо войти в аккаунт"
 
-#: btr/bookings/views.py:68
+#: btr/bookings/views.py:57
 msgid "You cannot see another user bookings"
 msgstr "Вы не можете смотреть записи других пользователей"
 
-#: btr/bookings/views.py:80
+#: btr/bookings/views.py:69
 msgid "Reservation created successfully"
 msgstr "Запись на прокат успешно создана"
 
-#: btr/bookings/views.py:81
+#: btr/bookings/views.py:70
 msgid "You must to be login to book ride"
 msgstr "Выполните вход для записи на прокат"
 
-#: btr/bookings/views.py:147 btr/bookings/views.py:198
-#: btr/bookings/views.py:238
+#: btr/bookings/views.py:116 btr/bookings/views.py:161
+#: btr/bookings/views.py:201
 msgid "Web Site"
 msgstr "Сайт"
 
-#: btr/bookings/views.py:165
+#: btr/bookings/views.py:134
 msgid "Reservation change successfully"
 msgstr "Запись изменена успешно"
 
-#: btr/bookings/views.py:166
+#: btr/bookings/views.py:135
 msgid "You must to be login to edit bookings"
 msgstr "Войдите в аккаунт чтобы изменять записи"
 
-#: btr/bookings/views.py:167
+#: btr/bookings/views.py:136
 msgid "You can't change another user bookings!"
 msgstr "Вы не можете изменять записи других поьзователей"
 
-#: btr/bookings/views.py:228
+#: btr/bookings/views.py:191
 msgid "You are canceled the ride"
 msgstr "Вы отменили запись на прокат"
 
-#: btr/bookings/views.py:229
+#: btr/bookings/views.py:192
 msgid "You must to be Log In"
 msgstr "Необходимо войти в аккаунт"
-
-#: btr/context_processors.py:10
-msgid "BroTeamRacing - Enduro and Pit-bikes rental in Saint-Petersburg"
-msgstr ""
-"Прокат эндуро и питбайков в Санкт-Петербурге | Молодежное, Приморское шоссе "
-"659 | BroTeamRacing"
 
 #: btr/emails.py:8 btr/emails.py:13
 msgid "Password reset"
@@ -445,7 +343,7 @@ msgstr "Запись изменена"
 msgid "You are edit the booking"
 msgstr "Вы изменили запись на прокат"
 
-#: btr/orm_utils.py:247
+#: btr/orm_utils.py:250
 #, python-brace-format
 msgid ""
 "<em>🔹 ID: <strong>{id}</strong> | <strong>{date}</strong> | <strong>{start}"
@@ -597,6 +495,12 @@ msgstr ""
 "спб, прокат питбайков спб, прокат эндуро мотоциклов, прокат права не нужны, "
 "прокат 16+, прокат эндуро с инструктором спб"
 
+#: btr/templates/base.html:9
+msgid "BroTeamRacing - Enduro and Pit-bikes rental in Saint-Petersburg"
+msgstr ""
+"Прокат эндуро и питбайков в Санкт-Петербурге | Молодежное, Приморское шоссе "
+"659 | BroTeamRacing"
+
 #: btr/templates/base.html:22
 msgid "Enduro bikes rental in Saint-Petersburg"
 msgstr "Прокат Эндуро мотоциклов в Санкт-Петербурге"
@@ -606,14 +510,23 @@ msgid ""
 "We teach and rent Enduro bycycles in Saint-Petersburg. All safety equipment "
 "included in rental price. No driver license needed, Welcome!"
 msgstr ""
-"Мы сдаем в прокат, и обучаем правильной езде на Эндуро мотоциклах. Весь комплект защитной экипировки "
-"включен в стоимость проката. Права на прокате не нужны, Ждем Вас!"
+"Мы сдаем в прокат, и обучаем правильной езде на Эндуро мотоциклах. Весь "
+"комплект защитной экипировки включен в стоимость проката. Права на прокате "
+"не нужны, Ждем Вас!"
 
-#: btr/templates/blog/404.html:18
+#: btr/templates/blog/404.html:4
+msgid "Rider blog"
+msgstr "Блог Райдера"
+
+#: btr/templates/blog/404.html:5
+msgid "Enduro rental in St.Petersburg. No driver license needed. 16+"
+msgstr "Прокат Эндуро мотоциклов в Санкт-Петербурге. В/У не требуется. 16+"
+
+#: btr/templates/blog/404.html:21
 msgid "Section is under development"
 msgstr "Секция находится в разработке"
 
-#: btr/templates/blog/404.html:22
+#: btr/templates/blog/404.html:25
 msgid ""
 "We are currently developing this section, it will be available for use "
 "soon..."
@@ -668,11 +581,26 @@ msgstr "Вы уверены, что хотите отменить"
 msgid "Yes, delete"
 msgstr "Да, отменить"
 
-#: btr/templates/bookings/index.html:14
+#: btr/templates/bookings/index.html:4 btr/templates/bookings/index.html:21
 msgid "Booking calendar"
 msgstr "Календарь записи"
 
-#: btr/templates/bookings/index.html:41
+#: btr/templates/bookings/index.html:5
+msgid ""
+"Book a rental in just a few clicks. Our simple online calendar will help you "
+"with this. We are waiting for you at our rental!"
+msgstr ""
+"Запишитесь на прокат всего в несколько кликов. Наш простой онлайн-календарь вам в этом поможет. Ждем вас на нашем прокате!"
+
+#: btr/templates/bookings/index.html:6
+msgid "Sign up for a rental"
+msgstr "Запишитесь на прокат"
+
+#: btr/templates/bookings/index.html:8
+msgid "Book a rental using our convenient online calendar or telegram bot!"
+msgstr "Запишитесь на прокат, используя наш удобный онлайн календарь или телеграм бот!"
+
+#: btr/templates/bookings/index.html:48
 msgid "Also you can book a ride via TG bot "
 msgstr "Попробуйте также запись через ТГ бота"
 
@@ -700,39 +628,53 @@ msgstr "Статус записи:"
 msgid "Planed Date"
 msgstr "Запланированная дата"
 
-#: btr/templates/bookings/show.html:36
+#: btr/templates/bookings/show.html:40
 msgid "Planed Time"
 msgstr "Запланированное время"
 
-#: btr/templates/bookings/show.html:41
+#: btr/templates/bookings/show.html:45
 msgid "Bikes Rented"
 msgstr "Байков в прокате"
 
-#: btr/templates/bookings/show.html:54 btr/tg_bot/keyboards/inline_menu.py:15
+#: btr/templates/bookings/show.html:58 btr/tg_bot/keyboards/inline_menu.py:15
 #: btr/tg_bot/utils/commands.py:39
 msgid "Edit booking"
 msgstr "Изменить запись"
 
-#: btr/templates/bookings/show.html:55 btr/tg_bot/keyboards/inline_menu.py:14
+#: btr/templates/bookings/show.html:59 btr/tg_bot/keyboards/inline_menu.py:14
 #: btr/tg_bot/utils/commands.py:35
 msgid "Cancel booking"
 msgstr "Отменить запись"
 
-#: btr/templates/briefing/briefing.html:10
+#: btr/templates/briefing/briefing.html:4
+#: btr/templates/briefing/briefing.html:6
+#: btr/templates/briefing/briefing.html:16
 msgid "Safety instructions"
 msgstr "Инструкции по безопасности"
 
-#: btr/templates/briefing/briefing.html:11
+#: btr/templates/briefing/briefing.html:5
+msgid ""
+"We have prepared a short safety instruction for you. Read it to avoid "
+"injury. Take care of yourself!"
+msgstr "Мы подготовили для вас краткую инструкцию по безопасности. Ознакомьтесь с ней во избежание травм. Берегите себя!"
+
+#: btr/templates/briefing/briefing.html:8
+msgid ""
+"To avoid injury, please read our instructions for driving an Enduro "
+"motorcycle!"
+msgstr "Во избежание травм, ознакомьтесь с нашей инструкцией по управлению Эндуро мотоциклом!"
+
+#: btr/templates/briefing/briefing.html:17
 msgid "For riding a Pit-bike and Enduro motorcycle"
 msgstr "По управлению Пит-байком или Эндуро"
 
-#: btr/templates/briefing/briefing.html:25
+#: btr/templates/briefing/briefing.html:31
 msgid ""
 "In case of injury, bruises or other harm to your health, we are not "
 "responsible."
 msgstr "В случае получения травм, мы не несем ответственности!"
 
-#: btr/templates/briefing/briefing.html:26
+#: btr/templates/briefing/briefing.html:32
 msgid "BroTeamRacing Team"
 msgstr "Команда BroTeamRacing"
 
@@ -815,25 +757,48 @@ msgstr ""
 msgid "27 hp"
 msgstr "27 лс"
 
-#: btr/templates/contacts/contacts.html:9 btr/templates/footer.html:35
+#: btr/templates/contacts/contacts.html:4
+#: btr/templates/contacts/contacts.html:15 btr/templates/footer.html:35
 #: btr/templates/footer.html:44 btr/templates/navbar.html:27
 msgid "Contacts"
 msgstr "Контакты"
 
-#: btr/templates/contacts/contacts.html:29
+#: btr/templates/contacts/contacts.html:5
+msgid ""
+"St. Petersburg, Molodezhnoye settlement, Primorsky highway 659. Contacts: +7 "
+"999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru. The location can "
+"be viewed on the map!"
+msgstr ""
+"Санкт-Петербург, п.Молодёжное, Приморское шоссе 659. Контакты: +7 "
+"999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru. "
+"Нас можно найти на карте!"
+
+#: btr/templates/contacts/contacts.html:6
+msgid "Our contacts"
+msgstr "Наши Контакты"
+
+#: btr/templates/contacts/contacts.html:8
+msgid ""
+"St. Petersburg, Molodezhnoye settlement, Primorsky highway 659. Contacts: +7 "
+"999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru"
+msgstr ""
+"Санкт-Петербург, п.Молодёжное, Приморское шоссе 659. Контакты: +7 "
+"999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru."
+
+#: btr/templates/contacts/contacts.html:35
 msgid "Below are the contacts where you can contact us."
 msgstr "Контакты, по которым с нами можно связаться."
 
-#: btr/templates/contacts/contacts.html:31
+#: btr/templates/contacts/contacts.html:37
 msgid "Saint-Peterburg, Molodezhnoe, Primorskoe h.659"
 msgstr "Санкт-Петербург, п.Молодежное, Приморское шоссе 659"
 
-#: btr/templates/contacts/contacts.html:32
+#: btr/templates/contacts/contacts.html:38
 #: btr/templates/modals/contacts.html:14
 msgid "Vladimir"
 msgstr "Владимир"
 
-#: btr/templates/contacts/contacts.html:33
+#: btr/templates/contacts/contacts.html:39
 #: btr/templates/modals/contacts.html:24
 msgid "Aleksandr"
 msgstr "Александр"
@@ -1062,7 +1027,7 @@ msgid "Briefing"
 msgstr "Инструктаж"
 
 #: btr/templates/footer.html:40 btr/templates/navbar.html:21
-#: btr/templates/reviews/reviews.html:13
+#: btr/templates/reviews/reviews.html:4 btr/templates/reviews/reviews.html:19
 msgid "Reviews"
 msgstr "Отзывы"
 
@@ -1116,26 +1081,26 @@ msgstr "Да, отменить эту запись"
 msgid "Book Edit"
 msgstr "Изменение записи"
 
-#: btr/templates/forms/book_edit.html:18
+#: btr/templates/forms/book_edit.html:22
 msgid "Your rental time:"
 msgstr "Ваше выбранное время проката:"
 
-#: btr/templates/forms/book_edit.html:23 btr/templates/forms/book_edit.html:40
-#: btr/templates/modals/booking.html:27 btr/templates/modals/booking.html:84
+#: btr/templates/forms/book_edit.html:27 btr/templates/forms/book_edit.html:44
+#: btr/templates/modals/booking.html:27 btr/templates/modals/booking.html:88
 msgid "From"
 msgstr "Время начала"
 
-#: btr/templates/forms/book_edit.html:24 btr/templates/forms/book_edit.html:41
-#: btr/templates/modals/booking.html:28 btr/templates/modals/booking.html:85
+#: btr/templates/forms/book_edit.html:28 btr/templates/forms/book_edit.html:45
+#: btr/templates/modals/booking.html:28 btr/templates/modals/booking.html:89
 msgid "To"
 msgstr "Время окончания"
 
-#: btr/templates/forms/book_edit.html:35
-#: btr/templates/forms/booking_create.html:17
+#: btr/templates/forms/book_edit.html:39
+#: btr/templates/forms/booking_create.html:21
 msgid "Available time:"
 msgstr "Свободное время:"
 
-#: btr/templates/forms/book_edit.html:63 btr/templates/forms/user_edit.html:26
+#: btr/templates/forms/book_edit.html:67 btr/templates/forms/user_edit.html:26
 #: btr/tg_bot/handlers/cancel_booking.py:104
 msgid "Confirm"
 msgstr "Подтвердить"
@@ -1144,15 +1109,15 @@ msgstr "Подтвердить"
 msgid "Create Booking"
 msgstr "Запись на прокат"
 
-#: btr/templates/forms/booking_create.html:28
+#: btr/templates/forms/booking_create.html:32
 msgid "from"
 msgstr "Время начала"
 
-#: btr/templates/forms/booking_create.html:30
+#: btr/templates/forms/booking_create.html:34
 msgid "to"
 msgstr "Время окончания"
 
-#: btr/templates/forms/booking_create.html:46
+#: btr/templates/forms/booking_create.html:50
 msgid "Make booking"
 msgstr "Записаться на прокат"
 
@@ -1281,27 +1246,31 @@ msgstr "Приморское ш. 659"
 msgid "Book a ride now"
 msgstr "Запишитесь прямо сейчас"
 
-#: btr/templates/modals/booking.html:17 btr/templates/modals/booking.html:74
+#: btr/templates/modals/booking.html:17 btr/templates/modals/booking.html:78
 msgid "Available booking slots:"
 msgstr "Свободное время:"
 
-#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:78
+#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:82
 msgid "No available slots 😢"
 msgstr "Свободных мест нет 😢"
 
-#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:78
+#: btr/templates/modals/booking.html:21 btr/templates/modals/booking.html:82
 msgid "Choose another day!"
 msgstr "Выберите другой день!"
 
-#: btr/templates/modals/booking.html:46 btr/templates/modals/booking.html:103
-msgid "Go to Time Selection"
-msgstr "Выбрать свободное время"
+#: btr/templates/modals/booking.html:46
+msgid "Choose time"
+msgstr "Выбрать время"
 
-#: btr/templates/modals/booking.html:50 btr/templates/modals/booking.html:107
+#: btr/templates/modals/booking.html:50 btr/templates/modals/booking.html:111
 #: btr/templates/modals/contacts.html:34 btr/templates/modals/guest.html:35
-#: btr/templates/modals/history.html:52 btr/templates/modals/user.html:46
+#: btr/templates/modals/history.html:56 btr/templates/modals/user.html:46
 msgid "Close"
 msgstr "Закрыть"
+
+#: btr/templates/modals/booking.html:107
+msgid "Go to Time Selection"
+msgstr "Выбрать свободное время"
 
 #: btr/templates/modals/contacts.html:9
 msgid "Call Us for a ride"
@@ -1348,11 +1317,26 @@ msgstr "Запись"
 msgid "Gallery"
 msgstr "Блог"
 
-#: btr/templates/reviews/reviews.html:15
+#: btr/templates/reviews/reviews.html:5
+msgid ""
+"Enduro motorcycle rental in St. Petersburg with experienced instructors. "
+"Come to us and share your impressions!"
+msgstr "Прокат Эндуро мотоциклов в Санкт-Петербурге с опытными инструкторами. Приходите к нам и делитесь впечатлениями с другими!"
+
+#: btr/templates/reviews/reviews.html:6
+msgid "Leave a review"
+msgstr "Оставьте отзыв"
+
+#: btr/templates/reviews/reviews.html:8
+msgid ""
+"If you liked the rental, please leave a review. This will help us a lot!"
+msgstr "Если вам понравился прокат, пожалуйста, оставьте отзыв. Это очень нам поможет!"
+
+#: btr/templates/reviews/reviews.html:21
 msgid "Did you have fun? Share your impressions, leave a"
 msgstr "Было весело? Поделись впечатлениями, оставь"
 
-#: btr/templates/reviews/reviews.html:16
+#: btr/templates/reviews/reviews.html:22
 msgid "Review"
 msgstr "Отзыв"
 
@@ -1364,7 +1348,7 @@ msgstr "Текущие поездки"
 msgid "There are not current bookings yet..."
 msgstr "У вас пока нет предстоящих поездок..."
 
-#: btr/templates/users/bookings.html:44
+#: btr/templates/users/bookings.html:48
 msgid "View history"
 msgstr "Посмотреть историю поездок"
 
