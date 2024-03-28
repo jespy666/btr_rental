@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static contrib_extras%}
 
 <div class="modal fade" id="rideHistory" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -33,7 +33,11 @@
                                         <tr class="table-danger">
                                     {% endif %}
                                     <th scope="row">{{ booking.id }}</th>
-                                        <td>{{ booking.booking_date }}</td>
+                                        {% if LANGUAGE_CODE == 'ru-ru' %}
+                                            <td>{{ booking.booking_date|date:"d" }} {{ booking.booking_date|ru_month_genitive }}, {{ booking.booking_date|date:"Y" }}</td>
+                                        {% else %}
+                                            <td>{{ booking.booking_date|date:"d" }} {{ booking.booking_date|date:"F" }}, {{ booking.booking_date|date:"Y" }}</td>
+                                        {% endif %}
                                         <td>{{ booking.start_time }}</td>
                                         <td>{{ booking.end_time }}</td>
                                         <td>{{ booking.status }}</td>

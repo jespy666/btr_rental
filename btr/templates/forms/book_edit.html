@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 i18n static %}
+{% load django_bootstrap5 i18n static contrib_extras %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
@@ -13,7 +13,11 @@
                 <div class="col-lg-6 col-0">
                     <img src="{% static 'images/edit.png' %}" width="120" height="120" alt="edit">
                     <h2 class="mt-3">{% translate 'Book Edit' %}</h2>
-                    <h3 class="mt-2">{{ booking.booking_date }}</h3>
+                    {% if LANGUAGE_CODE == 'ru-ru' %}
+                        <h3 class="mt-2">{{ booking.booking_date|date:"d" }} {{ booking.booking_date|ru_month_genitive }}, {{ booking.booking_date|date:"Y" }}</h3>
+                    {% else %}
+                        <h3 class="mt-2">{{ booking.booking_date|date:"d" }} {{ booking.booking_date|date:"F" }}, {{ booking.booking_date|date:"Y" }}</h3>
+                    {% endif %}
                     <div class="pt-3"></div>
                     <h5>{% translate 'Your rental time:' %}</h5>
                     <hr class="h-line-dark my-3">

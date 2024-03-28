@@ -15,7 +15,7 @@ def validate_slots(available_slots: list, desired_slot: tuple) -> bool:
 def validate_start_time(time: datetime.time, date: str) -> bool:
     """Checks start time not in past"""
     now = datetime.now()
-    formatted_date = datetime.strptime(date, '%Y-%B-%d')
+    formatted_date = datetime.strptime(date, '%Y-%m-%d')
     full_date = datetime.combine(formatted_date.date(), time)
     return full_date > now
 

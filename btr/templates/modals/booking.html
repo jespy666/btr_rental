@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n contrib_extras %}
 
 <div class="modal-container">
     {% for week in current_calendar %}
@@ -11,7 +11,7 @@
                                 <div class="container-fluid text-center py-3 c-body-color">
                                     <img class="img-modal" src="{% static 'images/calendar.png' %}" alt="calendar">
                                     <h4 class="modal-title" id="currentModalLabel{{ number }}">
-                                        {{ number }} {{ verbose_month }}, {{ current_year }}
+                                        {{ number }} {{ current_month|ru_month_genitive }}, {{ current_month|date:"Y" }}
                                     </h4>
                                     <div class="mb-3"></div>
                                     <h5>{% translate 'Available booking slots:' %}</h5>
@@ -42,8 +42,8 @@
                                 </div>
                                 <div class="container-fluid c-black-color p-3">
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ current_year }}-{{ current_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_month }}" class="btn btn-lg btn-outline-success">
-                                            {% translate 'Go to Time Selection' %}
+                                        <a href="{% url 'book_create' %}?selected_date={{ current_month|date:'Y-m' }}-{{ number }}&slots={{ slots }}" class="btn btn-lg btn-outline-success">
+                                            {% translate 'Choose time' %}
                                         </a>
                                     {% else %}
                                         <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
@@ -68,7 +68,11 @@
                                 <div class="container-fluid text-center py-3 c-body-color">
                                     <img class="img-modal" src="{% static 'images/calendar.png' %}" alt="calendar">
                                     <h4 class="modal-title" id="nextModalLabel{{ number }}">
-                                        {{ number }} {{ verbose_next_month }}, {{ next_year }}
+                                    {% if LANGUAGE_CODE == 'ru-ru' %}
+                                        {{ number }} {{ next_month|ru_month_genitive }}, {{ next_month|date:"Y" }}
+                                    {% else %}
+                                        {{ number }} {{ next_month|date:"F" }}, {{ next_month|date:"Y" }}
+                                    {% endif %}
                                     </h4>
                                     <div class="mb-3"></div>
                                     <h5>{% translate 'Available booking slots:' %}</h5>
@@ -99,7 +103,7 @@
                                 </div>
                                 <div class="container-fluid c-black-color p-3">
                                     {% if slots %}
-                                        <a href="{% url 'book_create' %}?selected_date={{ next_year }}-{{ next_month }}-{{ number }}&slots={{ slots }}&verbose={{ verbose_next_month }}" class="btn btn-lg btn-outline-success">
+                                        <a href="{% url 'book_create' %}?selected_date={{ next_month|date:'Y-m' }}-{{ number }}&slots={{ slots }}" class="btn btn-lg btn-outline-success">
                                             {% translate 'Go to Time Selection' %}
                                         </a>
                                     {% else %}

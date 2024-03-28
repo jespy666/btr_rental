@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 i18n static %}
+{% load django_bootstrap5 i18n static contrib_extras %}
 
 {% block content %}
 <div class="black-bg">{% include 'navbar.html' %}</div>
@@ -12,7 +12,11 @@
                 <div class="col-lg-6 col-12">
                     <img src="{% static 'images/calendar.png' %}" alt="Calendar" width="120" height="120">
                     <h2>{% translate 'Create Booking' %}</h2>
-                    <h3>{{ verbose }}</h3>
+                    {% if LANGUAGE_CODE == 'ru-ru' %}
+                        <h3>{{ date|date:"d" }} {{ date|ru_month_genitive }}, {{ date|date:"Y" }}</h3>
+                    {% else %}
+                        <h3>{{ date|date:"d" }} {{ date|date:"F" }}, {{ date|date:"Y" }}</h3>
+                    {% endif %}
                     <div class="mb-4"></div>
                     <h5>{% translate 'Available time:' %}</h5>
                     <hr class="h-line-dark">

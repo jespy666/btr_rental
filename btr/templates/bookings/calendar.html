@@ -1,9 +1,9 @@
-{% load static i18n %}
+{% load static i18n contrib_extras %}
 
 <table class="table text-center b-cal">
     <thead>
        <tr class="text-center">
-           <th scope="col" colspan="7">{{ verbose_current_al }}, {{ current_year }}</th>
+           <th scope="col" colspan="7">{{ current_month|date:"F" }}, {{ current_month|date:"Y" }}</th>
        </tr>
        <tr>
            <th scope="col">{% translate 'Monday' %}</th>
@@ -25,7 +25,7 @@
                         {% elif number < today %}
                             <td class="text-past" style="width: calc(100% / 7);">{{ number }}</td>
                         {% else %}
-                            {% if load < 30 %}
+                            {% if load < 20 %}
                                 <td class="valid" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}">{{ number }}</td>
                             {% elif load > 99 %}
                                 <td class="overload" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#currentModal{{ number }}">{{ number }}</td>

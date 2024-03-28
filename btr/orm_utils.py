@@ -13,6 +13,9 @@ from btr.bookings.models import Booking
 from btr.tg_bot.utils import exceptions as e
 from btr.users.models import SiteUser
 from btr.workhours.models import WorkHours, DayControl
+from config import settings
+
+from .templatetags.contrib_extras import ru_month_genitive
 
 T = TypeVar("T", bound=Model)
 
@@ -353,10 +356,10 @@ class AsyncTools:
         Returns:
             str: Translated month name (e.g., "March" in English)
         """
-        parts = date.split('-')
-        year, month, day = parts
-        plural_month = f'{month}s'
-        return f'{day} {_(plural_month)}, {year}'
+        obj = datetime.strptime(date, '%Y-%B-%d')
+        if settings.LANGUAGE_CODE == 'ru-ru':
+            return f'{obj.day} {ru_month_genitive(obj)}, {obj.year}'
+        return f'{obj.day} {obj.month}, {obj.year}'
 
     async def get_excluded_slot(self, email: str, date: str) -> tuple:
         """

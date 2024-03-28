@@ -3,7 +3,7 @@
 <table class="table text-center b-cal">
     <thead>
        <tr class="text-center">
-           <th scope="col" colspan="7">{{ verbose_next_al }}, {{ next_year }}</th>
+           <th scope="col" colspan="7">{{ next_month|date:"F" }}, {{ next_month|date:"Y" }}</th>
        </tr>
        <tr>
            <th scope="col">{% translate 'Monday' %}</th>
@@ -23,7 +23,7 @@
                         {% if number == 0 %}
                             <td style="width: calc(100% / 7);"></td>
                         {% else %}
-                            {% if load < 30 %}
+                            {% if load < 20 %}
                                 <td class="valid" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}">{{ number }}</td>
                             {% elif load > 70 %}
                                 <td class="overload" style="width: calc(100% / 7);" data-bs-toggle="modal" data-bs-target="#nextModal{{ number }}">{{ number }}</td>

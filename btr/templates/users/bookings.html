@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n contrib_extras %}
 
 <div class="card profile-bg">
     <h3 class="text-white text-center">{% translate 'Current bookings' %}</h3>
@@ -28,7 +28,11 @@
                                 <tr class="table-green" onclick="window.location='{% url 'book_show' pk=ride.id %}'" style="background-color: rgb(146, 181, 130);">
                             {% endif %}
                                 <th scope="row">{{ ride.id }}</th>
-                                <td>{{ ride.booking_date }}</td>
+                                {% if LANGUAGE_CODE == 'ru-ru' %}
+                                    <td>{{ ride.booking_date|date:"d" }} {{ ride.booking_date|ru_month_genitive }}, {{ ride.booking_date|date:"Y" }}</td>
+                                {% else %}
+                                    <td>{{ ride.booking_date|date:"d F Y" }}</td>
+                                {% endif %}
                                 <td>{{ ride.start_time }}</td>
                                 <td>{{ ride.end_time }}</td>
                                 <td>{{ ride.status }}</td>

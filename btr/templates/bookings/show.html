@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n contrib_extras %}
 
 {% block content %}
 <div class="black-bg">{% include 'navbar.html' %}</div>
@@ -30,7 +30,11 @@
                         <tr>
                             <td>{% translate 'Planed Date' %}</td>
                             <td>➡️</td>
-                            <td>{{ booking.booking_date }}</td>
+                            {% if LANGUAGE_CODE == 'ru-ru' %}
+                                <td>{{ booking.booking_date|date:"d" }} {{ booking.booking_date|ru_month_genitive }}, {{ booking.booking_date|date:"Y" }}</td>
+                            {% else %}
+                                <td>{{ booking.booking_date|date:"d" }} {{ booking.booking_date|date:"F" }}, {{ booking.booking_date|date:"Y" }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>{% translate 'Planed Time' %}</td>
