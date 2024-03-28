@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 i18n static %}
 
+{% block title %}{% translate 'Reviews' %}{% endblock %}
+{% block description %}{% translate 'Enduro motorcycle rental in St. Petersburg with experienced instructors. Come to us and share your impressions!' %}{% endblock %}
+{% block og_title %}{% translate 'Leave a review' %}{% endblock %}
+{% block og_image %}{% static 'images/og-review.png' %}{% endblock %}
+{% block og_description %}{% translate 'If you liked the rental, please leave a review. This will help us a lot!' %}{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/reviews.css' %}">
 <div class="black-bg">{% include 'navbar.html' %}</div>

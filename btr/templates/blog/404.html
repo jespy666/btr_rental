@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 i18n static %}
 
+{% block title %}{% translate 'Rider blog' %}{% endblock %}
+{% block description %}{% translate 'Enduro rental in St.Petersburg. No driver license needed. 16+' %}{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/404.css' %}">
 <div class="black-bg">{% include 'navbar.html' %}</div>
@@ -10,7 +13,7 @@
             <div class="row text-center">
                 <div class="col-lg-3 col-0"></div>
                 <div class="col-lg-6 col-12 lg-m-t">
-                    <img src="{% static 'images/404.png' %}" alt="page is not available right now" width="180" height="auto">
+                    <img src="{% static 'images/404.png' %}" alt="Decoration">
                 </div>
                 <div class="col-lg-3 col-0"></div>
             </div>

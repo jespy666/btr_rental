@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 i18n static %}
 
+{% block title %}{% translate 'Booking calendar' %}{% endblock %}
+{% block description %}{% translate 'Book a rental in just a few clicks. Our simple online calendar will help you with this. We are waiting for you at our rental!' %}{% endblock %}
+{% block og_title %}{% translate 'Sign up for a rental' %}{% endblock %}
+{% block og_image %}{% static 'images/og-booking.jpg' %}{% endblock %}
+{% block og_description %}{% translate 'Book a rental using our convenient online calendar or telegram bot!' %}{% endblock %}
+
+
 {% block content %}
 {% include 'modals/booking.html' %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}">

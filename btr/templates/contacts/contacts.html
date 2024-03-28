@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 static i18n %}
 
+{% block title %}{% translate 'Contacts' %}{% endblock %}
+{% block description %}{% translate 'St. Petersburg, Molodezhnoye settlement, Primorsky highway 659. Contacts: +7 999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru. The location can be viewed on the map!' %}{% endblock %}
+{% block og_title %}{% translate 'Our contacts' %}{% endblock %}
+{% block og_image %}{% static 'images/og-location.png' %}{% endblock %}
+{% block og_description %}{% translate 'St. Petersburg, Molodezhnoye settlement, Primorsky highway 659. Contacts: +7 999 235-00-91 | +7 981 785-04-51 | broteamracing@yandex.ru' %}{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css' %}">
 <div class="black-bg lg-m-b">{% include 'navbar.html' %}</div>

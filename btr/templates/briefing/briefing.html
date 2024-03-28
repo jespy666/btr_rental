@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 i18n static %}
 
+{% block title %}{% translate 'Safety instructions' %}{% endblock %}
+{% block description %}{% translate 'We have prepared a short safety instruction for you. Read it to avoid injury. Take care of yourself!' %}{% endblock %}
+{% block og_title %}{% translate 'Safety instructions' %}{% endblock %}
+{% block og_image %}{% static 'images/og-instruction.jpg' %}{% endblock %}
+{% block og_description %}{% translate 'To avoid injury, please read our instructions for driving an Enduro motorcycle!' %}{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/briefing.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/blackquote.css' %}">

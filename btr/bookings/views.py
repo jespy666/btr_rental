@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 import calendar
 
 from django.contrib.messages.views import SuccessMessageMixin
@@ -10,7 +10,6 @@ from django.utils.translation import gettext as _
 from ..mixins import UserAuthRequiredMixin, BookingPermissionMixin
 from .models import Booking
 from .forms import BookingForm, BookingEditForm, BookingCancelForm
-from .locale import locale_month_name_plural, locale_month_name
 from ..orm_utils import LoadCalc, SlotsFinder, AsyncTools
 from ..tasks.admin import send_vk_notify
 from ..tasks.bookings import (send_booking_details, send_cancel_self_message,
@@ -33,29 +32,19 @@ class BookingIndexView(TemplateView):
         else:
             next_year = current_year
             next_month = current_month + 1
-        current_load = LoadCalc(current_cal, current_year,
-                                current_month).get_month_load()
+        current_load = LoadCalc(current_cal, current_year, current_month)
         next_cal = calendar.monthcalendar(next_year, next_month)
-        next_load = LoadCalc(next_cal, next_year, next_month).get_month_load()
-        context['current_month'] = calendar.month_name[current_month]
-        context['verbose_month'] = locale_month_name_plural(
-            calendar.month_name[current_month]
-        )
-        context['verbose_current_al'] = locale_month_name(
-            calendar.month_name[current_month]
-        )
-        context['verbose_next_al'] = locale_month_name(
-            calendar.month_name[next_month]
-        )
-        context['current_year'] = current_year
-        context['today'] = current_day
-        context['current_calendar'] = current_load
-        context['next_month'] = calendar.month_name[next_month]
-        context['verbose_next_month'] = locale_month_name_plural(
-            calendar.month_name[next_month]
-        )
-        context['next_year'] = next_year
-        context['next_calendar'] = next_load
+        next_load = LoadCalc(next_cal, next_year, next_month)
+        update_context = {
+            'current_month': date(current_year, current_month, 1),
+            'current_year': current_year,
+            'current_calendar': current_load.get_month_load(),
+            'today': current_day,
+            'next_month': date(next_year, next_month, 1),
+            'next_year': next_year,
+            'next_calendar': next_load.get_month_load(),
+        }
+        context.update(update_context)
         return context
 
 
@@ -89,40 +78,20 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_date = self.request.GET.get('selected_date')
-        verbose_month = self.request.GET.get('verbose')
         slots = self.request.GET.get('slots')
-        verbose_date = self.format_date_for_form(
-            selected_date, verbose_month
-        )
-        context['ranges'] = eval(slots)
-        context['verbose'] = (
-            f"{verbose_date.get('day')}"
-            f" {verbose_date.get('month')},"
-            f" {verbose_date.get('year')}"
-        )
+        update_context = {
+            'ranges': eval(slots),
+            'date': datetime.strptime(selected_date, '%Y-%m-%d').date()
+        }
+        context.update(update_context)
         return context
 
-    @staticmethod
-    def format_date_for_form(date: str, verbose_month: str) -> dict:
-        """Friendly view date format"""
-        date_elements = date.split('-')
-        return {
-            'year': date_elements[0],
-            'month': verbose_month,
-            'day': date_elements[2],
-        }
-
-    @staticmethod
-    def format_date_for_orm(date: str) -> str:
-        """Format month name to number"""
-        date_object = datetime.strptime(date, '%Y-%B-%d')
-        formatted_date = date_object.strftime('%Y-%m-%d')
-        return formatted_date
-
     def form_valid(self, form):
-        date = self.request.GET.get('selected_date')
+        selected_date = self.request.GET.get('selected_date')
+        date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
+        friendly_date = datetime.strftime(date_obj, '%Y-%B-%d')
         user = self.request.user
-        form.instance.booking_date = self.format_date_for_orm(date)
+        form.instance.booking_date = selected_date
         form.instance.rider = user
         if user.is_superuser:
             status = _('confirmed')
@@ -137,7 +106,7 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
                 'client': instance.rider.username,
                 'email': user.email,
                 'name': user.first_name,
-                'date': AsyncTools().get_friendly_date(date),
+                'date': AsyncTools().get_friendly_date(friendly_date),
                 'start': form.cleaned_data.get('start_time').strftime('%H:%M'),
                 'end': form.cleaned_data.get('end_time').strftime('%H:%M'),
                 'bikes': form.cleaned_data.get('bike_count'),
@@ -170,38 +139,32 @@ class BookingEditView(UserAuthRequiredMixin, BookingPermissionMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         booking = Booking.objects.get(pk=self.kwargs['pk'])
-        slots = SlotsFinder(
-            datetime.strftime(booking.booking_date, '%Y-%m-%d')
-        )
-        context['slots'] = slots.find_available_slots(
-            (booking.start_time, booking.end_time)
-        )
+        slots = SlotsFinder(booking.booking_date.strftime('%Y-%m-%d'))
+        excluded_slot = (booking.start_time, booking.end_time)
+        context['slots'] = slots.find_available_slots(excluded_slot)
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         booking = Booking.objects.get(pk=self.kwargs['pk'])
-        booking_date = booking.booking_date
-        f_date = datetime.strftime(booking_date, '%Y-%B-%d')
-        slots = SlotsFinder(datetime.strftime(booking_date, '%Y-%m-%d'))
-        kwargs['slots'] = slots.find_available_slots(
-            (booking.start_time, booking.end_time)
-        )
-        kwargs['date'] = f_date
+        booking_date = booking.booking_date.strftime('%Y-%m-%d')
+        slots = SlotsFinder(booking_date)
+        excluded_slot = (booking.start_time, booking.end_time)
+        kwargs['slots'] = slots.find_available_slots(excluded_slot)
+        kwargs['date'] = booking_date
         return kwargs
 
     def form_valid(self, form):
         user = self.request.user
         if not user.is_superuser:
-            date_obj = form.instance.booking_date
-            date = date_obj.strftime('%Y-%B-%d')
+            date_obj = form.instance.booking_date.strftime('%Y-%B-%d')
             via = _('Web Site')
             data = {
                 'pk': form.instance.pk,
                 'client': form.instance.rider.username,
                 'email': user.email,
                 'name': user.first_name,
-                'date': AsyncTools().get_friendly_date(date),
+                'date': AsyncTools().get_friendly_date(date_obj),
                 'start': form.cleaned_data.get('start_time').strftime('%H:%M'),
                 'end': form.cleaned_data.get('end_time').strftime('%H:%M'),
                 'bikes': form.cleaned_data.get('bike_count'),
@@ -233,14 +196,14 @@ class BookingCancelView(UserAuthRequiredMixin, SuccessMessageMixin,
         booking = Booking.objects.get(pk=self.kwargs['pk'])
         booking.status = _('canceled')
         booking.save()
-        date = booking.booking_date.strftime('%Y-%B-%d')
+        booking_date = booking.booking_date.strftime('%Y-%B-%d')
         if not self.request.user.is_superuser:
             via = _('Web Site')
             data = {
                 'pk': booking.pk,
                 'client': booking.rider.username,
                 'email': booking.rider.email,
-                'date': AsyncTools().get_friendly_date(date),
+                'date': AsyncTools().get_friendly_date(booking_date),
                 'start': booking.start_time.strftime('%H:%M'),
                 'end': booking.end_time.strftime('%H:%M'),
                 'bikes': booking.bike_count,
