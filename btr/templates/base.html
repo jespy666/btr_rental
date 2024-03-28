@@ -1,108 +1,58 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-  <head>
-    {% load django_bootstrap5 i18n static contrib_extras %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width-device-width, initial-scale=1.0">
-    <meta name="description" content="{% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles' %}">
-    <meta name="keywords" content="{% translate 'motorcycles rental, bike rental, enduro, enduro spb, pit bike spb' %}">
-      <title>{{ title }}</title>
-      {% bootstrap_css %}
-      {% bootstrap_javascript %}
-      <link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/advantages.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/gallery.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/video.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/bikes.css' %}">
-      <link rel="stylesheet" type="text/css" href="{% static 'css/modals.css' %}">
-      <link rel="icon" type="image/png" href="https://i.ibb.co.com/R0Sh9Pf/favicon.png">
-      <link href="{% static 'dist/css/lightbox.css' %}" rel="stylesheet" />
-      <!-- Open Graph tags -->
-      <meta property="og:title" content="{% block og_title %}{% translate 'Enduro bikes rental in Saint-Petersburg' %}{% endblock og_title %}" />
-      <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
-      <meta property="og:image" content="{% block og_image %}{% static 'images/og-image.jpg' %}{% endblock og_image %}" />
-      <meta property="og:description" content="{% block og_description %}{% translate 'We teach and rent Enduro bycycles in Saint-Petersburg. All safety equipment included in rental price. No driver license needed, Welcome!' %}{% endblock og_description %}" />
-      <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
-      <meta property="og:locale:alternate" content="en-us" />
-      <!-- End Open Graph -->
-      {% if YANDEX_VERIFICATION_ID %}
-        <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_ID }}" />
-      {% endif %}
-      {% get_canonical_url as canonical_url %}
-      <link rel="canonical" href="{{ canonical_url }}">
-      <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
-  </head>
-  <body class="body-bg">
-    {% block content %}{% endblock %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'dist/js/lightbox.js' %}"></script>
-    <script>
-        $(function() {
-        $('.tv-video').each(function() {
-            let image = $(this).attr('data-video');
-            $(this).html('<img alt="" src="https://i.ytimg.com/vi/'+ image +'/hq720.jpg" />');
-        });
-        $('.tv-video').click(function() {
-            $(this).addClass('show');
-            let video = $(this).attr('data-video');
-            $(this).html('<iframe width="560" height="315" src="https://www.youtube.com/embed/'+ video +'?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
-        });
-    });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var alertElements = document.querySelectorAll('.alert');
-
-            alertElements.forEach(function (alert) {
-                setTimeout(function () {
-                    alert.classList.add('fade-out');
-                    setTimeout(function () {
-                        alert.style.display = 'none';
-                    }, 1000);
-                }, 2000);
-            });
-        });
-    </script>
-    <script>
-        lightbox.option({
-          'resizeDuration': 200,
-          'wrapAround': true
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#id_phone_number').inputmask('+7(999) 999-99-99');
-        });
-    </script>
-    <script>
-        const nodes = [].slice.call(document.querySelectorAll('li .data'), 0);
-        const directions  = { 0: 'top', 1: 'right', 2: 'bottom', 3: 'left' };
-        const classNames = ['in', 'out'].map((p) => Object.values(directions).map((d) => `${p}-${d}`)).reduce((a, b) => a.concat(b));
-        const getDirectionKey = (ev, node) => {
-            const { width, height, top, left } = node.getBoundingClientRect();
-            const l = ev.pageX - (left + window.pageXOffset);
-            const t = ev.pageY - (top + window.pageYOffset);
-            const x = (l - (width/2));
-            const y = (t - (height/2));
-            return Math.round(Math.atan2(y, x) / 1.57079633 + 5) % 4;
-        }
-        class hovItem {
-            constructor(element) {
-                this.element = element;
-                this.element.addEventListener('mouseover', (ev) => this.update(ev, 'in'));
-                this.element.addEventListener('mouseout', (ev) => this.update(ev, 'out'));
-            }
-            update(ev, prefix) {
-                this.element.classList.remove(...classNames);
-                this.element.classList.add(`${prefix}-${directions[getDirectionKey(ev, this.element)]}`);
-            }
-        }
-        nodes.forEach(node => new hovItem(node));
-    </script>
-  </body>
-  <footer class="text-white" style="background-color: rgb(28, 29, 37);">
-    {% include 'footer.html' %}
-  </footer>
+    <head>
+        {% load django_bootstrap5 i18n static contrib_extras %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <meta name="description" content="{% block description %}{% translate 'We are a team of professional enduro riders, we rent and teach proper riding techniques on our motorcycles' %}{% endblock %}">
+        <meta name="keywords" content="{% translate 'motorcycles rental, bike rental, enduro, enduro spb, pit bike spb' %}">
+        <title>{% block title %}{% translate 'BroTeamRacing - Enduro and Pit-bikes rental in Saint-Petersburg' %}{% endblock %}</title>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/advantages.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/gallery.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/video.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bikes.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/modals.css' %}">
+        <link rel="icon" type="image/png" href="https://i.ibb.co.com/R0Sh9Pf/favicon.png">
+        <link href="{% static 'lightbox/css/lightbox.css' %}" rel="stylesheet" />
+        <!-- Open Graph tags -->
+        <meta property="og:title" content="{% block og_title %}{% translate 'Enduro bikes rental in Saint-Petersburg' %}{% endblock og_title %}" />
+        <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
+        <meta property="og:image" content="{% block og_image %}{% static 'images/og-image.jpg' %}{% endblock og_image %}" />
+        <meta property="og:description" content="{% block og_description %}{% translate 'We teach and rent Enduro bycycles in Saint-Petersburg. All safety equipment included in rental price. No driver license needed, Welcome!' %}{% endblock og_description %}" />
+        <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+        <meta property="og:locale:alternate" content="ru-ru" />
+        <meta property="og:locale:alternate" content="en-us" />
+        <!-- End Open Graph -->
+        <!-- Yandex verification -->
+        {% if YANDEX_VERIFICATION_ID %}
+            <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_ID }}" />
+        {% endif %}
+        <!-- Canonical url -->
+        {% get_canonical_url as canonical_url %}
+            <link rel="canonical" href="{{ canonical_url }}">
+        <!-- VK api script -->
+        <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
+    </head>
+    <body class="body-bg">
+        <!-- All extended content -->
+        {% block content %}{% endblock %}
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- End -->
+        <script src="{% static 'lightbox/js/lightbox.js' %}"></script>
+        <script src="{% static 'js/lazyload.js' %}"></script>
+        <script src="{% static 'js/video.js' %}"></script>
+        <script src="{% static 'js/alert_fade.js' %}"></script>
+        <script src="{% static 'js/lightbox_extra.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/inputmask@latest/dist/min/jquery.inputmask.bundle.min.js"></script>
+        <script src="{% static 'js/inputmask.js' %}"></script>
+        <script src="{% static 'js/gallery_shadow.js' %}"></script>
+    </body>
+    <footer class="text-white" style="background-color: rgb(28, 29, 37);">
+        {% include 'footer.html' %}
+    </footer>
 </html>
