@@ -5,7 +5,16 @@ from .models import SiteUser
 
 
 class UserAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the User model.
 
+    Attributes:
+        list_display (tuple): Fields to display in the admin list view.
+        list_filter (tuple): Fields to use for filtering in the
+         admin list view.
+        search_fields (tuple): Fields to use for searching in the
+         admin list view.
+    """
     list_display = (
         'id',
         'username',

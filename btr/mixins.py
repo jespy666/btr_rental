@@ -6,7 +6,18 @@ from django.shortcuts import redirect
 
 
 class UserAuthRequiredMixin(LoginRequiredMixin):
+    """
+    Mixin to require user authentication.
 
+    This mixin ensures that the user is authenticated before accessing a view.
+    If the user is not authenticated, it displays an error message and
+     redirects them to the login page.
+
+    Attributes:
+        permission_denied_message (str): The message to display when
+         permission is denied.
+        login_url (str): The URL to redirect to for login.
+    """
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
             messages.error(self.request, self.permission_denied_message)
@@ -15,7 +26,20 @@ class UserAuthRequiredMixin(LoginRequiredMixin):
 
 
 class UserPermissionMixin(UserPassesTestMixin):
+    """
+    Mixin to check user permissions.
 
+    This mixin ensures that the user has permission to access a view based on
+     a test function.
+    If the test function fails, it displays an error message and redirects
+     them to a specified URL.
+
+    Attributes:
+        permission_message (str): The message to display when permission
+         is denied.
+        permission_url (str): The URL to redirect to when permission
+         is denied.
+    """
     permission_message = None
     permission_url = None
 
@@ -28,7 +52,12 @@ class UserPermissionMixin(UserPassesTestMixin):
 
 
 class BookingPermissionMixin(UserPassesTestMixin):
+    """
+    Test function to check booking permission.
 
+    Returns:
+        bool: True if the user has permission, False otherwise.
+    """
     foreign_book_message = None
     foreign_book_url = None
 
@@ -42,7 +71,20 @@ class BookingPermissionMixin(UserPassesTestMixin):
 
 
 class ObjectDoesNotExistMixin:
+    """
+    Mixin to handle ObjectDoesNotExist exceptions.
 
+    This mixin catches ObjectDoesNotExist exceptions raised during view
+     dispatching.
+    If such an exception occurs, it displays an error message and redirects
+     the user to a specified URL.
+
+    Attributes:
+        not_existed_message (str): The message to display when the object
+         does not exist.
+        not_existed_url (str): The URL to redirect to when the object
+         does not exist.
+    """
     not_existed_message = None
     not_existed_url = None
 
@@ -55,7 +97,20 @@ class ObjectDoesNotExistMixin:
 
 
 class DeleteProtectionMixin:
+    """
+    Mixin to handle ProtectedError exceptions during deletion.
 
+    This mixin catches ProtectedError exceptions raised during deletion
+     operations.
+    If such an exception occurs, it displays an error message and redirects
+     the user to a specified URL.
+
+    Attributes:
+        protection_message (str): The message to display when deletion
+         is protected.
+        protected_url (str): The URL to redirect to when deletion
+         is protected.
+    """
     protection_message = None
     protected_url = None
 

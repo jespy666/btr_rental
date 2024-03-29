@@ -40,8 +40,11 @@ class AuthResetView(SuccessMessageMixin, ObjectDoesNotExistMixin, FormView):
         email = form.cleaned_data.get('email').lower()
         form.cleaned_data['email'] = email
         SiteUser.objects.get(email=email)
+        # generate secret code
         code = generate_verification_code()
+        # send secret code on user email
         send_verification_code.delay(email=email, code=code)
+        # keep secret code in session
         self.request.session['verification_code'] = code
         self.request.session['user_email'] = email
         return super().form_valid(form)
@@ -57,6 +60,7 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
     template_name = 'forms/confirm_code.html'
 
     def form_valid(self, form):
+        # get secret code from session
         verification_code = self.request.session.get('verification_code')
         email = self.request.session.get('user_email')
         user_code = form.cleaned_data.get('code')
@@ -66,6 +70,7 @@ class ConfirmCodeView(SuccessMessageMixin, FormView):
                 user = SiteUser.objects.get(email=email)
                 user.set_password(password)
                 user.save()
+                # send recover message to user email with new sign in data
                 send_recover_message.delay(
                     email=email,
                     password=password,

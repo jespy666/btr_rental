@@ -12,7 +12,39 @@ from . import exceptions as e
 
 
 def validators(func):
-    """Validate all incorrect or wrong user input data"""
+    """
+    Decorator to validate incorrect or wrong user input data.
+
+    Args:
+        func (callable): The function to be wrapped.
+
+    Returns:
+        callable: The wrapped function.
+
+    Raises:
+        e.WrongStatus: If the user input has an invalid status.
+        e.UserAlreadyExists: If a user with the provided data already exists.
+        e.UserDoesNotExists: If a user with the provided data does not exist.
+        e.NotExistedId: If the provided ID does not exist.
+        e.InvalidIDFormat: If the provided ID are not integer.
+        e.NameOverLength: If value greater than 40 symbols.
+        e.InvalidEmailFormat: If wrong email format.
+        e.InvalidPhoneFormat: If wrong phone number format.
+        e.WrongBikesCount: If wrong bikes count.
+        e.PastTense: If date in the past.
+        e.WrongHoursFormat: If wrong hours format.
+        e.InvalidDate: If wrong date format.
+        e.InvalidTimeFormat: If wrong time format.
+        e.TimeIsNotAvailable: If time already booked.
+        e.EndBiggerStart: If end time less than start time.
+        e.CodesCompareError: If wrong verification code.
+        e.WrongPassword: If wrong password.
+
+    Example:
+        @validators
+        async def my_function(message: Message, state: FSMContext, bot: Bot):
+            # Your implementation here
+    """
 
     @wraps(func)
     async def wrapper(message: Message, state: FSMContext, bot: Bot,

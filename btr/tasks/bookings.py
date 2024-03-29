@@ -9,7 +9,24 @@ from ..celery import app
 
 @app.task
 def send_booking_details(**kwargs) -> None:
-    """Send mail to user after booking create"""
+    """
+    Email the user after booking creation.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            name='John Doe',
+            date='2024-03-29',
+            status='confirmed',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     create_booking_mail(
         kwargs.get('email'),
         kwargs.get('name'),
@@ -24,7 +41,22 @@ def send_booking_details(**kwargs) -> None:
 
 @app.task
 def send_confirm_message(**kwargs) -> None:
-    """Send mail to user when booking confirmed"""
+    """
+    Email the user after booking is confirmed by admin.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            date='2024-03-29',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     confirm_booking_mail(
         kwargs.get('email'),
         kwargs.get('pk'),
@@ -37,7 +69,22 @@ def send_confirm_message(**kwargs) -> None:
 
 @app.task
 def send_cancel_message(**kwargs) -> None:
-    """Send mail to user when booking canceled by admin"""
+    """
+    Email the user after booking canceled by admin.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            date='2024-03-29',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     cancel_booking_mail(
         kwargs.get('email'),
         kwargs.get('pk'),
@@ -50,7 +97,22 @@ def send_cancel_message(**kwargs) -> None:
 
 @app.task
 def send_cancel_self_message(**kwargs) -> None:
-    """Send mail to user when booking canceled by himself"""
+    """
+    Email the user after booking canceled by himself.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            date='2024-03-29',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     cancel_booking_mail(
         kwargs.get('email'),
         kwargs.get('pk'),
@@ -64,6 +126,22 @@ def send_cancel_self_message(**kwargs) -> None:
 
 @app.task
 def send_edit_booking_message(**kwargs) -> None:
+    """
+    Email the user after booking edited by admin.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            date='2024-03-29',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     edit_booking_mail(
         kwargs.get('email'),
         kwargs.get('pk'),
@@ -76,6 +154,22 @@ def send_edit_booking_message(**kwargs) -> None:
 
 @app.task
 def send_self_edit_booking_message(**kwargs) -> None:
+    """
+    Email the user after booking edited by himself.
+
+    Args:
+        **kwargs: Keyword arguments containing booking details.
+
+    Example:
+        send_booking_details(
+            email='user@example.com',
+            date='2024-03-29',
+            start='10:00',
+            end='11:00',
+            bikes='2',
+            pk='123'
+        )
+    """
     edit_booking_mail(
         kwargs.get('email'),
         kwargs.get('pk'),
@@ -88,7 +182,14 @@ def send_self_edit_booking_message(**kwargs) -> None:
 
 
 @shared_task
-def check_booking_status():
+def check_booking_status() -> None:
+    """
+    Automatically set booking status to 'completed' after the booking end time.
+
+    Example:
+        This task runs periodically and updates the status of confirmed
+         bookings whose end time has passed.
+    """
     current_time = timezone.now().time()
     bookings_to_complete = Booking.objects.filter(
         status='confirmed',

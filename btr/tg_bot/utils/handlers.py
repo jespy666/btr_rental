@@ -16,14 +16,30 @@ from btr.tasks import users as user_mail
 
 
 def check_admin_access(user_id: int) -> bool:
-    """Check current user as admin"""
+    """
+    Check if the current user is an admin.
+
+    Args:
+        user_id (int): The user ID to check.
+
+    Returns:
+        bool: True if the user is an admin, False otherwise.
+    """
     load_dotenv()
     admin_ids = os.getenv('TG_ADMIN_IDS')
     return user_id in eval(admin_ids)
 
 
-def extract_start_times(intervals: List[Tuple]) -> list:
-    """Get all available start times to bot buttons"""
+def extract_start_times(intervals: List[Tuple]) -> List[str]:
+    """
+    Get all available start times for bot buttons.
+
+    Args:
+        intervals (List[Tuple[str, str]]): List of time intervals (start, end).
+
+    Returns:
+        List[str]: List of formatted start times.
+    """
     start_times = []
     for start, end in intervals:
         start_dt = datetime.strptime(start, '%H:%M')
@@ -37,13 +53,30 @@ def extract_start_times(intervals: List[Tuple]) -> list:
 
 
 def friendly_formatted_date(date: str) -> str:
-    """Returned date with month name"""
+    """
+    Return the date with the month name.
+
+    Args:
+        date (str): The input date in the format 'YYYY-MM-DD'.
+
+    Returns:
+        str: The formatted date with the month name (e.g., '2024-March-29').
+    """
     date_object = datetime.strptime(date, '%Y-%m-%d')
     return date_object.strftime('%Y-%B-%d')
 
 
 def extract_hours(slots: list, start_time: str) -> list:
-    """Get choices list of available hours"""
+    """
+    Get a list of available hours for booking.
+
+    Args:
+        slots (list): List of time slots (start, end).
+        start_time (str): The desired start time in the format 'HH:MM'.
+
+    Returns:
+        list: A list of available hours (as strings) from the start time.
+    """
     for start, end in slots:
         start_hours = int(start.split(':')[0])
         end_hours = int(end.split(':')[0])
@@ -54,7 +87,15 @@ def extract_hours(slots: list, start_time: str) -> list:
 
 
 def get_slots_for_bot_view(slots: list) -> str:
-    """Show free booking slots for given date"""
+    """
+    Show free booking slots for a given date.
+
+    Args:
+        slots (list): List of time slots (start, end).
+
+    Returns:
+        str: A formatted string with available booking slots.
+    """
     bot_view_slots = ''
     for slot in slots:
         bot_view_slots += f'{slot[0]}-{slot[1]}\n'
@@ -62,7 +103,19 @@ def get_slots_for_bot_view(slots: list) -> str:
 
 
 def check_available_start_time(start_time: str, slots: list) -> bool:
-    """Check given time in free slot"""
+    """
+    Check if the given time is available in the list of free slots.
+
+    Args:
+        start_time (str): The desired start time in the format 'HH:MM'.
+        slots (list): List of time slots (start, end).
+
+    Returns:
+        bool: True if the time is available, False otherwise.
+
+    Raises:
+        TimeIsNotAvailable: if start time are already booked or out of time.
+    """
     for slot_start, slot_end in slots:
         if slot_start <= start_time < slot_end:
             return True
@@ -70,14 +123,32 @@ def check_available_start_time(start_time: str, slots: list) -> bool:
 
 
 def get_end_time(start_time: str, hours: str) -> str:
-    """Calculate end time by hours"""
+    """
+    Calculate the end time based on the given start time and duration in hours.
+
+    Args:
+        start_time (str): The start time in the format 'HH:MM'.
+        hours (str): The duration in hours.
+
+    Returns:
+        str: The calculated end time in the format 'HH:MM'.
+    """
     start = datetime.strptime(start_time, "%H:%M")
     end = start + timedelta(hours=int(hours))
     return end.strftime('%H:%M')
 
 
 def get_hours(start: str, end: str) -> str:
-    """Calculate timedelta in hours"""
+    """
+    Calculate the duration between two time points in hours.
+
+    Args:
+        start (str): The start time in the format 'HH:MM'.
+        end (str): The end time in the format 'HH:MM'.
+
+    Returns:
+        str: The duration between start and end time in hours.
+    """
     start_time = datetime.strptime(start, "%H:%M")
     end_time = datetime.strptime(end, "%H:%M")
     delta = end_time - start_time
@@ -86,7 +157,21 @@ def get_hours(start: str, end: str) -> str:
 
 
 def check_available_hours(start_time: str, hours: str, slots: list) -> bool:
-    """Available time range validator"""
+    """
+    Validate if the given time range is available within the list
+     of time slots.
+
+    Args:
+        start_time (str): The start time in the format 'HH:MM'.
+        hours (str): The duration in hours.
+        slots (list): List of time slots represented as tuples (start, end).
+
+    Returns:
+        bool: True if the time range is available, False otherwise.
+
+    Raises:
+        TimeIsNotAvailable: If the time range is not available within any slot.
+    """
     start = datetime.strptime(start_time, '%H:%M')
     end = start + timedelta(hours=int(hours))
     for slot_start, slot_end in slots:
@@ -98,7 +183,15 @@ def check_available_hours(start_time: str, hours: str, slots: list) -> bool:
 
 
 def get_emoji_for_status(status: str) -> str:
-    """Get tg emoji equal booking status"""
+    """
+    Get the emoji corresponding to the provided booking status.
+
+    Args:
+        status (str): The booking status.
+
+    Returns:
+        str: The emoji corresponding to the booking status.
+    """
     statuses = {
         _('pending'): '🟡',
         _('confirmed'): '🟢',
@@ -109,18 +202,43 @@ def get_emoji_for_status(status: str) -> str:
 
 
 def generate_password() -> str:
+    """
+    Generate a random password consisting of 8 characters.
+
+    Returns:
+        str: The randomly generated password.
+    """
     characters = string.ascii_letters + string.digits
     return ''.join(secrets.choice(characters) for _ in range(8))
 
 
 def generate_verification_code() -> str:
-    """Generate random code to confirm personality"""
+    """
+    Generate a random verification code to confirm identity.
+
+    Returns:
+        str: The randomly generated verification code consisting
+         of 6 characters.
+    """
     characters = string.ascii_letters + string.digits
     return ''.join(secrets.choice(characters) for _ in range(6))
 
 
 def check_verification_code(source_code: str, user_code: str) -> bool:
-    """Compare verification codes"""
+    """
+    Compare the provided verification codes.
+
+    Args:
+        source_code (str): The original verification code.
+        user_code (str): The user-entered verification code.
+
+    Returns:
+        bool: True if the user-entered code matches the original code,
+         False otherwise.
+
+    Raises:
+        CodesCompareError: If the codes do not match.
+    """
     if source_code == user_code:
         return True
     raise CodesCompareError
@@ -159,6 +277,17 @@ def vk_notify(is_admin: bool, created: bool, **kwargs) -> None:
 
 
 def mail_notify(action: str, **kwargs) -> None:
+    """
+    Send email notifications based on the specified action.
+
+    Args:
+        action (str): The action for which to send the notification.
+        **kwargs: Additional keyword arguments to pass to the email
+         sending functions.
+
+    Returns:
+        None
+    """
     match action:
         case a if a == 'booking_details':
             book_mail.send_booking_details.delay(**kwargs)
@@ -181,6 +310,15 @@ def mail_notify(action: str, **kwargs) -> None:
 
 
 def json_filter(data: dict) -> dict:
+    """
+    Filter out instances of ReplyKeyboardMarkup from a dictionary.
+
+    Args:
+        data (dict): The input dictionary to filter.
+
+    Returns:
+        dict: A new dictionary with instances of ReplyKeyboardMarkup removed.
+    """
     return {
         key: value for key, value in data.items()
         if not isinstance(value, ReplyKeyboardMarkup)

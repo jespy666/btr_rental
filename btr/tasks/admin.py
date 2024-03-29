@@ -9,7 +9,30 @@ from ..celery import app
 @app.task
 def send_vk_notify(via: str, created: bool, data: dict,
                    is_admin=False) -> None:
-    """Send message in Vk after successfully booking or changing status"""
+    """
+    Send a message in VK after successfully booking or changing status.
+
+    Args:
+        via (str): The source of the notification (e.g., 'Admin panel').
+        created (bool): Indicates whether the booking was just created.
+        data (dict): Dictionary containing booking details.
+        is_admin (bool, optional): Indicates if the user is an admin.
+         Defaults to False.
+
+    Returns:
+        None
+
+    Example data values:
+        'pk' (str): Booking primary key (e.g '123')
+        'client' (str): Rider username (e.g. 'john_doe')
+        'phone' (str): Rider phone number (e.g. '+1234567890')
+        'date' (str): Booking day (e.g. '%Y-%m-%d': '2024-03-29' as string)
+        'start' (str): Booking start time (e.g. '10:00')
+        'end' (str): Booking end time (e.g. '11:00')
+        'bikes' (str): Booking bikes count as string (e.g. '2')
+        'status' (str): Booking status (e.g. 'confirmed')
+        'email' (str): Rider email (e.g. 'john@example.com')
+    """
     load_dotenv()
     user_id = os.getenv('VK_ADMIN_ID')
     access_token = os.getenv('VK_BTR_KEY')

@@ -17,6 +17,7 @@ from ..tasks.bookings import (send_booking_details, send_cancel_self_message,
 
 
 class BookingIndexView(TemplateView):
+
     template_name = 'bookings/index.html'
 
     def get_context_data(self, **kwargs):
@@ -25,13 +26,16 @@ class BookingIndexView(TemplateView):
         current_year = now.year
         current_month = now.month
         current_day = now.day
+        # get data for current month
         current_cal = calendar.monthcalendar(current_year, current_month)
+        # check if not last month in year
         if current_month == 12:
             next_year = current_year + 1
             next_month = 1
         else:
             next_year = current_year
             next_month = current_month + 1
+        # get load in percentage on current month
         current_load = LoadCalc(current_cal, current_year, current_month)
         next_cal = calendar.monthcalendar(next_year, next_month)
         next_load = LoadCalc(next_cal, next_year, next_month)
@@ -50,6 +54,7 @@ class BookingIndexView(TemplateView):
 
 class BookingDetailView(UserAuthRequiredMixin, BookingPermissionMixin,
                         DetailView):
+
     template_name = 'bookings/show.html'
     model = Booking
     login_url = reverse_lazy('login')
@@ -70,6 +75,9 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     permission_denied_message = _('You must to be login to book ride')
 
     def get_form_kwargs(self):
+        """
+        Provide chosen date and time slots to form.
+        """
         kwargs = super().get_form_kwargs()
         kwargs['available_slots'] = self.request.GET.get('slots')
         kwargs['current_date'] = self.request.GET.get('selected_date')
@@ -93,10 +101,12 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
         user = self.request.user
         form.instance.booking_date = selected_date
         form.instance.rider = user
+        # automatically set status as confirmed if executor are admin
         if user.is_superuser:
             status = _('confirmed')
             form.instance.status = status
             form.save()
+        # otherwise, status are pending
         else:
             status = _('pending')
             form.instance.status = status

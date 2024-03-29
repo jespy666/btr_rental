@@ -7,6 +7,12 @@ from .models import WorkHours, DayControl
 
 
 class WorkHoursAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the WorkHours model.
+
+    Attributes:
+        list_display (tuple): Fields to display in the admin list view.
+    """
 
     list_display = ('day', 'open', 'close')
 

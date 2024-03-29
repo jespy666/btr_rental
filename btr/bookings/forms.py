@@ -7,7 +7,12 @@ from .validators import (validate_slots, validate_start_time,
 
 
 class BookingForm(forms.ModelForm):
+    """
+    Custom form for booking management.
 
+    Usage:
+        Form automatically get available slots and set chosen date from view.
+    """
     def __init__(self, *args, **kwargs):
         available_slots = kwargs.pop('available_slots', None)
         current_date = kwargs.pop('current_date', None)
@@ -26,6 +31,13 @@ class BookingForm(forms.ModelForm):
         }
 
     def clean(self):
+        """
+        Custom validation for booking form fields.
+
+        Example:
+            Validate start and end times, slot availability, and equal ride
+             duration.
+        """
         cleaned_data = super().clean()
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
@@ -37,11 +49,13 @@ class BookingForm(forms.ModelForm):
             desired_slot = (start, end)
             available_slots = self.initial.get('available_slots')
             current_date = self.initial.get('date')
+            # validate time format
             if not validate_start_time(start_time, current_date):
                 self.add_error(
                     'start_time',
                     _('Selected start time can\'t be in past')
                 )
+            # check if chosen time are available
             if not validate_slots(eval(available_slots), desired_slot):
                 self.add_error(
                     'start_time',
@@ -51,11 +65,13 @@ class BookingForm(forms.ModelForm):
                     'end_time',
                     _('Selected time is not available for booking')
                 )
+            # check if ride time are equal 1 hour
             if not validate_equal_hour(start_time, end_time):
                 self.add_error(
                     'end_time',
                     _('Common ride time must be equal to hour')
                 )
+            # validate bikes count
             if not validate_bikes(bikes):
                 self.add_error(
                     'bike_count',
@@ -65,7 +81,9 @@ class BookingForm(forms.ModelForm):
 
 
 class BookingEditForm(forms.ModelForm):
-
+    """
+    Custom form for edit booking details.
+    """
     def __init__(self, *args, **kwargs):
         slots = kwargs.pop('slots', None)
         date = kwargs.pop('date', None)
@@ -123,7 +141,11 @@ class BookingEditForm(forms.ModelForm):
 
 
 class BookingCancelForm(forms.ModelForm):
+    """
+    Custom form for cancel booking from profile page.
 
+    Set status as canceled.
+    """
     class Meta:
         model = Booking
         fields = ['status']

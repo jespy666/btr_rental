@@ -7,7 +7,15 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def get_canonical_url(context):
-    """Get canonical url from request."""
+    """
+    Get the canonical URL from the request.
+
+    Args:
+        context (dict): A dictionary containing the context data.
+
+    Returns:
+        str: The canonical URL with 'https://' protocol.
+    """
     request = context.get('request')
     if request:
         return request.build_absolute_uri(
@@ -18,6 +26,15 @@ def get_canonical_url(context):
 
 @register.filter
 def ru_month_genitive(date: datetime.date) -> str:
+    """
+    Filter to return the genitive form of the month name in Russian.
+
+    Args:
+        date (datetime.date): The input date.
+
+    Returns:
+        str: The genitive form of the month name.
+    """
     months_genitive = {
         1: "Января",
         2: "Февраля",

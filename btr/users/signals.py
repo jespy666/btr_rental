@@ -9,7 +9,19 @@ from .models import SiteUser
 @receiver(post_save, sender=SiteUser)
 def set_status(sender: Model, instance: SiteUser,
                created: bool, **kwargs) -> None:
-    """Set status to new users"""
+    """
+    Signal handler to set status to new users.
+
+    Args:
+        sender (Model): The sender model class.
+        instance (SiteUser): The instance of the user being saved.
+        created (bool): A flag indicating whether the instance was
+         created or updated.
+        **kwargs: Additional keyword arguments.
+
+    Returns:
+        None
+    """
     if created:
         instance.status = _('newbie')
         instance.save()

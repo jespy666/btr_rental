@@ -4,7 +4,16 @@ from django.utils.translation import gettext as _
 
 
 def verification_code_mail(email: str, code: str) -> None:
-    """Mail with verification code"""
+    """
+    Send an email with a verification code for password reset.
+
+    Args:
+        email (str): The recipient email address.
+        code (str): The verification code to include in the email.
+
+    Returns:
+        None
+    """
     subject = _('Password reset')
     html_content = render_to_string(
         'emails/email_base.html', {
@@ -25,7 +34,17 @@ def verification_code_mail(email: str, code: str) -> None:
 
 
 def recover_message_mail(email: str, password: str, username: str) -> None:
-    """Mail with recovered data to sign-in"""
+    """
+    Send an email with recovered sign-in data.
+
+    Args:
+        email (str): The recipient email address.
+        password (str): The recovered password to include in the email.
+        username (str): The recovered username to include in the email.
+
+    Returns:
+        None
+    """
     subject = _('Recovered Sign-In message')
     html_content = render_to_string(
         'emails/email_base.html', {
@@ -48,7 +67,18 @@ def recover_message_mail(email: str, password: str, username: str) -> None:
 
 def registration_mail(email: str, name: str, login: str,
                       password: str) -> None:
-    """Mail with hello message after sign up"""
+    """
+    Send an email with a welcome message after sign up.
+
+    Args:
+        email (str): The recipient email address.
+        name (str): The name of the user.
+        login (str): The username of the user.
+        password (str): The password of the user.
+
+    Returns:
+        None
+    """
     subject = _('Hello from BroTeamRacing')
     html_content = render_to_string(
         'emails/email_base.html', {
@@ -71,7 +101,22 @@ def registration_mail(email: str, name: str, login: str,
 
 def create_booking_mail(email: str, name: str, date: str, status: str,
                         start: str, end: str, bikes: str, pk: str) -> None:
-    """Mail with new booking details"""
+    """
+    Send an email with details of a new booking.
+
+    Args:
+        email (str): The recipient email address.
+        name (str): The name of the user.
+        date (str): The date of the booking.
+        status (str): The status of the booking.
+        start (str): The start time of the booking.
+        end (str): The end time of the booking.
+        bikes (str): The number of bikes for the booking.
+        pk (str): The primary key of the booking.
+
+    Returns:
+        None
+    """
     subject = _('New Booking Created')
     html_content = render_to_string(
         'emails/email_base.html', {
@@ -99,7 +144,20 @@ def create_booking_mail(email: str, name: str, date: str, status: str,
 
 def confirm_booking_mail(email: str, pk: str, bikes: str,
                          date: str, start: str, end: str) -> None:
-    """Mail with confirm booking message"""
+    """
+    Email confirm a booking.
+
+    Args:
+        email (str): The recipient email address.
+        pk (str): The primary key of the booking.
+        bikes (str): The number of bikes for the booking.
+        date (str): The date of the booking.
+        start (str): The start time of the booking.
+        end (str): The end time of the booking.
+
+    Returns:
+        None
+    """
     subject = _('Booking Confirmed')
     html_content = render_to_string(
         'emails/email_base.html', {
@@ -125,7 +183,22 @@ def confirm_booking_mail(email: str, pk: str, bikes: str,
 
 def cancel_booking_mail(email: str, pk: str, bikes: str, date: str,
                         start: str, end: str, self_cancel=False) -> None:
-    """Mail with canceled booking message"""
+    """
+    Send an email with a canceled booking message.
+
+    Args:
+        email (str): The recipient email address.
+        pk (str): The primary key of the booking.
+        bikes (str): The number of bikes for the booking.
+        date (str): The date of the booking.
+        start (str): The start time of the booking.
+        end (str): The end time of the booking.
+        self_cancel (bool, optional): A flag indicating whether the booking
+         was canceled by the user themselves. Defaults to False.
+
+    Returns:
+        None
+    """
     subject = _('Booking Canceled')
     if not self_cancel:
         html_content = render_to_string(
@@ -165,6 +238,22 @@ def cancel_booking_mail(email: str, pk: str, bikes: str, date: str,
 
 def edit_booking_mail(email: str, pk: str, bikes: str, date: str, start: str,
                       end: str, self_edit=False) -> None:
+    """
+    Send an email with a booking edited message.
+
+    Args:
+        email (str): The recipient email address.
+        pk (str): The primary key of the booking.
+        bikes (str): The number of bikes for the booking.
+        date (str): The date of the booking.
+        start (str): The start time of the booking.
+        end (str): The end time of the booking.
+        self_edit (bool, optional): A flag indicating whether the booking was
+         edited by the user themselves. Defaults to False.
+
+    Returns:
+        None
+    """
     subject = _('Booking edited')
     if not self_edit:
         html_content = render_to_string(

@@ -7,6 +7,16 @@ from .models import WorkHours
 
 @receiver(post_migrate)
 def initiate_default_hours(sender, **kwargs):
+    """
+    Signal handler to initiate default work hours after migration.
+
+    Args:
+        sender: The sender of the signal.
+        **kwargs: Additional keyword arguments.
+
+    Returns:
+        None
+    """
     if sender.name == 'btr.workhours':
         if not WorkHours.objects.exists():
             WorkHours.objects.create(
