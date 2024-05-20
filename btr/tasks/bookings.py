@@ -1,5 +1,8 @@
+from datetime import datetime
+
+from django.utils.translation import gettext as _
+
 from celery import shared_task
-from django.utils import timezone
 
 from btr.bookings.models import Booking
 from ..emails import (create_booking_mail, confirm_booking_mail,
@@ -190,11 +193,13 @@ def check_booking_status() -> None:
         This task runs periodically and updates the status of confirmed
          bookings whose end time has passed.
     """
-    current_time = timezone.now().time()
+    current_time = datetime.utcnow()
+    current_date = datetime.utcnow().date()
     bookings_to_complete = Booking.objects.filter(
-        status='confirmed',
+        status=_('confirmed'),
+        booking_date__lte=current_date,
         end_time__gte=current_time,
     )
     for booking in bookings_to_complete:
-        booking.status = 'completed'
+        booking.status = _('completed')
         booking.save()
