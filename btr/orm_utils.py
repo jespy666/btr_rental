@@ -13,6 +13,7 @@ from btr.bookings.models import Booking
 from btr.tg_bot.utils import exceptions as e
 from btr.users.models import SiteUser
 from btr.workhours.models import WorkHours, DayControl
+
 from config import settings
 
 from .templatetags.contrib_extras import ru_month_genitive
@@ -328,7 +329,10 @@ class AsyncTools:
         """
         try:
             booking = await self.get_object(
-                Booking, load_prefetch=load_prefetch, **kwargs)
+                Booking,
+                load_prefetch=load_prefetch,
+                **kwargs
+            )
             booking_info = {
                 'date': booking.booking_date.strftime('%Y-%B-%d'),
                 'clean_date': booking.booking_date.strftime('%Y-%m-%d'),
@@ -517,7 +521,7 @@ class SlotsFinder:
              in the format "start_time-end_time".
         """
         bookings = (Booking.objects.filter(booking_date=self.date).exclude(
-            status='canceled')
+            status=_('canceled'))
         )
         return [(book.start_time, book.end_time) for book in bookings]
 
@@ -535,7 +539,7 @@ class SlotsFinder:
         """
         exc_start, exc_end = excluded_slot
         bookings = (Booking.objects.filter(booking_date=self.date).exclude(
-            status='canceled')
+            status=_('canceled'))
         )
         return [(book.start_time, book.end_time) for book in bookings if
                 (book.start_time >= exc_end or book.end_time <= exc_start)]
@@ -689,7 +693,7 @@ class LoadCalc:
         if date.split('-')[-1] == '0':
             return -1
         bookings = (Booking.objects.filter(booking_date=date)
-                    .exclude(status='canceled'))
+                    .exclude(status=_('canceled')))
         s = SlotsFinder(date)
         custom_h = s.get_custom_open_hours()
         workhours = s.get_workhours()

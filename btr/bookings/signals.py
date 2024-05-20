@@ -29,7 +29,7 @@ def update_user_status(sender: Model, instance: Booking, **kwargs) -> None:
     rider = instance.rider
     # check if user are not admin
     if not rider.is_superuser:
-        book_count = rider.booking_set.filter(status='completed').count()
+        book_count = rider.booking_set.filter(status=_('completed')).count()
         match book_count:
             case count if count < 3:
                 rider.status = _('Newbie')
