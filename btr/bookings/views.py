@@ -1,5 +1,6 @@
 from datetime import datetime, date
 import calendar
+import ast
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy, reverse
@@ -86,9 +87,13 @@ class BookingCreateView(UserAuthRequiredMixin, SuccessMessageMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_date = self.request.GET.get('selected_date')
-        slots = self.request.GET.get('slots')
+        slots: str = self.request.GET.get('slots')
+        try:
+            parsed_slots = ast.literal_eval(slots)
+        except (ValueError, SyntaxError):
+            parsed_slots = []
         update_context = {
-            'ranges': eval(slots),
+            'ranges': parsed_slots,
             'date': datetime.strptime(selected_date, '%Y-%m-%d').date()
         }
         context.update(update_context)
