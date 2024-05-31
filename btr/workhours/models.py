@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -52,3 +53,14 @@ class DayControl(models.Model):
     class Meta:
         verbose_name = _('Day')
         verbose_name_plural = _('Days settings')
+
+    # To prevent errors, validate the start time and end time.
+    # If the admin forgot to set one of the fields, throw an exception
+    def clean(self) -> None:
+        # This rule should only work on days that are not completely closed
+        if not self.is_closed:
+            # Check if one of the fields is not filled
+            if self.open is None or self.close is None:
+                raise ValidationError(_(
+                    'You need to set up open and close if day are not closed'
+                ))
